@@ -1,4 +1,4 @@
-# ARLAW AI Global 2.0 — Release and QA status
+# ARLAW AI Global 2.0.2 — Release and QA status
 
 ## Release intent
 

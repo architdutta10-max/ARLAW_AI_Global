@@ -1,3 +1,11 @@
+# ARLAW AI Global 2.0.2
+
+- Consolidated the Groq-only provider configuration and direct Python startup workflow.
+- Removed Windows batch launch/installer scripts; start with `python run.py`.
+- Updated Windows setup, repository integration and QA documentation to match the package.
+- Preserved the existing teal UI, legal workflows, settings, multilingual prompting, retrieval and evaluation utilities.
+- No claim of production security certification or legal-accuracy certification.
+
 # Release 2.0.1
 
 - Removed Gemini and Ollama provider adapters and routing.

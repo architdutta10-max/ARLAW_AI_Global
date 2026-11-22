@@ -2,7 +2,7 @@
 
 **An AI-assisted global legal, civil, economic and justice research platform.**
 
-Release: **2.0.0 — Final Stable Package** · See [RELEASE_QA.md](RELEASE_QA.md) for verified checks and limitations.
+Release: **2.0.2 — Consolidated Direct-Launch Release** · See [RELEASE_QA.md](RELEASE_QA.md) for verified checks and limitations.
 
 - Live application: https://arlaw-ai-global.onrender.com
 - GitHub repository: https://github.com/architdutta10-max/ARLAW_AI_Global
@@ -33,10 +33,11 @@ python -m venv .venv
 .venv\Scripts\activate
 python -m pip install -r requirements.txt
 copy .env.example .env
-uvicorn app.main:app --host 127.0.0.1 --port 8000
+notepad .env
+python run.py
 ```
 
-Put your Groq key in `.env` as `GROQ_API_KEY=...`. The application loads `.env` automatically. Never commit API keys. Start the application with `python run.py`; no `.bat` file or local model runtime is required.
+Add your Groq key to `.env` as `GROQ_API_KEY=...`, save the file, then run `python run.py`. Open `http://127.0.0.1:8000` in your browser. The application loads `.env` automatically. No BAT launcher or local model runtime is needed. Keep `.env` private and never commit API keys.
 
 ## Configuration
 
@@ -51,9 +52,9 @@ Free-tier limits and availability vary. Only the Groq cloud provider is enabled 
 
 ## Upgrade-free feature scope
 
-Version 2.0.0 is intended as the consolidated, feature-complete handoff for the currently implemented scope. It is not a promise that software will never need maintenance: security fixes, dependency compatibility, model-provider changes and legal-source updates may still be necessary. See [RELEASE_QA.md](RELEASE_QA.md) for the exact release boundaries.
+Version 2.0.2 is intended as the consolidated, feature-complete handoff for the currently implemented scope. It is not a promise that software will never need maintenance: security fixes, dependency compatibility, model-provider changes and legal-source updates may still be necessary. See [RELEASE_QA.md](RELEASE_QA.md) for the exact release boundaries.
 
-To integrate into an existing clean Git checkout on Windows, extract this ZIP and run `scripts\install_release_2_0.bat`. The script creates a backup, preserves `.git`, `.env`, local data and virtual environments, runs the automated tests, and does not commit or push.
+To update an existing Git checkout, first make a backup of your project and confirm that your working tree is clean. Extract this release to a separate folder, then manually copy the application files into your checkout while preserving `.git`, `.env`, `.venv` and your local `data` directory. Review `git status`, run the tests, and commit only after reviewing the diff. This release does not automatically modify or push your Git repository.
 
 ## Tests and evaluation
 
