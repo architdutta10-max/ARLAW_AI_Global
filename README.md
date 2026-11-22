@@ -12,7 +12,9 @@ ARLAW AI is an informational research assistant, not a law firm or substitute fo
 The existing FastAPI application and teal frontend are retained. The backend now includes:
 
 - Groq, Ollama and OpenAI-compatible provider adapters with automatic fallback.
-- Task-specific routing for legal research, civil procedure, finance/tax, document review, translation and general tasks.
+- Task-specific routing for legal research, civil procedure, lawyer/advocate workflow assistance, accounting support, CA/tax research, neutral judicial research, finance, document review, translation and general tasks.
+- Professional-workspace boundaries that prohibit claims of legal representation, account certification, statutory audit, tax attestation or judicial decision-making.
+- Dedicated capability endpoint at `/api/capabilities` and in-app starter prompts for the professional workflows.
 - Multilingual prompting for English, Hindi, Bengali and mixed-language queries.
 - Optional independent multi-model peer review (`ARLAW_MULTI_MODEL_REVIEW=true`).
 - Retrieval from the existing SQLite/FTS5 legal knowledge library.
@@ -20,7 +22,7 @@ The existing FastAPI application and teal frontend are retained. The backend now
 - LoRA/QLoRA supervised training and provenance-gated teacher-output distillation preparation.
 - Automated tests and an API evaluation smoke runner.
 
-See `docs/MULTI_MODEL_ARCHITECTURE.md` for configuration and limitations.
+See `docs/MULTI_MODEL_ARCHITECTURE.md` and `docs/PROFESSIONAL_WORKSPACES.md` for configuration, workflow scope and limitations.
 
 ## Run on Windows CMD
 

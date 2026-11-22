@@ -16,3 +16,12 @@
 - Added English, Hindi, and Bengali interface labels.
 - Added text-size, higher-contrast, and reduced-motion controls.
 - Preferences remain local to the browser.
+
+
+## Professional workspace expansion
+
+- Added task routing for lawyer/advocate workflow assistance, accounting support, CA/tax research and neutral judicial research.
+- Added `/api/capabilities` to expose supported workflows and professional boundaries.
+- Added starter prompts for the four professional workflows.
+- Added explicit human-review, source-verification and non-substitution safeguards.
+- Updated GitHub Actions to run tests through `python -m pytest` with the repository root on `PYTHONPATH`.

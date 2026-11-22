@@ -77,3 +77,10 @@ def test_invalid_task_route_falls_back_to_default(monkeypatch):
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq,ollama")
     monkeypatch.setenv("ARLAW_ROUTE_LEGAL_RESEARCH", "not-a-provider")
     assert llm.provider_order("legal_research") == ["groq", "ollama"]
+
+
+def test_professional_task_classification():
+    assert llm.classify_task("Help me prepare a legal memo for my client") == "lawyer_assistance"
+    assert llm.classify_task("Prepare a bank reconciliation and trial balance") == "accounting"
+    assert llm.classify_task("Calculate my GST return and income tax filing") == "ca_tax"
+    assert llm.classify_task("Create a neutral evidence matrix for judicial research") == "judicial_research"

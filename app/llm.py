@@ -21,8 +21,12 @@ passwords, API keys, or unnecessary confidential personal/legal records. This is
 not legal representation or a substitute for qualified professional advice."""
 
 SPECIALISTS = {
-    "legal_research": "SPECIALIST MODE: Legal research. Identify jurisdiction, hierarchy of authority, issue, rule, application, exceptions, effective date and what primary source must be checked.",
+    "legal_research": "SPECIALIST MODE: Legal research. Identify jurisdiction, hierarchy of authority, issue, rule, application, exceptions, effective date and what primary source must be checked. Separate binding authority from persuasive authority and commentary.",
     "civil_procedure": "SPECIALIST MODE: Civil law and procedure. Explain procedural stages, forum/jurisdiction, limitation uncertainty, evidence and practical steps. Never invent deadlines or guarantee outcomes.",
+    "lawyer_assistance": "SPECIALIST MODE: Lawyer/advocate workflow assistance. Help organise facts, identify legal issues, prepare research plans, draft non-filed working documents and create questions for counsel. Flag missing facts, conflicts, limitation/date uncertainty and jurisdiction. Never claim to represent a client, provide a guaranteed strategy or certify a filing as legally sufficient.",
+    "accounting": "SPECIALIST MODE: Accounting support. Identify jurisdiction, reporting period, applicable accounting framework and assumptions. Show calculations and reconciliation steps, distinguish source data from estimates, flag missing records and do not certify accounts or perform a statutory audit.",
+    "ca_tax": "SPECIALIST MODE: Chartered-accountancy and tax support. Identify jurisdiction, tax year/assessment year, applicable law and effective date. Show calculation steps, distinguish general information from formal tax advice, flag thresholds/rates requiring current official verification, and never claim authority to sign, attest, certify or audit.",
+    "judicial_research": "SPECIALIST MODE: Judicial research support only. Organise issues, procedural history, party submissions, evidence references and potentially relevant precedents. Distinguish allegations, admitted facts, evidence, findings and legal holdings. Present competing arguments and uncertainty neutrally. Never decide guilt, liability, credibility or outcome; never impersonate a judge or issue a judgment.",
     "finance_tax": "SPECIALIST MODE: Economics, finance and tax. State jurisdiction, tax year, accounting/reporting standard, assumptions and calculation method. Distinguish law from financial opinion.",
     "document_review": "SPECIALIST MODE: Document analysis. Separate text actually present from inference, identify missing clauses/risks, quote only short relevant fragments and do not assume authenticity or enforceability.",
     "translation": "SPECIALIST MODE: Translation. Preserve meaning and defined legal terms; flag terms with no exact equivalent. Do not add legal advice unless asked.",
@@ -34,6 +38,14 @@ def classify_task(text: str) -> str:
     q = (text or "").lower()
     if any(x in q for x in ("translate", "translation", "अनुवाद", "অনুবাদ")):
         return "translation"
+    if any(x in q for x in ("judge", "judicial", "judgment draft", "court reasoning", "evidence matrix", "precedent comparison", " বিচার", "न्यायिक")):
+        return "judicial_research"
+    if any(x in q for x in ("chartered accountant", " ca ", "income tax return", "itr", "gst return", "tax filing", "tax audit", "tax computation", "assessment year", "advance tax", "tds", "tax compliance")):
+        return "ca_tax"
+    if any(x in q for x in ("bookkeeping", "ledger", "trial balance", "bank reconciliation", "journal entry", "balance sheet", "profit and loss", "cash flow statement", "accounting standard", "accounts payable", "accounts receivable")):
+        return "accounting"
+    if any(x in q for x in ("lawyer", "advocate", "legal notice", "draft a petition", "draft a plaint", "draft a contract", "client matter", "case strategy", "legal memo")):
+        return "lawyer_assistance"
     if any(x in q for x in ("pdf", "document", "agreement", "clause", "review this", "review the contract", "analyze this contract", "অঙ্গীকার", "समझौता")):
         return "document_review"
     if any(x in q for x in ("tax", "gst", "income tax", "accounting", "financial", "economy", "economic", "investment", "budget")):

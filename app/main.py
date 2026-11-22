@@ -18,7 +18,21 @@ def startup(): init_db()
 def home(): return FileResponse(STATIC_DIR / "index.html")
 
 @app.get("/api/health")
-def health(): return {"status":"ok","product":"ARLAW AI Global","version":"1.0.0","mode":"local-first"}
+def health(): return {"status":"ok","product":"ARLAW AI Global","version":"1.1.0","mode":"hybrid","disclaimer":"Research and workflow assistance only; not professional representation, certification or judicial decision-making."}
+
+@app.get("/api/capabilities")
+def capabilities():
+    return {
+        "professional_workspaces": [
+            {"id":"lawyer_assistance","name":"Lawyer & Advocate Assistance","scope":"Research, issue spotting, drafting support and matter organisation","boundary":"Does not represent clients or certify court filings."},
+            {"id":"accounting","name":"Accounting Support","scope":"Bookkeeping explanations, reconciliations and financial statement analysis","boundary":"Does not certify accounts or conduct statutory audits."},
+            {"id":"ca_tax","name":"CA & Tax Support","scope":"Tax research, worked calculations and compliance preparation","boundary":"Does not sign, attest, certify or conduct regulated audits."},
+            {"id":"judicial_research","name":"Judicial Research Support","scope":"Neutral issue, evidence and precedent organisation","boundary":"Does not determine guilt, liability, credibility or case outcomes."},
+            {"id":"legal_research","name":"Legal Research","scope":"Jurisdiction-aware legal information and source-grounded research","boundary":"Not a substitute for qualified legal advice."}
+        ],
+        "supported_languages_prompted": ["English", "Hindi", "Bengali", "other languages when supported by the configured model"],
+        "verification": "Citation labels are checked for existence only; source support, currency and legal correctness require human verification."
+    }
 
 @app.get("/api/health/model")
 def model_health():
