@@ -6,7 +6,7 @@ from pathlib import Path
 import hashlib, json
 from .config import STATIC_DIR, UPLOAD_DIR, TOP_K, OLLAMA_BASE_URL, OLLAMA_MODEL
 from .knowledge import init_db, add_source, search, list_sources
-from .llm import generate
+from .llm import generate, provider_order
 
 app = FastAPI(title="ARLAW AI Global", version="1.0.0")
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
@@ -22,13 +22,14 @@ def health(): return {"status":"ok","product":"ARLAW AI Global","version":"1.0.0
 
 @app.get("/api/health/model")
 def model_health():
-    import requests
+    import requests, os
     try:
         r=requests.get(f"{OLLAMA_BASE_URL}/api/tags",timeout=3); r.raise_for_status()
         names=[m.get("name") for m in r.json().get("models",[])]
-        return {"ollama":"reachable","configured_model":OLLAMA_MODEL,"model_installed":OLLAMA_MODEL in names,"available_models":names}
+        ollama={"status":"reachable","configured_model":OLLAMA_MODEL,"model_installed":OLLAMA_MODEL in names,"available_models":names}
     except requests.RequestException:
-        return {"ollama":"not_reachable","configured_model":OLLAMA_MODEL}
+        ollama={"status":"not_reachable","configured_model":OLLAMA_MODEL,"model_installed":False,"available_models":[]}
+    return {"ollama":ollama,"providers":provider_order(),"multi_model_review":os.getenv("ARLAW_MULTI_MODEL_REVIEW","false").lower() in {"1","true","yes","on"}}
 
 @app.get("/api/jurisdictions")
 def jurisdictions():
@@ -54,9 +55,9 @@ def chat(req: ChatRequest):
         label=f"S{i}"
         context.append(f"[{label}] {h['title']} | Jurisdiction: {h['jurisdiction']} | Authority: {h['authority']} | Language: {h['language']} | As of: {h['as_of'] or 'not supplied'} | URL: {h['source_url'] or 'not supplied'}\n{h['content']}")
         citations.append({"label":label,"title":h["title"],"jurisdiction":h["jurisdiction"],"authority":h["authority"],"language":h["language"],"as_of":h["as_of"],"url":h["source_url"]})
-    answer,error=generate(req.messages,"\n\n".join(context))
-    if error: answer="ARLAW cannot generate an AI answer because its local model is disconnected.\n\n"+error
-    return {"answer":answer,"citations":citations,"model_connected":error is None,"jurisdiction":req.jurisdiction}
+    answer,error,model_info=generate(req.messages,"\n\n".join(context),[c["label"] for c in citations])
+    if error: answer="ARLAW could not connect to any configured AI provider.\n\n"+error
+    return {"answer":answer,"citations":citations,"model_connected":error is None,"model":model_info,"jurisdiction":req.jurisdiction,"task":model_info.get("task"),"citation_validation":model_info.get("citation_validation")}
 
 @app.post("/api/documents")
 async def upload_document(file: UploadFile=File(...), title: str=Form(""), jurisdiction: str=Form("GLOBAL"),

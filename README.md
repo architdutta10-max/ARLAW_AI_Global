@@ -1,151 +1,98 @@
 # ARLAW AI Global
 
-**An AI-assisted legal information platform designed to make legal knowledge easier to explore.**
+**An AI-assisted global legal, civil, economic and justice research platform.**
 
-- **Live application:** https://arlaw-ai-global.onrender.com
-- **GitHub repository:** https://github.com/architdutta10-max/ARLAW_AI_Global
+- Live application: https://arlaw-ai-global.onrender.com
+- GitHub repository: https://github.com/architdutta10-max/ARLAW_AI_Global
 
----
+ARLAW AI is an informational research assistant, not a law firm or substitute for qualified legal advice. AI output can be incomplete or wrong. Verify important matters against current official primary sources and consult a qualified professional.
 
-## Overview
+## Integrated architecture
 
-ARLAW AI Global is an AI-powered application for exploring legal, civil, and economic topics through a conversational interface. It uses a hosted language model through the Groq API to generate responses.
+The existing FastAPI application and teal frontend are retained. The backend now includes:
 
-The project is intended as an informational and educational technology tool. It is **not a law firm, does not provide legal representation, and is not a substitute for advice from a qualified lawyer**.
+- Groq, Ollama and OpenAI-compatible provider adapters with automatic fallback.
+- Task-specific routing for legal research, civil procedure, finance/tax, document review, translation and general tasks.
+- Multilingual prompting for English, Hindi, Bengali and mixed-language queries.
+- Optional independent multi-model peer review (`ARLAW_MULTI_MODEL_REVIEW=true`).
+- Retrieval from the existing SQLite/FTS5 legal knowledge library.
+- Citation-reference validation that checks whether `[S#]` labels exist in the retrieved set. This is not proof that a source supports a claim.
+- LoRA/QLoRA supervised training and provenance-gated teacher-output distillation preparation.
+- Automated tests and an API evaluation smoke runner.
 
-## Project information
+See `docs/MULTI_MODEL_ARCHITECTURE.md` for configuration and limitations.
 
-| Item | Details |
-|---|---|
-| Project | ARLAW AI Global |
-| Developer | Archit Dutta |
-| Location | Siliguri, West Bengal, India |
-| AI provider | Groq API |
-| Configured model | `openai/gpt-oss-20b` |
-| Application framework | FastAPI |
-| Hosting | Render |
-
-## Live demo
-
-Visit **https://arlaw-ai-global.onrender.com** to try the deployed application.
-
-The service may take a short time to wake up after a period of inactivity.
-
-## Technology
-
-- Python
-- FastAPI
-- Groq API
-- `openai/gpt-oss-20b`
-- Render
-
-## Run locally
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/architdutta10-max/ARLAW_AI_Global.git
-cd ARLAW_AI_Global
-```
-
-### 2. Create and activate a virtual environment
-
-**Windows Command Prompt:**
+## Run on Windows CMD
 
 ```cmd
 python -m venv .venv
 .venv\Scripts\activate
+python -m pip install -r requirements.txt
+copy .env.example .env
+uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-**macOS / Linux:**
+Configure provider environment variables in the current CMD session or deployment dashboard. Never commit API keys. For local Ollama, install Ollama separately, pull the model in `OLLAMA_MODEL`, and set `ARLAW_PROVIDER_ORDER=ollama`. Example model download command: `ollama pull qwen3:1.7b`.
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
+## Configuration
 
-### 3. Install dependencies
+| Variable | Purpose |
+|---|---|
+| `ARLAW_PROVIDER_ORDER` | Default provider priority |
+| `ARLAW_ROUTE_LEGAL_RESEARCH` | Provider priority for legal research |
+| `ARLAW_ROUTE_CIVIL_PROCEDURE` | Provider priority for civil procedure |
+| `ARLAW_ROUTE_FINANCE_TAX` | Provider priority for finance/tax |
+| `ARLAW_ROUTE_DOCUMENT_REVIEW` | Provider priority for document review |
+| `ARLAW_ROUTE_TRANSLATION` | Provider priority for translation |
+| `ARLAW_MULTI_MODEL_REVIEW` | Enable independent peer review from other configured providers |
+| `GROQ_API_KEY` | Optional Groq credential; keep server-side |
+| `OLLAMA_BASE_URL`, `OLLAMA_MODEL` | Local Ollama endpoint/model |
+| `OPENAI_COMPATIBLE_BASE_URL`, `OPENAI_COMPATIBLE_MODEL` | Optional compatible endpoint/model |
 
-If the repository includes `requirements.txt`, run:
+Free-tier limits and availability vary. Render cannot reach Ollama running on a developer's own computer via `localhost`; use a reachable hosted endpoint or keep Ollama local.
 
-```bash
-pip install -r requirements.txt
-```
-
-### 4. Configure the API key
-
-Set the `GROQ_API_KEY` environment variable to your own Groq API key.
-
-**Windows Command Prompt (current session):**
+## Tests and evaluation
 
 ```cmd
-set GROQ_API_KEY=your_groq_api_key
+python -m pip install pytest
+pytest -q
 ```
 
-**macOS / Linux:**
+With the app running:
 
-```bash
-export GROQ_API_KEY="your_groq_api_key"
+```cmd
+python evaluation\run_eval.py --base-url http://127.0.0.1:8000
 ```
 
-Never commit API keys, passwords, or other secrets to GitHub. For Render, add `GROQ_API_KEY` under the service's **Environment** settings.
-
-### 5. Start the application
-
-The FastAPI application entry point is `app.main:app`. If Uvicorn is included in the project's dependencies, run:
-
-```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8000
-```
-
-Then open http://localhost:8000.
-
-If the repository's current dependency file or start command differs, follow the configuration included in the repository.
+The evaluation runner checks API availability and response generation; it does not certify legal correctness.
 
 ## Deployment
 
-The application is deployed on Render:
+The existing `render.yaml`, GitHub Actions workflow and FastAPI start command are retained. Configure secrets through Render Environment settings. Set a provider accessible from Render (for example Groq with an environment key). Local Ollama is intended for local development unless deployed on an accessible host.
 
-https://arlaw-ai-global.onrender.com
+## Responsible data and legal use
 
-When deploying from GitHub, connect the repository to Render and configure the required environment variable:
-
-| Environment variable | Purpose |
-|---|---|
-| `GROQ_API_KEY` | Authenticates requests to the Groq API |
-
-Keep this key private. Do not place it in source code, README files, screenshots, or public issue reports.
-
-## Responsible use and legal disclaimer
-
-AI-generated information may be incomplete, outdated, or incorrect. Laws and legal procedures vary by jurisdiction and change over time.
-
-- Verify important information against current official legislation, regulations, and court or government sources.
-- Consult a qualified legal professional about a real case, legal rights, deadlines, contracts, or court proceedings.
-- Do not rely on generated output as the sole basis for legal, financial, or other high-impact decisions.
-- Do not submit confidential, privileged, or sensitive personal information unless you understand and accept the application's data-handling arrangements.
-
-**Using this application does not create a lawyer-client relationship.**
-
-## Contributing
-
-Suggestions, bug reports, and improvements are welcome. Please open an issue in the GitHub repository before proposing substantial changes.
-
-For pull requests:
-1. Explain the purpose of the change.
-2. Keep API keys and other secrets out of the code.
-3. Include relevant testing or reproduction steps.
+Index only lawful, public, licensed and non-confidential material. Record jurisdiction, authority, language, URL and effective/as-of date. Do not upload privileged or confidential client records without an appropriate legal basis and safeguards. Confirm dataset and model licences before training or distribution.
 
 ## Developer
 
-**Archit Dutta**  
-Siliguri, West Bengal, India
+Archit Dutta · Siliguri, West Bengal, India
 
-- **GitHub:** https://github.com/architdutta10-max
-- **LinkedIn:** https://www.linkedin.com/in/archit-dutta-4522693aa/
-- **Instagram:** https://www.instagram.com/architdutta17/
-- **Email:** architdutta10@gmail.com
+GitHub: https://github.com/architdutta10-max
 
 ## License
 
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+MIT. See `LICENSE`.
+
+## User settings and accessibility
+
+Open **Settings** from the top-right area of the application header. Preferences are stored locally in the current browser and are not sent to the AI backend.
+
+Available controls:
+- Appearance: Light or Dark mode
+- Interface language: English, Hindi, or Bengali
+- Text size: Small, Default, Large, or Extra large
+- Higher contrast
+- Reduce motion
+
+The Settings dialog can be closed with its close button, by clicking outside it, or with Escape. Use **Reset preferences** to restore defaults.

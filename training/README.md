@@ -1,28 +1,27 @@
-# Optional LoRA training
+# ARLAW AI training and distillation
 
-Fine-tuning is optional; ARLAW runs without it. Prefer retrieval over repeatedly fine-tuning
-changing law. Use only lawfully obtained, expert-reviewed, non-confidential examples. Split train,
-validation and test data by case/source and time to avoid leakage. Test citation validity,
-jurisdiction recognition, effective-date awareness, multilingual performance and uncertainty.
-Free GPU availability is not guaranteed. This starter does not create a professional legal expert.
+Fine-tuning is optional. Retrieval of current official law should remain the primary way to keep legal content current.
 
+## Supervised LoRA / QLoRA
 
-## Free hosted AI (Groq)
+Install `training/requirements.txt`, prepare train and validation JSONL files matching `data_schema.json`, and mark each row `review_status: approved` only after qualified review. Every example must include jurisdiction, language, source IDs and an as-of date. Then run:
 
-The app can use Groq's OpenAI-compatible hosted inference API. Groq offers a free tier
-with model-specific rate and token limits; it is not unlimited and limits can change.
+```bash
+python training/train_lora.py --train data/train.jsonl --validation data/validation.jsonl --output artifacts/arlaw-adapter --model Qwen/Qwen3-1.7B
+```
 
-1. Create an account at https://console.groq.com/.
-2. Create an API key at https://console.groq.com/keys.
-3. In Render, open the `arlaw-ai-global` web service.
-4. Open **Environment** and add `GROQ_API_KEY` with your secret key as the value.
-5. Ensure `GROQ_MODEL` is set to `openai/gpt-oss-20b`.
-6. Save changes and redeploy if Render does not redeploy automatically.
+A compatible CUDA GPU is required. GPU availability and model compatibility vary; the script is not guaranteed to run on every free notebook runtime.
 
-Never put the API key in GitHub, source code, screenshots, or browser JavaScript.
-The key must be stored only as a Render environment variable. Free usage is subject to
-provider limits, availability, and data-use terms. Do not send privileged, confidential,
-or sensitive client information to a free-tier provider unless its terms and your
-professional obligations permit it.
+## Teacher/student distillation data preparation
 
-The application keeps local Ollama as a development fallback when `GROQ_API_KEY` is absent.
+Create a JSONL file containing `instruction`, `output`, `jurisdiction`, `language`, `source_ids`, `as_of`, `review_status`, and `teacher_model`. Teacher outputs must be checked by a qualified reviewer against the cited source material. Prepare accepted rows:
+
+```bash
+python training/build_distillation.py --input data/teacher_outputs.jsonl --output data/distillation_approved.jsonl
+```
+
+The script rejects unapproved or untraceable examples and writes a `.report.json` file. The resulting approved rows can be used as SFT training examples. This repository does not automatically generate trustworthy legal labels or replace expert review.
+
+## Evaluation
+
+Run the app and use `python evaluation/run_eval.py --base-url http://127.0.0.1:8000`. This is an API smoke test, not a legal accuracy benchmark. Build human-reviewed test sets covering jurisdiction, effective date, authority hierarchy, citation entailment, uncertainty and language quality.
