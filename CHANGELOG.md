@@ -25,3 +25,9 @@
 - Added starter prompts for the four professional workflows.
 - Added explicit human-review, source-verification and non-substitution safeguards.
 - Updated GitHub Actions to run tests through `python -m pytest` with the repository root on `PYTHONPATH`.
+
+## Release 1.2.0
+- Consolidated the integrated professional-workspace release package.
+- Added bounded, typed chat-message input validation and rejected unsupported message roles at the API boundary.
+- Updated API release metadata and FastAPI startup lifecycle handling.
+- Added release notes and a production-readiness checklist that clearly identifies security and evaluation work still required.

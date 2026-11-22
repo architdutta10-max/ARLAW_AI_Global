@@ -2,6 +2,8 @@
 
 **An AI-assisted global legal, civil, economic and justice research platform.**
 
+Release: **1.2.0** · See [RELEASE_NOTES.md](RELEASE_NOTES.md) for package scope and production limitations.
+
 - Live application: https://arlaw-ai-global.onrender.com
 - GitHub repository: https://github.com/architdutta10-max/ARLAW_AI_Global
 
@@ -67,6 +69,10 @@ python evaluation\run_eval.py --base-url http://127.0.0.1:8000
 ```
 
 The evaluation runner checks API availability and response generation; it does not certify legal correctness.
+
+## Production deployment checklist
+
+Before exposing this application to real users, add authentication and role-based access, API rate limits, HTTPS, secure secret management, encrypted backups, retention/deletion controls, audit logging, malware scanning for uploads, monitoring and an incident-response process. The current starter application is intended for controlled development and evaluation; do not treat it as a production-secure legal case-management system.
 
 ## Deployment
 

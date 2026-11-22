@@ -84,3 +84,11 @@ def test_professional_task_classification():
     assert llm.classify_task("Prepare a bank reconciliation and trial balance") == "accounting"
     assert llm.classify_task("Calculate my GST return and income tax filing") == "ca_tax"
     assert llm.classify_task("Create a neutral evidence matrix for judicial research") == "judicial_research"
+
+
+def test_chat_message_schema_limits_content():
+    from app.main import ChatMessage
+    import pytest
+    assert ChatMessage(role="user", content="hello").content == "hello"
+    with pytest.raises(Exception):
+        ChatMessage(role="user", content="")
