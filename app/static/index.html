@@ -18,7 +18,7 @@
     <div class="foot">Clear legal research.<br>Grounded in sources. Built for clarity.</div>
   </aside>
   <main>
-    <header><div class="mobile-brand">ARLAW <span>AI</span></div><div class="top-title">Legal research assistant</div><div class="top-right"><span id="connection" class="status">Checking model…</span><label>Jurisdiction <select id="jurisdiction"><option value="GLOBAL">Global / unspecified</option></select></label></div></header>
+    <header><div class="mobile-brand">ARLAW <span>AI</span></div><div class="top-title">Legal research assistant</div><div class="top-right"><span id="connection" class="status">Checking model…</span><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span></button><button id="settingsOpen" class="settings-open" type="button" aria-haspopup="dialog" aria-controls="settingsDialog" title="User settings">⚙ <span>Settings</span></button><label>Jurisdiction <select id="jurisdiction"><option value="GLOBAL">Global / unspecified</option></select></label></div></header>
     <section id="chatView" class="chat">
       <div id="messages" class="messages">
         <div class="welcome">
@@ -43,6 +43,19 @@
       <h2>Indexed sources</h2><div id="sourceList" class="source-list"></div><h2>Official-source directory</h2><p id="registryNotice"></p><div id="registryList" class="source-list"></div>
     </section>
   </main>
+</div>
+<div id="settingsDialog" class="settings-backdrop hidden" role="presentation">
+  <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" tabindex="-1">
+    <div class="settings-heading"><div><div class="section-kicker">PERSONALIZE YOUR WORKSPACE</div><h2 id="settingsTitle">User settings</h2></div><button id="settingsClose" class="settings-close" type="button" aria-label="Close settings">×</button></div>
+    <p class="settings-intro">Choose how ARLAW AI looks and feels on this device. Your preferences are saved locally in this browser.</p>
+    <div class="setting-row"><label for="prefTheme"><b>Appearance</b><small>Choose light or dark mode</small></label><select id="prefTheme"><option value="light">Light</option><option value="dark">Dark</option></select></div>
+    <div class="setting-row"><label for="prefLanguage"><b>Interface language</b><small>Language for menus and controls</small></label><select id="prefLanguage"><option value="en">English</option><option value="hi">हिन्दी</option><option value="bn">বাংলা</option></select></div>
+    <div class="setting-row"><label for="prefFontSize"><b>Text size</b><small>Adjust the interface reading size</small></label><select id="prefFontSize"><option value="small">Small</option><option value="medium">Default</option><option value="large">Large</option><option value="xlarge">Extra large</option></select></div>
+    <div class="setting-row setting-check"><label for="prefContrast"><b>Higher contrast</b><small>Strengthen borders and text contrast</small></label><input id="prefContrast" type="checkbox"></div>
+    <div class="setting-row setting-check"><label for="prefMotion"><b>Reduce motion</b><small>Limit non-essential interface animation</small></label><input id="prefMotion" type="checkbox"></div>
+    <div class="settings-actions"><button id="settingsReset" class="settings-reset" type="button">Reset preferences</button><button id="settingsDone" class="primary" type="button">Done</button></div>
+    <p class="settings-note">Language preference changes the interface labels. Legal answers may still use the language you request in your message.</p>
+  </section>
 </div>
 <script src="/static/app.js"></script>
 </body></html>
