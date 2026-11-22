@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import os
 import re
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from typing import Callable
 import requests
 
@@ -79,40 +78,13 @@ def _groq(payload):
     return str(response.json()["choices"][0]["message"].get("content") or "").strip(), model
 
 
-def _ollama(payload):
-    model = os.getenv("OLLAMA_MODEL", "qwen3:1.7b").strip()
-    base = os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434").rstrip("/")
-    response = requests.post(base + "/api/chat", json={"model": model, "messages": payload, "stream": False,
-        "options": {"temperature": 0.15}}, timeout=int(os.getenv("ARLAW_LOCAL_TIMEOUT", "240")))
-    response.raise_for_status()
-    return str(response.json().get("message", {}).get("content") or "").strip(), model
 
-
-def _openai_compatible(payload):
-    base = os.getenv("OPENAI_COMPATIBLE_BASE_URL", "").strip().rstrip("/")
-    model = os.getenv("OPENAI_COMPATIBLE_MODEL", "").strip()
-    if not base or not model: raise RuntimeError("OpenAI-compatible base URL/model is not configured")
-    headers = {"Content-Type": "application/json"}
-    key = os.getenv("OPENAI_COMPATIBLE_API_KEY", "").strip()
-    if key: headers["Authorization"] = f"Bearer {key}"
-    response = requests.post(base + "/chat/completions", headers=headers,
-        json={"model": model, "messages": payload, "temperature": 0.2, "max_tokens": 2200},
-        timeout=int(os.getenv("ARLAW_HOSTED_TIMEOUT", "90")))
-    response.raise_for_status()
-    return str(response.json()["choices"][0]["message"].get("content") or "").strip(), model
-
-
-PROVIDERS: dict[str, Callable] = {"groq": _groq, "ollama": _ollama, "openai_compatible": _openai_compatible}
+PROVIDERS: dict[str, Callable] = {"groq": _groq}
 
 
 def provider_order(task=None):
-    default = os.getenv("ARLAW_PROVIDER_ORDER", "groq,ollama,openai_compatible")
-    routed = os.getenv("ARLAW_ROUTE_" + str(task or "").upper(), "").strip() if task else ""
-    raw = routed or default
-    selected = list(dict.fromkeys(name.strip().lower() for name in raw.split(",") if name.strip().lower() in PROVIDERS))
-    if task and not selected:
-        selected = list(dict.fromkeys(name.strip().lower() for name in default.split(",") if name.strip().lower() in PROVIDERS))
-    return selected
+    """Groq-only cloud routing. Legacy Ollama/Gemini settings are ignored."""
+    return ["groq"] if os.getenv("GROQ_API_KEY", "").strip() else []
 
 
 def _call_provider(name, payload):
@@ -150,26 +122,9 @@ def generate(messages, context="", source_labels=None):
 
     answer = primary["answer"]
     reviewers = []
-    if os.getenv("ARLAW_MULTI_MODEL_REVIEW", "false").lower() in {"1", "true", "yes", "on"}:
-        review_order = [p for p in provider_order() if p != primary["provider"]]
-        review_prompt = payload + [{"role": "user", "content": "Independently review this draft. Identify factual/legal errors, unsupported claims, missing jurisdiction/date issues and citation problems. Do not merely agree. If uncertain, say so.\n\nDRAFT:\n" + answer[:12000]}]
-        with ThreadPoolExecutor(max_workers=min(3, len(review_order) or 1)) as pool:
-            futures = {pool.submit(_call_provider, p, review_prompt): p for p in review_order[:2]}
-            for future in as_completed(futures):
-                try:
-                    result = future.result()
-                    reviewers.append({"provider": result["provider"], "model": result["model"], "review": result["answer"]})
-                except Exception as exc:
-                    reviewers.append({"provider": futures[future], "error": type(exc).__name__})
-        usable = [r for r in reviewers if r.get("review")]
-        if usable:
-            answer += "\n\n## Independent model review\nThe following is a separate model review, not a verified legal conclusion. Check each point against primary sources.\n"
-            for idx, review in enumerate(usable, 1):
-                answer += f"\n### Reviewer {idx} ({review['provider']} / {review['model']})\n{review['review']}\n"
-
     citation_check = validate_citations(answer, source_labels or [])
     meta = {"provider": primary["provider"], "model": primary["model"],
             "fallback_used": bool(failures), "task": task,
-            "review_enabled": os.getenv("ARLAW_MULTI_MODEL_REVIEW", "false").lower() in {"1", "true", "yes", "on"},
+            "review_enabled": False,
             "reviewers": reviewers, "citation_validation": citation_check}
     return answer, None, meta

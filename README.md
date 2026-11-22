@@ -2,7 +2,7 @@
 
 **An AI-assisted global legal, civil, economic and justice research platform.**
 
-Release: **1.2.1** · See [RELEASE_NOTES.md](RELEASE_NOTES.md) for package scope and production limitations.
+Release: **2.0.0 — Final Stable Package** · See [RELEASE_QA.md](RELEASE_QA.md) for verified checks and limitations.
 
 - Live application: https://arlaw-ai-global.onrender.com
 - GitHub repository: https://github.com/architdutta10-max/ARLAW_AI_Global
@@ -13,7 +13,7 @@ ARLAW AI is an informational research assistant, not a law firm or substitute fo
 
 The existing FastAPI application and teal frontend are retained. The backend now includes:
 
-- Groq, Ollama and OpenAI-compatible provider adapters with automatic fallback.
+- Groq cloud provider adapter. Gemini and Ollama are removed; no local model download is required.
 - Task-specific routing for legal research, civil procedure, lawyer/advocate workflow assistance, accounting support, CA/tax research, neutral judicial research, finance, document review, translation and general tasks.
 - Professional-workspace boundaries that prohibit claims of legal representation, account certification, statutory audit, tax attestation or judicial decision-making.
 - Dedicated capability endpoint at `/api/capabilities` and in-app starter prompts for the professional workflows.
@@ -36,24 +36,24 @@ copy .env.example .env
 uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-Configure provider environment variables in the current CMD session or deployment dashboard. Never commit API keys. For local Ollama, install Ollama separately, pull the model in `OLLAMA_MODEL`, and set `ARLAW_PROVIDER_ORDER=ollama`. Example model download command: `ollama pull qwen3:1.7b`.
+Put your Groq key in `.env` as `GROQ_API_KEY=...`. The application loads `.env` automatically. Never commit API keys. Start the application with `python run.py`; no `.bat` file or local model runtime is required.
 
 ## Configuration
 
 | Variable | Purpose |
 |---|---|
-| `ARLAW_PROVIDER_ORDER` | Default provider priority |
-| `ARLAW_ROUTE_LEGAL_RESEARCH` | Provider priority for legal research |
-| `ARLAW_ROUTE_CIVIL_PROCEDURE` | Provider priority for civil procedure |
-| `ARLAW_ROUTE_FINANCE_TAX` | Provider priority for finance/tax |
-| `ARLAW_ROUTE_DOCUMENT_REVIEW` | Provider priority for document review |
-| `ARLAW_ROUTE_TRANSLATION` | Provider priority for translation |
-| `ARLAW_MULTI_MODEL_REVIEW` | Enable independent peer review from other configured providers |
-| `GROQ_API_KEY` | Optional Groq credential; keep server-side |
-| `OLLAMA_BASE_URL`, `OLLAMA_MODEL` | Local Ollama endpoint/model |
-| `OPENAI_COMPATIBLE_BASE_URL`, `OPENAI_COMPATIBLE_MODEL` | Optional compatible endpoint/model |
+| `GROQ_API_KEY` | Required Groq credential; keep server-side |
+| `GROQ_MODEL` | Groq model name |
+| `GROQ_BASE_URL` | Groq API base URL |
 
-Free-tier limits and availability vary. Render cannot reach Ollama running on a developer's own computer via `localhost`; use a reachable hosted endpoint or keep Ollama local.
+
+Free-tier limits and availability vary. Only the Groq cloud provider is enabled in this release.
+
+## Upgrade-free feature scope
+
+Version 2.0.0 is intended as the consolidated, feature-complete handoff for the currently implemented scope. It is not a promise that software will never need maintenance: security fixes, dependency compatibility, model-provider changes and legal-source updates may still be necessary. See [RELEASE_QA.md](RELEASE_QA.md) for the exact release boundaries.
+
+To integrate into an existing clean Git checkout on Windows, extract this ZIP and run `scripts\install_release_2_0.bat`. The script creates a backup, preserves `.git`, `.env`, local data and virtual environments, runs the automated tests, and does not commit or push.
 
 ## Tests and evaluation
 
@@ -76,7 +76,7 @@ Before exposing this application to real users, add authentication and role-base
 
 ## Deployment
 
-The existing `render.yaml`, GitHub Actions workflow and FastAPI start command are retained. Configure secrets through Render Environment settings. Set a provider accessible from Render (for example Groq with an environment key). Local Ollama is intended for local development unless deployed on an accessible host.
+The existing `render.yaml`, GitHub Actions workflow and FastAPI start command are retained. Configure `GROQ_API_KEY` through Render Environment settings for hosted deployment. Locally, configure `.env` and run `python run.py`.
 
 ## Responsible data and legal use
 

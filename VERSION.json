@@ -1,0 +1,10 @@
+{
+  "name": "ARLAW AI Global",
+  "version": "2.0.1",
+  "release": "Groq-only direct-launch update",
+  "release_scope": "Removes Gemini and Ollama runtime providers; loads .env automatically and supports direct Python startup",
+  "requires_maintenance": true,
+  "production_certified": false,
+  "legal_accuracy_certified": false,
+  "security_audited": false
+}

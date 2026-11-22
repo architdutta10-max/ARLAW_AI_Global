@@ -1,30 +1,34 @@
-# ARLAW AI Global — Release 1.2.0
+# Release 2.0.1
 
-## Included
-- Hybrid model gateway with Groq, local Ollama and OpenAI-compatible adapters.
-- Task routing for legal research, civil procedure, advocate workflows, accounting, CA/tax, judicial research, document review, translation and general questions.
-- Optional independent model review, clearly separated from verified conclusions.
-- SQLite/FTS5 source library with jurisdiction, authority, language and as-of metadata.
-- Document ingestion for text, Markdown and text-based PDF files.
-- English, Hindi and Bengali interface options, dark/light themes and accessibility preferences.
-- API input bounds for conversation count and message size; the chat endpoint accepts only user/assistant roles.
-- Automated unit tests and a smoke-evaluation runner.
+- Removed Gemini and Ollama provider adapters and routing.
+- Groq is the only active cloud AI provider.
+- Added automatic `.env` loading.
+- Added `python run.py` direct startup; no Windows batch file is needed to launch the application.
+- Updated health reporting, configuration examples, documentation and tests.
+- Existing UI, retrieval, specialist prompts and project structure are retained.
 
-## Verification performed for this package
-- Python compile check: passed.
-- Automated tests: see the test result supplied with this release package.
-- ZIP integrity: verified after packaging.
+# ARLAW AI Global 2.0.0 — Final Stable Package
 
-## Important limitations
-This is a software release, not a certification of legal, tax, accounting or judicial accuracy. Citation validation confirms that a cited source label exists; it does not prove that the source supports the claim. The included evaluation runner is a smoke test, not a professional benchmark. Production deployment still requires authentication, authorization, rate limiting, encrypted transport/storage, backups, monitoring, privacy review and jurisdiction-specific expert evaluation.
+## Release purpose
 
-## Upgrade
-Back up your existing repository and `.env` first. Extract this archive into a separate folder, compare your local changes, then merge the files into your repository. Do not overwrite your `.env`, database or uploaded knowledge files.
+A consolidated, feature-complete package for the current ARLAW AI Global implementation. The release preserves the existing FastAPI backend and teal frontend rather than replacing the application.
 
+## Included project capabilities
 
-## Release 1.2.1
+- FastAPI application and existing teal web interface.
+- Groq-only cloud provider adapters with configured fallback.
+- Task-specific provider routing and optional independent multi-model review.
+- Retrieval from the existing SQLite/FTS5 knowledge library.
+- English, Hindi, Bengali and mixed-language prompting.
+- Settings for appearance, interface language, text size, contrast and reduced motion.
+- Support page, creator attribution and social links.
+- Training/evaluation utilities, automated tests, deployment files and documentation.
+- Guarded Windows integration script with backup and local-data preservation.
 
-- Added a dedicated in-app Support page with a direct Instagram contact link.
-- Added creator attribution for Archit Dutta in the application interface.
-- Added LinkedIn and Instagram profile links to the README developer section.
-- Preserved the existing AI backend, teal interface, settings and light/dark themes.
+## Verification boundary
+
+The release package includes automated backend and frontend-contract tests. See `RELEASE_QA.md` for commands and limitations. Packaging is not evidence of browser testing, legal correctness certification, production security certification, or a completed GitHub deployment.
+
+## Maintenance policy
+
+No planned feature upgrade is required to use this release within its current scope. Necessary security patches, dependency updates, model-provider compatibility fixes and legal-source maintenance remain important.

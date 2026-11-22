@@ -31,4 +31,4 @@ provider limits, availability, and data-use terms. Do not send privileged, confi
 or sensitive client information to a free-tier provider unless its terms and your
 professional obligations permit it.
 
-The application keeps local Ollama as a development fallback when `GROQ_API_KEY` is absent.
+This release is Groq-only. If `GROQ_API_KEY` is absent, AI responses are unavailable; the app does not silently switch to a local model.

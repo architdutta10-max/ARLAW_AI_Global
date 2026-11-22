@@ -5,7 +5,7 @@ from pydantic import BaseModel, Field
 from pathlib import Path
 from contextlib import asynccontextmanager
 import hashlib, json
-from .config import STATIC_DIR, UPLOAD_DIR, TOP_K, OLLAMA_BASE_URL, OLLAMA_MODEL
+from .config import STATIC_DIR, UPLOAD_DIR, TOP_K
 from .knowledge import init_db, add_source, search, list_sources
 from .llm import generate, provider_order
 
@@ -39,14 +39,8 @@ def capabilities():
 
 @app.get("/api/health/model")
 def model_health():
-    import requests, os
-    try:
-        r=requests.get(f"{OLLAMA_BASE_URL}/api/tags",timeout=3); r.raise_for_status()
-        names=[m.get("name") for m in r.json().get("models",[])]
-        ollama={"status":"reachable","configured_model":OLLAMA_MODEL,"model_installed":OLLAMA_MODEL in names,"available_models":names}
-    except requests.RequestException:
-        ollama={"status":"not_reachable","configured_model":OLLAMA_MODEL,"model_installed":False,"available_models":[]}
-    return {"ollama":ollama,"providers":provider_order(),"multi_model_review":os.getenv("ARLAW_MULTI_MODEL_REVIEW","false").lower() in {"1","true","yes","on"}}
+    import os
+    return {"providers": provider_order(), "primary_provider": "groq", "groq_configured": bool(os.getenv("GROQ_API_KEY", "").strip()), "local_models": False, "multi_model_review": False}
 
 @app.get("/api/jurisdictions")
 def jurisdictions():

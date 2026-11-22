@@ -2,24 +2,24 @@ from app import llm
 
 
 def test_provider_order_filters_unknown(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "ollama,unknown,groq")
-    assert llm.provider_order() == ["ollama", "groq"]
+    assert llm.provider_order() == ["groq"]
 
 
-def test_generate_falls_back_after_provider_error(monkeypatch):
-    monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq,ollama")
+def test_groq_only_provider_failure_is_reported(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setattr(llm, "PROVIDERS", {
         "groq": lambda payload: (_ for _ in ()).throw(RuntimeError("offline")),
-        "ollama": lambda payload: ("answer", "qwen3:1.7b"),
     })
     answer, error, meta = llm.generate([{"role": "user", "content": "Explain contract law"}])
-    assert answer == "answer"
-    assert error is None
-    assert meta["provider"] == "ollama"
-    assert meta["fallback_used"] is True
+    assert answer is None
+    assert "All configured AI providers failed" in error
+    assert meta["provider"] is None
 
 
 def test_generate_reports_all_provider_failures(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq")
     monkeypatch.setattr(llm, "PROVIDERS", {"groq": lambda payload: (_ for _ in ()).throw(RuntimeError("offline"))})
     answer, error, meta = llm.generate([{"role": "user", "content": "test"}])
@@ -36,10 +36,12 @@ def test_task_classification():
 
 
 def test_task_specific_provider_route(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq,ollama")
     monkeypatch.setenv("ARLAW_ROUTE_FINANCE_TAX", "ollama,groq")
-    assert llm.provider_order("finance_tax") == ["ollama", "groq"]
-    assert llm.provider_order("general") == ["groq", "ollama"]
+    assert llm.provider_order("finance_tax") == ["groq"]
+    assert llm.provider_order("general") == ["groq"]
 
 
 def test_citation_validation_flags_unknown_labels():
@@ -50,9 +52,10 @@ def test_citation_validation_flags_unknown_labels():
 
 
 def test_generate_includes_task_and_citation_metadata(monkeypatch):
-    monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "ollama")
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq")
     monkeypatch.setenv("ARLAW_MULTI_MODEL_REVIEW", "false")
-    monkeypatch.setattr(llm, "PROVIDERS", {"ollama": lambda payload: ("Use [S1] as authority.", "test-model")})
+    monkeypatch.setattr(llm, "PROVIDERS", {"groq": lambda payload: ("Use [S1] as authority.", "test-model")})
     answer, error, meta = llm.generate([{"role": "user", "content": "Explain contract law"}], "[S1] Act excerpt", ["S1"])
     assert error is None
     assert "[S1]" in answer
@@ -61,22 +64,22 @@ def test_generate_includes_task_and_citation_metadata(monkeypatch):
 
 
 def test_peer_review_uses_other_configured_provider(monkeypatch):
-    monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq,ollama")
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("ARLAW_MULTI_MODEL_REVIEW", "true")
-    monkeypatch.setattr(llm, "PROVIDERS", {
-        "groq": lambda payload: ("Primary answer.", "primary-model"),
-        "ollama": lambda payload: ("Review: verify the effective date.", "review-model"),
-    })
+    monkeypatch.setattr(llm, "PROVIDERS", {"groq": lambda payload: ("Primary answer.", "primary-model")})
     answer, error, meta = llm.generate([{"role": "user", "content": "Explain legal precedent"}])
     assert error is None
-    assert "Independent model review" in answer
-    assert meta["reviewers"][0]["provider"] == "ollama"
+    assert "Independent model review" not in answer
+    assert meta["review_enabled"] is False
 
 
 def test_invalid_task_route_falls_back_to_default(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq,ollama")
     monkeypatch.setenv("ARLAW_ROUTE_LEGAL_RESEARCH", "not-a-provider")
-    assert llm.provider_order("legal_research") == ["groq", "ollama"]
+    assert llm.provider_order("legal_research") == ["groq"]
 
 
 def test_professional_task_classification():

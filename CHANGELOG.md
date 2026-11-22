@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.0.0 — Final Stable Package
+
+- Consolidated current application capabilities and release documentation.
+- Added guarded Windows integration script with backup and protected local files.
+- Documented automated verification, release boundaries and maintenance policy.
+- Preserved existing backend, frontend, provider configuration and project workflows.
+
+
 ## Integrated hybrid milestone
 
 - Added task classification and task-specific provider routing.
