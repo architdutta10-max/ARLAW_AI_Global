@@ -55,8 +55,12 @@ def chat(req: ChatRequest):
         context.append(f"[{label}] {h['title']} | Jurisdiction: {h['jurisdiction']} | Authority: {h['authority']} | Language: {h['language']} | As of: {h['as_of'] or 'not supplied'} | URL: {h['source_url'] or 'not supplied'}\n{h['content']}")
         citations.append({"label":label,"title":h["title"],"jurisdiction":h["jurisdiction"],"authority":h["authority"],"language":h["language"],"as_of":h["as_of"],"url":h["source_url"]})
     answer,error=generate(req.messages,"\n\n".join(context))
-    if error: answer="ARLAW cannot generate an AI answer because its local model is disconnected.\n\n"+error
-    return {"answer":answer,"citations":citations,"model_connected":error is None,"jurisdiction":req.jurisdiction}
+    if error:
+    answer = (
+        "ARLAW could not generate an AI response. "
+        "Please try again later.\n\n"
+        + error
+    )    return {"answer":answer,"citations":citations,"model_connected":error is None,"jurisdiction":req.jurisdiction}
 
 @app.post("/api/documents")
 async def upload_document(file: UploadFile=File(...), title: str=Form(""), jurisdiction: str=Form("GLOBAL"),
