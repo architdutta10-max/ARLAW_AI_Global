@@ -14,8 +14,9 @@
     <p class="label">YOUR WORKSPACE</p>
     <button id="chatTab" class="nav active"><span>◉</span> Research assistant</button>
     <button id="sourcesTab" class="nav"><span>▤</span> Knowledge library</button>
+    <button id="supportTab" class="nav"><span>♡</span> Support</button>
     <div class="sidebar-note"><span class="online-dot"></span> India-focused · Global-ready</div>
-    <div class="foot">Clear legal research.<br>Grounded in sources. Built for clarity.</div>
+    <div class="foot">Clear legal research.<br>Grounded in sources. Built for clarity.<br><br>Created by <b>Archit Dutta</b>.</div>
   </aside>
   <main>
     <header><div class="mobile-brand">ARLAW <span>AI</span></div><div class="top-title">Legal research assistant</div><div class="top-right"><span id="connection" class="status">Checking model…</span><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span></button><button id="settingsOpen" class="settings-open" type="button" aria-haspopup="dialog" aria-controls="settingsDialog" title="User settings">⚙ <span>Settings</span></button><label>Jurisdiction <select id="jurisdiction"><option value="GLOBAL">Global / unspecified</option></select></label></div></header>
@@ -45,6 +46,19 @@
         <div class="two"><label>As-of / effective date<input name="as_of" placeholder="YYYY-MM-DD"></label><label>Language code<input name="language" value="en" placeholder="en, hi, bn, fr…"></label></div>
         <label>Official source URL<input name="source_url" placeholder="https://…"></label><label>File<input name="file" type="file" accept=".txt,.md,.pdf" required></label><button class="primary">Index document locally</button><span id="uploadStatus" class="upload-status"></span></form>
       <h2>Indexed sources</h2><div id="sourceList" class="source-list"></div><h2>Official-source directory</h2><p id="registryNotice"></p><div id="registryList" class="source-list"></div>
+    </section>
+    <section id="supportView" class="sources hidden support-view">
+      <div class="section-kicker">ARLAW AI · SUPPORT</div>
+      <h1>Support ARLAW AI</h1>
+      <p>Need help, want to share feedback, or have a suggestion for improving ARLAW AI? Connect through Instagram.</p>
+      <div class="support-card">
+        <div class="support-mark" aria-hidden="true">♡</div>
+        <h2>Contact & support</h2>
+        <p>For questions, feedback and project-related support, visit the official Instagram profile below.</p>
+        <a class="support-link" href="https://www.instagram.com/architdutta17?xtok=MWJoem0yZW9lcWVmOQ==" target="_blank" rel="noopener noreferrer">Contact on Instagram ↗</a>
+        <p class="support-handle">@architdutta17</p>
+      </div>
+      <p class="support-credit">ARLAW AI Global · Created by Archit Dutta</p>
     </section>
   </main>
 </div>

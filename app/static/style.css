@@ -62,3 +62,18 @@ html.high-contrast:not([data-theme="dark"]) .body,html.high-contrast:not([data-t
 html[data-font-size="small"] body{font-size:13px}html[data-font-size="medium"] body{font-size:14px}html[data-font-size="large"] body{font-size:16px}html[data-font-size="xlarge"] body{font-size:18px}html[data-font-size="large"] .body,html[data-font-size="xlarge"] .body{line-height:1.8}html[data-font-size="large"] .body p,html[data-font-size="xlarge"] .body p{margin-bottom:14px}
 html.reduce-motion *,html.reduce-motion *::before,html.reduce-motion *::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
 @media(max-width:720px){.settings-open{padding:7px 8px}.settings-open span{display:none}.settings-panel{padding:19px}.setting-row{align-items:flex-start}.setting-row select{min-width:112px;max-width:140px}}
+
+/* Support page */
+.support-view{max-width:850px}
+.support-card{margin-top:22px;padding:28px;background:#ffffffd9;border:1px solid #d1e4e0;border-radius:16px;box-shadow:0 8px 25px #1a6b620d;max-width:620px}
+.support-card h2{margin:10px 0 6px;color:#174b47}
+.support-card p{margin:7px 0 18px;color:#64817d}
+.support-mark{width:46px;height:46px;display:grid;place-items:center;border-radius:13px;background:#e3f4f0;color:#087f79;font-size:25px}
+.support-link{display:inline-flex;align-items:center;justify-content:center;padding:11px 17px;border-radius:9px;background:var(--teal);color:#fff;text-decoration:none;font-weight:650}
+.support-link:hover{background:var(--teal-dark)}
+.support-card .support-handle{font-size:12px;margin:10px 0 0;color:#64817d}
+.support-credit{font-size:11px;margin-top:20px;color:#64817d}
+html[data-theme="dark"] .support-card{background:#192b2a;border-color:#354e4b;box-shadow:0 8px 25px #0003}
+html[data-theme="dark"] .support-card h2{color:#e1eeeb}
+html[data-theme="dark"] .support-card p,html[data-theme="dark"] .support-credit{color:#a4bbb7}
+html[data-theme="dark"] .support-mark{background:#243d3a;color:#9fe0d3}

@@ -20,3 +20,11 @@ This is a software release, not a certification of legal, tax, accounting or jud
 
 ## Upgrade
 Back up your existing repository and `.env` first. Extract this archive into a separate folder, compare your local changes, then merge the files into your repository. Do not overwrite your `.env`, database or uploaded knowledge files.
+
+
+## Release 1.2.1
+
+- Added a dedicated in-app Support page with a direct Instagram contact link.
+- Added creator attribution for Archit Dutta in the application interface.
+- Added LinkedIn and Instagram profile links to the README developer section.
+- Preserved the existing AI backend, teal interface, settings and light/dark themes.

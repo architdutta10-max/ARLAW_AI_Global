@@ -2,7 +2,7 @@
 
 **An AI-assisted global legal, civil, economic and justice research platform.**
 
-Release: **1.2.0** · See [RELEASE_NOTES.md](RELEASE_NOTES.md) for package scope and production limitations.
+Release: **1.2.1** · See [RELEASE_NOTES.md](RELEASE_NOTES.md) for package scope and production limitations.
 
 - Live application: https://arlaw-ai-global.onrender.com
 - GitHub repository: https://github.com/architdutta10-max/ARLAW_AI_Global
@@ -86,7 +86,9 @@ Index only lawful, public, licensed and non-confidential material. Record jurisd
 
 Archit Dutta · Siliguri, West Bengal, India
 
-GitHub: https://github.com/architdutta10-max
+GitHub: https://github.com/architdutta10-max  
+LinkedIn: https://www.linkedin.com/in/archit-dutta-4522693aa/  
+Instagram: https://www.instagram.com/architdutta17?xtok=MWJoem0yZW9lcWVmOQ==
 
 ## License
 
