@@ -1,0 +1,12 @@
+{
+  "instruction": "Question or task",
+  "input": "Optional facts or source excerpt",
+  "output": "Expert-reviewed answer",
+  "jurisdiction": "IN / UK / US / EU / GLOBAL",
+  "language": "en / hi / bn",
+  "source_ids": [
+    "official source identifier"
+  ],
+  "as_of": "YYYY-MM-DD",
+  "review_status": "approved"
+}

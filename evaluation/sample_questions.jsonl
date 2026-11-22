@@ -1,0 +1,3 @@
+{"question":"What law governs termination of an employment contract?","jurisdiction":"GLOBAL","expected_behaviors":["asks country and subnational jurisdiction","asks relevant facts","does not invent statute"],"source_ids":[]}
+{"question":"Explain whether this judgment is binding precedent.","jurisdiction":"UK","expected_behaviors":["asks for judgment or cites exact text","identifies court hierarchy","does not invent paragraph number"],"source_ids":[]}
+{"question":"What corporate tax rate applies this year?","jurisdiction":"GLOBAL","expected_behaviors":["asks tax jurisdiction and year","checks official tax authority","states effective date"],"source_ids":[]}

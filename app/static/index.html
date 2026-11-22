@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b827d">
+  <title>ARLAW AI — Legal Research Assistant</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><b class="logo">A</b><div><b>ARLAW AI</b><small>LEGAL RESEARCH</small></div></div>
+    <button id="newChat" class="new"><span>＋</span> New chat</button>
+    <p class="label">YOUR WORKSPACE</p>
+    <button id="chatTab" class="nav active"><span>◉</span> Research assistant</button>
+    <button id="sourcesTab" class="nav"><span>▤</span> Knowledge library</button>
+    <div class="sidebar-note"><span class="online-dot"></span> India-focused · Global-ready</div>
+    <div class="foot">Clear legal research.<br>Grounded in sources. Built for clarity.</div>
+  </aside>
+  <main>
+    <header><div class="mobile-brand">ARLAW <span>AI</span></div><div class="top-title">Legal research assistant</div><div class="top-right"><span id="connection" class="status">Checking model…</span><label>Jurisdiction <select id="jurisdiction"><option value="GLOBAL">Global / unspecified</option></select></label></div></header>
+    <section id="chatView" class="chat">
+      <div id="messages" class="messages">
+        <div class="welcome">
+          <div class="welcome-mark">A</div><div class="eyebrow">ARLAW AI · LEGAL INTELLIGENCE</div>
+          <h1>What would you like to understand?</h1>
+          <p>Ask clear questions about law, civil disputes, justice, economics, taxation and financial matters.</p>
+          <div class="suggest">
+            <button data-prompt="Explain the steps in a civil case in India, from filing to judgment. Use clear headings and identify the relevant laws."><b>⚖ Civil law</b><small>Understand a civil case step by step</small></button>
+            <button data-prompt="Explain how to verify whether an Indian legal rule is current and binding. Distinguish statutes, judgments and commentary."><b>⌕ Verify legal authority</b><small>Check laws, judgments and sources</small></button>
+            <button data-prompt="Create a practical legal and financial due-diligence checklist for an Indian business."><b>▤ Business & finance</b><small>Review legal and financial risks</small></button>
+            <button data-prompt="Explain the difference between binding precedent and persuasive authority in India, with a simple example."><b>⇄ Legal concepts</b><small>Understand complex ideas simply</small></button>
+          </div>
+        </div>
+      </div>
+      <div class="composer-wrap"><form id="chatForm"><textarea id="prompt" rows="1" placeholder="Message ARLAW AI… Include the country, state or court when relevant." required></textarea><button aria-label="Send message" title="Send message">↑</button></form><small>ARLAW AI can make mistakes. Verify important points with current official sources and a qualified legal professional.</small></div>
+    </section>
+    <section id="sourcesView" class="sources hidden"><div class="section-kicker">RESEARCH WORKSPACE</div><h1>Knowledge library</h1><p>Index lawful, public, licensed and non-confidential materials. Record jurisdiction, authority and effective date so answers can be checked against their sources.</p>
+      <form id="uploadForm"><label>Document title<input name="title" placeholder="Act, judgment, regulation or report"></label>
+        <div class="two"><label>Jurisdiction<select name="jurisdiction" id="uploadJurisdiction"><option value="GLOBAL">Global</option></select></label><label>Authority<select name="authority"><option value="official">Official primary source</option><option value="court">Court / tribunal</option><option value="regulator">Regulator</option><option value="secondary">Secondary commentary</option><option value="unspecified">Unspecified</option></select></label></div>
+        <div class="two"><label>As-of / effective date<input name="as_of" placeholder="YYYY-MM-DD"></label><label>Language code<input name="language" value="en" placeholder="en, hi, bn, fr…"></label></div>
+        <label>Official source URL<input name="source_url" placeholder="https://…"></label><label>File<input name="file" type="file" accept=".txt,.md,.pdf" required></label><button class="primary">Index document locally</button><span id="uploadStatus" class="upload-status"></span></form>
+      <h2>Indexed sources</h2><div id="sourceList" class="source-list"></div><h2>Official-source directory</h2><p id="registryNotice"></p><div id="registryList" class="source-list"></div>
+    </section>
+  </main>
+</div>
+<script src="/static/app.js"></script>
+</body></html>
