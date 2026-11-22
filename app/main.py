@@ -14,14 +14,14 @@ async def lifespan(app):
     init_db()
     yield
 
-app = FastAPI(title="ARLAW AI Global", version="1.2.0", description="Hybrid AI research and professional-workflow support platform", lifespan=lifespan)
+app = FastAPI(title="ARLAW AI Global", version="2.1.0", description="Hybrid AI research and professional-workflow support platform", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/")
 def home(): return FileResponse(STATIC_DIR / "index.html")
 
 @app.get("/api/health")
-def health(): return {"status":"ok","product":"ARLAW AI Global","version":"1.2.0","mode":"hybrid","disclaimer":"Research and workflow assistance only; not professional representation, certification or judicial decision-making."}
+def health(): return {"status":"ok","product":"ARLAW AI Global","version":"2.1.0","mode":"hybrid","disclaimer":"Research and workflow assistance only; not professional representation, certification or judicial decision-making."}
 
 @app.get("/api/capabilities")
 def capabilities():
@@ -75,7 +75,7 @@ def chat(req: ChatRequest):
         citations.append({"label":label,"title":h["title"],"jurisdiction":h["jurisdiction"],"authority":h["authority"],"language":h["language"],"as_of":h["as_of"],"url":h["source_url"]})
     answer,error,model_info=generate(messages,"\n\n".join(context),[c["label"] for c in citations])
     if error: answer="ARLAW could not connect to any configured AI provider.\n\n"+error
-    return {"answer":answer,"citations":citations,"model_connected":error is None,"model":model_info,"jurisdiction":req.jurisdiction,"task":model_info.get("task"),"citation_validation":model_info.get("citation_validation")}
+    return {"answer":answer,"citations":citations,"model_connected":error is None,"model":model_info,"jurisdiction":req.jurisdiction,"task":model_info.get("task"),"citation_validation":model_info.get("citation_validation"),"quality":model_info.get("quality"),"quality_warning":model_info.get("quality_warning"),"incomplete":model_info.get("incomplete", False)}
 
 @app.post("/api/documents")
 async def upload_document(file: UploadFile=File(...), title: str=Form(""), jurisdiction: str=Form("GLOBAL"),

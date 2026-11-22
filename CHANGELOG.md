@@ -1,5 +1,16 @@
 # Changelog
 
+## 2.1.0 — Reliability and response integrity
+- Detects repeated paragraphs and section descriptions in generated answers.
+- Makes one bounded rewrite attempt when repetition is detected; unresolved repetition is surfaced as a visible reliability warning.
+- Continues a response only when the provider explicitly reports token-limit truncation, with a maximum of two continuation calls.
+- Exposes quality, continuation and incomplete-response metadata through the chat API.
+- Adds regression tests for repeated legal sections, rewrite recovery and truncated-response continuation.
+- Preserves the existing UI, knowledge base, Groq-only provider configuration and direct Python launch workflow.
+- This release does not certify legal accuracy; legal provisions still require verification against current primary sources.
+
+# Changelog
+
 ## 2.0.0 — Final Stable Package
 
 - Consolidated current application capabilities and release documentation.

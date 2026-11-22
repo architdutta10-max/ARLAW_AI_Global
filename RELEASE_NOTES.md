@@ -1,42 +1,26 @@
-# ARLAW AI Global 2.0.2
+# ARLAW AI Global 2.1.0
 
-- Consolidated the Groq-only provider configuration and direct Python startup workflow.
-- Removed Windows batch launch/installer scripts; start with `python run.py`.
-- Updated Windows setup, repository integration and QA documentation to match the package.
-- Preserved the existing teal UI, legal workflows, settings, multilingual prompting, retrieval and evaluation utilities.
-- No claim of production security certification or legal-accuracy certification.
+## Reliability and response integrity
 
-# Release 2.0.1
+- Detects repeated paragraphs and repeated section descriptions in model output.
+- Makes one bounded rewrite attempt when repeated content is detected.
+- If repetition remains, returns a visible warning rather than silently presenting the output as clean.
+- Uses the provider finish reason to continue responses only when generation stopped at the output-token limit.
+- Caps continuation at two extra calls to avoid runaway generation.
+- Exposes quality, continuation and incomplete-response metadata through `/api/chat`.
+- Raises the default completion budget to 4096 tokens; configurable with `ARLAW_MAX_COMPLETION_TOKENS` (bounded to 512–8192).
+- Adds explicit prompt rules for handling multiple legal provisions independently and marking missing provisions unverified.
 
-- Removed Gemini and Ollama provider adapters and routing.
-- Groq is the only active cloud AI provider.
-- Added automatic `.env` loading.
-- Added `python run.py` direct startup; no Windows batch file is needed to launch the application.
-- Updated health reporting, configuration examples, documentation and tests.
-- Existing UI, retrieval, specialist prompts and project structure are retained.
+## Preserved
 
-# ARLAW AI Global 2.0.0 — Final Stable Package
+- Existing teal UI and settings.
+- Existing FastAPI backend and SQLite knowledge store.
+- Existing Groq-only provider configuration; no Gemini added.
+- Direct Python launch workflow; no batch-file requirement.
 
-## Release purpose
+## Verification status
 
-A consolidated, feature-complete package for the current ARLAW AI Global implementation. The release preserves the existing FastAPI backend and teal frontend rather than replacing the application.
-
-## Included project capabilities
-
-- FastAPI application and existing teal web interface.
-- Groq-only cloud provider adapters with configured fallback.
-- Task-specific provider routing and optional independent multi-model review.
-- Retrieval from the existing SQLite/FTS5 knowledge library.
-- English, Hindi, Bengali and mixed-language prompting.
-- Settings for appearance, interface language, text size, contrast and reduced motion.
-- Support page, creator attribution and social links.
-- Training/evaluation utilities, automated tests, deployment files and documentation.
-- Guarded Windows integration script with backup and local-data preservation.
-
-## Verification boundary
-
-The release package includes automated backend and frontend-contract tests. See `RELEASE_QA.md` for commands and limitations. Packaging is not evidence of browser testing, legal correctness certification, production security certification, or a completed GitHub deployment.
-
-## Maintenance policy
-
-No planned feature upgrade is required to use this release within its current scope. Necessary security patches, dependency updates, model-provider compatibility fixes and legal-source maintenance remain important.
+- Automated test suite: 23 passed.
+- Python bytecode compilation: passed.
+- Live Groq/network test: not run in this build environment.
+- Legal accuracy, production readiness and security are not certified. Always verify legal provisions against current official primary sources.

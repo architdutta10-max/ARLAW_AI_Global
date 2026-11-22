@@ -1,3 +1,23 @@
+# ARLAW AI Global 2.1.0 — Release and QA status
+
+## Automated checks performed for 2.1.0
+- `PYTHONPATH=. python -m pytest -q`: 23 passed.
+- `python -m compileall -q app run.py`: passed.
+- ZIP integrity: checked after packaging.
+- Live model/network test: not run; requires the user's configured Groq API key and network.
+
+## Reliability safeguards
+- Repeated paragraph/section detection.
+- One bounded rewrite attempt.
+- Visible warning if repetition remains.
+- Finish-reason-based continuation, maximum two continuation calls.
+- Missing legal provisions are instructed to be marked unverified, not guessed.
+
+## Boundaries
+This release is not certified for legal accuracy, production readiness or security. Citation-label validation checks label existence only; it does not prove that a source supports a claim or that the source is current. Human verification against official primary sources remains necessary.
+
+---
+
 # ARLAW AI Global 2.0.2 — Release and QA status
 
 ## Release intent

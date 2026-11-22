@@ -95,3 +95,53 @@ def test_chat_message_schema_limits_content():
     assert ChatMessage(role="user", content="hello").content == "hello"
     with pytest.raises(Exception):
         ChatMessage(role="user", content="")
+
+
+
+def test_repetition_report_detects_repeated_sections():
+    repeated = "Section 54 has a unique rule in the source document.\n\n" * 4
+    result = llm.repetition_report(repeated)
+    assert result["is_repetitive"] is True
+    assert result["repeated_blocks"] == 1
+
+
+def test_generate_attempts_repair_for_repeated_sections(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    calls = []
+    repeated = "Section 54 has a repeated generic description that is long enough to flag.\n\n" * 4
+    corrected = "Section 54: verified provision A.\n\nSection 55: verified provision B.\n\nSection 56: verified provision C."
+    def fake_provider(payload):
+        calls.append(payload)
+        return (repeated, "test-model") if len(calls) == 1 else (corrected, "test-model")
+    monkeypatch.setattr(llm, "PROVIDERS", {"groq": fake_provider})
+    answer, error, meta = llm.generate([{"role": "user", "content": "List sections 54 to 56"}])
+    assert error is None
+    assert answer == corrected
+    assert meta["repetition_repaired"] is True
+    assert len(calls) == 2
+
+
+def test_generate_continues_only_on_length_finish_reason(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    calls = []
+    def fake_provider(payload):
+        calls.append(payload)
+        if len(calls) == 1:
+            return ("Beginning of answer.", "test-model", "length")
+        return ("Completed ending.", "test-model", "stop")
+    monkeypatch.setattr(llm, "PROVIDERS", {"groq": fake_provider})
+    answer, error, meta = llm.generate([{"role": "user", "content": "Explain a legal topic"}])
+    assert error is None
+    assert "Beginning of answer." in answer and "Completed ending." in answer
+    assert meta["continuations"] == 1
+    assert meta["incomplete"] is False
+
+
+def test_repetition_warning_survives_failed_repair(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    repeated = "A repeated legal section description that should trigger the warning.\n\n" * 4
+    monkeypatch.setattr(llm, "PROVIDERS", {"groq": lambda payload: (repeated, "test-model")})
+    answer, error, meta = llm.generate([{"role": "user", "content": "List legal sections"}])
+    assert error is None
+    assert meta["quality"]["is_repetitive"] is True
+    assert "quality_warning" in meta

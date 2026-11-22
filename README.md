@@ -2,7 +2,7 @@
 
 **An AI-assisted global legal, civil, economic and justice research platform.**
 
-Release: **2.0.2 — Consolidated Direct-Launch Release** · See [RELEASE_QA.md](RELEASE_QA.md) for verified checks and limitations.
+Release: **2.1.0 — Reliability and Response-Integrity Upgrade** · See [RELEASE_QA.md](RELEASE_QA.md) for verified checks and limitations.
 
 - Live application: https://arlaw-ai-global.onrender.com
 - GitHub repository: https://github.com/architdutta10-max/ARLAW_AI_Global
@@ -52,7 +52,7 @@ Free-tier limits and availability vary. Only the Groq cloud provider is enabled 
 
 ## Upgrade-free feature scope
 
-Version 2.0.2 is intended as the consolidated, feature-complete handoff for the currently implemented scope. It is not a promise that software will never need maintenance: security fixes, dependency compatibility, model-provider changes and legal-source updates may still be necessary. See [RELEASE_QA.md](RELEASE_QA.md) for the exact release boundaries.
+Version 2.1.0 adds bounded continuation, duplicate-section detection and response-quality warnings to the consolidated direct-launch release. It is not a promise that software will never need maintenance: security fixes, dependency compatibility, model-provider changes and legal-source updates may still be necessary. See [RELEASE_QA.md](RELEASE_QA.md) for the exact release boundaries and [RELEASE_NOTES.md](RELEASE_NOTES.md) for the 2.1.0 changes.
 
 To update an existing Git checkout, first make a backup of your project and confirm that your working tree is clean. Extract this release to a separate folder, then manually copy the application files into your checkout while preserving `.git`, `.env`, `.venv` and your local `data` directory. Review `git status`, run the tests, and commit only after reviewing the diff. This release does not automatically modify or push your Git repository.
 
