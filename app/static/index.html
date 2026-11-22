@@ -11,6 +11,8 @@
   <aside class="sidebar">
     <div class="brand"><b class="logo">A</b><div><b>ARLAW AI</b><small>LEGAL RESEARCH</small></div></div>
     <button id="newChat" class="new"><span>＋</span> New chat</button>
+    <button id="historyToggle" class="nav history-toggle" type="button">◷ Chat history</button>
+    <div id="historyList" class="history-list" aria-live="polite"><small>Loading…</small></div>
     <p class="label">YOUR WORKSPACE</p>
     <button id="chatTab" class="nav active"><span>◉</span> Research assistant</button>
     <button id="sourcesTab" class="nav"><span>▤</span> Knowledge library</button>
@@ -75,5 +77,5 @@
     <p class="settings-note">Language preference changes the interface labels. Legal answers may still use the language you request in your message.</p>
   </section>
 </div>
-<script src="/static/app.js"></script>
+<script src="/static/app.js"></script><script src="/static/history.js"></script>
 </body></html>

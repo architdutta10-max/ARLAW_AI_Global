@@ -77,3 +77,6 @@ html[data-theme="dark"] .support-card{background:#192b2a;border-color:#354e4b;bo
 html[data-theme="dark"] .support-card h2{color:#e1eeeb}
 html[data-theme="dark"] .support-card p,html[data-theme="dark"] .support-credit{color:#a4bbb7}
 html[data-theme="dark"] .support-mark{background:#243d3a;color:#9fe0d3}
+
+/* ARLAW chat history */
+.history-list{display:none;max-height:36vh;overflow:auto;margin:4px 0 12px 8px;padding-right:4px}.history-list.expanded{display:block}.history-row{display:flex;gap:4px;margin:3px 0}.history-open{flex:1;min-width:0;text-align:left;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:transparent;border:0;border-radius:8px;padding:9px;color:inherit;cursor:pointer}.history-delete{border:0;background:transparent;color:inherit;padding:5px 9px;cursor:pointer}
