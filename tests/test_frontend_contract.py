@@ -50,3 +50,17 @@ def test_recent_chat_and_request_feedback_controls_exist():
     assert 'function renderHistory()' in JS
     assert 'function saveConversation()' in JS
     assert 'loading-message' in JS
+
+
+def test_colour_palette_has_at_least_30_persistent_options():
+    assert 'id="prefAccent"' in HTML
+    palettes = re.findall(r"\['([a-z]+)',\s*'#[0-9a-fA-F]{6}',\s*'#[0-9a-fA-F]{6}'\]", JS)
+    assert len(palettes) >= 30
+    assert "preferences.accent" in JS
+    assert "localStorage.setItem('arlaw-preferences'" in JS
+
+
+def test_readme_discloses_verification_and_history_limitations():
+    assert "does not determine whether that source actually supports" in README
+    assert "not synchronized to the server or other devices" in README
+    assert "do not constitute a production security audit" in README

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.4.0 — Workspace redesign and personalization
+
+- Refined responsive workspace styling and navigation presentation.
+- Added 36 persistent accent-colour palettes alongside light/dark appearance.
+- Expanded README with AI architecture, provider routing, retrieval details and explicit verification limitations.
+- Exposed retrieval relevance as a search heuristic in source metadata; it is not claim-support verification.
+- Updated application version to 2.4.0.
+
+
 ## 2.3.0 — Retrieval integrity and workspace refinement
 - Added topic-aware source categories and a safe SQLite migration for earlier databases.
 - Separated bundled law digests from economic/shortage frameworks during task-aware retrieval.

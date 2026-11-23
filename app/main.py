@@ -15,14 +15,14 @@ async def lifespan(app):
     seed_builtin_knowledge()
     yield
 
-app = FastAPI(title="ARLAW AI Global", version="2.3.0", description="Hybrid AI research and professional-workflow support platform", lifespan=lifespan)
+app = FastAPI(title="ARLAW AI Global", version="2.4.0", description="Hybrid AI research and professional-workflow support platform", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
 @app.get("/")
 def home(): return FileResponse(STATIC_DIR / "index.html")
 
 @app.get("/api/health")
-def health(): return {"status":"ok","product":"ARLAW AI Global","version":"2.3.0","mode":"local-and-cloud-hybrid","disclaimer":"Research and workflow assistance only; not professional representation, certification or judicial decision-making."}
+def health(): return {"status":"ok","product":"ARLAW AI Global","version":"2.4.0","mode":"local-and-cloud-hybrid","disclaimer":"Research and workflow assistance only; not professional representation, certification or judicial decision-making."}
 
 @app.get("/api/capabilities")
 def capabilities():
@@ -79,7 +79,7 @@ def chat(req: ChatRequest):
     for i,h in enumerate(hits,1):
         label=f"S{i}"
         context.append(f"[{label}] {h['title']} | Jurisdiction: {h['jurisdiction']} | Authority: {h['authority']} | Language: {h['language']} | As of: {h['as_of'] or 'not supplied'} | URL: {h['source_url'] or 'not supplied'}\n{h['content']}")
-        citations.append({"label":label,"title":h["title"],"jurisdiction":h["jurisdiction"],"authority":h["authority"],"language":h["language"],"category":h.get("category", "general"),"as_of":h["as_of"],"url":h["source_url"]})
+        citations.append({"label":label,"title":h["title"],"jurisdiction":h["jurisdiction"],"authority":h["authority"],"language":h["language"],"category":h.get("category", "general"),"retrieval_relevance":h.get("relevance"),"as_of":h["as_of"],"url":h["source_url"]})
     answer,error,model_info=generate(messages,"\n\n".join(context),[c["label"] for c in citations])
     if error: answer="ARLAW could not connect to any configured AI provider.\n\n"+error
     return {"answer":answer,"citations":citations,"model_connected":error is None,"model":model_info,"jurisdiction":req.jurisdiction,"task":model_info.get("task"),"citation_validation":model_info.get("citation_validation"),"quality":model_info.get("quality"),"quality_warning":model_info.get("quality_warning"),"incomplete":model_info.get("incomplete", False)}

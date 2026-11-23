@@ -1,116 +1,167 @@
 # ARLAW AI Global
 
-**An AI-assisted global legal, civil, economic and justice research platform.**
+**An AI-assisted global legal, civil, economic, financial and justice research workspace.**
 
-Release: **2.3.0 — Retrieval Integrity and Workspace Refinement** · See [RELEASE_QA.md](RELEASE_QA.md) for verified checks and limitations.
+- **Release:** 2.4.0 — Workspace redesign and colour personalization
+- **Live application:** https://arlaw-ai-global.onrender.com
+- **Repository:** https://github.com/architdutta10-max/ARLAW_AI_Global
 
-- Live application: https://arlaw-ai-global.onrender.com
-- GitHub repository: https://github.com/architdutta10-max/ARLAW_AI_Global
+> **Important:** ARLAW AI provides informational research and workflow assistance. It is not a law firm, lawyer, advocate, accountant, government authority or judicial decision-maker. AI output can be inaccurate, incomplete or out of date. Verify important propositions against current official primary sources and consult a qualified professional.
 
-ARLAW AI is an informational research assistant, not a law firm or substitute for qualified legal advice. AI output can be incomplete or wrong. Verify important matters against current official primary sources and consult a qualified professional.
+## What ARLAW AI does
 
-## Integrated architecture
+ARLAW AI combines a FastAPI application, a browser-based research workspace, retrieval from a local SQLite/FTS5 knowledge library and configurable language-model providers.
 
-The existing FastAPI application and teal frontend are retained. The backend now includes:
+### Main capabilities
 
-- Ollama local inference with configurable Groq cloud fallback. Default preference is Ollama first, then Groq when a Groq key is configured.
-- Task-specific routing for legal research, civil procedure, lawyer/advocate workflow assistance, accounting support, CA/tax research, neutral judicial research, finance, document review, translation and general tasks.
-- Professional-workspace boundaries that prohibit claims of legal representation, account certification, statutory audit, tax attestation or judicial decision-making.
-- Dedicated capability endpoint at `/api/capabilities` and in-app starter prompts for the professional workflows.
-- Multilingual prompting for English, Hindi, Bengali and mixed-language queries.
-- Optional independent multi-model peer review (`ARLAW_MULTI_MODEL_REVIEW=true`).
-- Retrieval from the existing SQLite/FTS5 legal knowledge library.
-- Topic- and jurisdiction-aware retrieval, ranked by query-term coverage, with duplicate-source collapse. Citation-reference checking accepts `[S#]` and bold `**S#**` labels, and explicitly reports that label existence is not proof of claim support.
-- LoRA/QLoRA supervised training and provenance-gated teacher-output distillation preparation.
-- Automated tests and an API evaluation smoke runner.
+- **Legal research:** jurisdiction-aware explanations, issue spotting, legal concepts, source-oriented research and research planning.
+- **Civil and judicial research support:** neutral organisation of issues, evidence, arguments and potentially relevant authorities. It does not decide credibility, guilt, liability or outcomes.
+- **Lawyer and advocate workflow assistance:** research memos, drafting support, checklists and matter organisation. It does not represent clients or certify court filings.
+- **Accounting support:** bookkeeping explanations, reconciliations and financial-statement analysis. It does not certify accounts or perform statutory audits.
+- **CA and tax research support:** tax research, worked calculations and compliance-preparation assistance. It does not sign, attest or certify regulated work.
+- **Economic and finance research:** retrieval from the indexed research library and explanation of supplied material.
+- **Multilingual prompting:** English, Hindi, Bengali and mixed-language prompts, subject to the configured model's language capability.
+- **Knowledge library:** locally index text, Markdown and text-extractable PDF documents with jurisdiction, source URL, authority, language and effective/as-of date metadata.
+- **Provider fallback:** route requests to the configured providers in preference order, for example local Ollama followed by Groq.
+- **Workspace preferences:** light/dark appearance, 36 accent-colour palettes, interface language, text sizing, contrast and reduced motion.
 
-See `docs/MULTI_MODEL_ARCHITECTURE.md` and `docs/PROFESSIONAL_WORKSPACES.md` for configuration, workflow scope and limitations.
+## AI architecture
+
+```text
+Browser workspace
+      |
+      | POST /api/chat
+      v
+FastAPI application (app/main.py)
+      |
+      +--> Task classification and provider routing (app/llm.py)
+      |
+      +--> SQLite + FTS5 retrieval (app/knowledge.py)
+      |        |
+      |        +--> Jurisdiction and topic/category filters
+      |        +--> Query-term relevance ranking
+      |        +--> Duplicate-source collapse
+      |
+      +--> Configured model provider
+               |
+               +--> Ollama (local model runtime)
+               |
+               +--> Groq (cloud fallback, when configured)
+```
+
+### Model providers
+
+- **Ollama** runs a model locally on the machine or host where Ollama is installed. The example configuration uses `qwen3:8b`; actual speed and quality depend on hardware, model quantisation and runtime settings.
+- **Groq** is an optional hosted provider. Its API key is read by the server from environment configuration and must never be exposed in frontend JavaScript or committed to Git.
+- **Provider order** is configurable. `ollama,groq` means try Ollama first and use Groq if the earlier provider cannot complete the request. Fallback is best-effort and depends on provider availability, credentials, quotas and network access.
+- **Task routing** classifies prompts into supported workflow categories such as legal research, civil procedure, lawyer assistance, accounting, tax, judicial research, translation and general assistance. Routing labels guide prompts and provider selection; they do not create specialist professional qualifications.
+
+### Retrieval and knowledge library
+
+The retrieval layer stores source metadata and text chunks in SQLite and searches chunks with FTS5. Results are filtered by jurisdiction and broad content category, ranked using query-term coverage and title matches, and collapsed so a source contributes its strongest matching chunk.
+
+The application exposes:
+- `GET /api/capabilities` — declared workflows, language prompting and verification boundary.
+- `GET /api/health` and `GET /api/health/model` — application and provider configuration status.
+- `GET /api/jurisdictions` — jurisdiction list.
+- `GET /api/registry` — source-directory metadata.
+- `GET /api/sources` — indexed-source metadata.
+- `POST /api/documents` — local indexing for supported document formats.
+- `POST /api/chat` — chat generation and retrieved-source metadata.
+
+## Verification and important limitations
+
+These limitations are intentional and should be understood before relying on outputs:
+
+1. **Citation validation is not legal source verification.** The current validator checks whether a cited reference label (such as `[S1]`) exists among the sources supplied to the model. It does not determine whether that source actually supports the specific sentence or legal proposition, whether the quotation is accurate, whether the source is binding, whether it remains good law, or whether later amendments or judgments changed the position. Retrieval relevance is a search-ranking heuristic, not proof of legal support. Independently inspect the source and verify the proposition.
+2. **Chat history is browser-local.** Recent conversations are stored in the current browser's local storage. They are not synchronized to the server or other devices. Clearing browser storage or changing browsers/devices can make that history unavailable. Server-side cross-device history requires an authenticated account system, access controls and retention/deletion safeguards; a browser-only identifier is not a safe substitute for authentication.
+3. **Tests are not a production audit.** Automated tests and smoke checks demonstrate selected software behaviours only. They do not constitute a production security audit, penetration test, privacy review, legal-accuracy audit, or certification of professional suitability.
+4. **Knowledge currency depends on the indexed material.** The app does not automatically guarantee that statutes, regulations, judgments or source URLs are current. Record effective dates and verify changes using authoritative primary sources.
+5. **Bundled digests are secondary educational material.** Short summaries are not full official judgments and are not proof of current legal status or subsequent judicial treatment.
+6. **Model output is probabilistic.** Provider availability, model updates, context limits, generation settings and hardware can change response quality and latency.
 
 ## Run on Windows CMD
 
+```cmd
 python -m venv .venv
-.venv\Scripts\activate
+.venv\\Scripts\\activate
 python -m pip install -r requirements.txt
 python -m pip install -r requirements-test.txt
 copy .env.example .env
 notepad .env
 ollama pull qwen3:8b
 python run.py
+```
 
-Install Ollama separately before running `ollama pull qwen3:8b`. Keep Ollama running in the background. The default provider order is `ollama,groq`; local Ollama inference works without a cloud key. Add a Groq key to `.env` as `GROQ_API_KEY=...` only if you want cloud fallback. Save `.env`, run `python run.py`, and open `http://127.0.0.1:8000`. The app loads `.env` automatically. Keep `.env` private and never commit API keys. If you already have a working `.venv`, do not recreate it; activate it and install/update dependencies instead.
+Install Ollama separately before running `ollama pull qwen3:8b`, and keep the Ollama service running. Configure `GROQ_API_KEY` in `.env` only if you want the optional cloud fallback. Save `.env`, start the app and open `http://127.0.0.1:8000`.
+
+If a working `.venv` already exists, activate it and install/update dependencies rather than recreating it. Never upload `.env`, `.env.backup`, API keys, private databases or virtual-environment folders to GitHub.
 
 ## Configuration
 
 | Variable | Purpose |
 |---|---|
-| `GROQ_API_KEY` | Required Groq credential; keep server-side |
-| `GROQ_MODEL` | Groq model name |
-| `GROQ_BASE_URL` | Groq API base URL |
-| `OLLAMA_ENABLED` | Enable/disable the local Ollama provider |
-| `OLLAMA_BASE_URL` | Ollama server URL (default `http://127.0.0.1:11434`) |
-| `OLLAMA_MODEL` | Local model name (default `qwen3:8b`) |
-| `OLLAMA_TIMEOUT` | Ollama request timeout in seconds |
-| `OLLAMA_NUM_PREDICT` | Maximum generated tokens |
-| `ARLAW_PROVIDER_ORDER` | Provider order, e.g. `ollama,groq` |
+| `GROQ_API_KEY` | Server-side Groq credential |
+| `GROQ_MODEL` | Groq model identifier |
+| `GROQ_BASE_URL` | Groq-compatible API base URL |
+| `OLLAMA_ENABLED` | Enable or disable local Ollama |
+| `OLLAMA_BASE_URL` | Ollama endpoint; defaults to `http://127.0.0.1:11434` |
+| `OLLAMA_MODEL` | Local model name; example `qwen3:8b` |
+| `OLLAMA_TIMEOUT` | Ollama request timeout |
+| `OLLAMA_NUM_PREDICT` | Generation token limit |
+| `ARLAW_PROVIDER_ORDER` | Provider preference, e.g. `ollama,groq` |
 | `ARLAW_TOP_K` | Maximum retrieved source records |
 
+See `.env.example`, `OLLAMA_SETUP.md`, `DEPLOYMENT.md` and `docs/MULTI_MODEL_ARCHITECTURE.md` for the full configuration context.
 
-Ollama is a local model runtime, not a model itself. `qwen3:8b` is a general-purpose open-weight model choice, not a copy of Grok and not guaranteed to match its capabilities. Local speed and quality depend on RAM, CPU/GPU and model quantisation. If the local server is unavailable, ARLAW tries the next enabled provider in the configured order.
+## User interface and colour options
 
-## Release scope
+Open **Settings** in the application header. Choose Light or Dark appearance and one of 36 accent palettes: Teal, Ocean, Sky, Blue, Royal, Indigo, Violet, Purple, Orchid, Magenta, Pink, Rose, Ruby, Red, Coral, Orange, Amber, Gold, Lime, Green, Emerald, Mint, Forest, Sage, Cyan, Turquoise, Aqua, Slate, Steel, Graphite, Charcoal, Brown, Copper, Terracotta, Plum or Lavender.
 
-Version 2.3.0 adds topic/jurisdiction-aware retrieval, safer citation-label reporting, persistent browser-local recent chats, clearer request status and a refined responsive interface. The provider preference/fallback behavior remains configurable and is not a guarantee of model availability. It is not a promise that software will never need maintenance: security fixes, dependency compatibility, model-provider changes and legal-source updates may still be necessary. See [RELEASE_QA.md](RELEASE_QA.md) for the exact release boundaries and [RELEASE_NOTES.md](RELEASE_NOTES.md) for the 2.3.0 changes.
-
-To update an existing Git checkout, back up the project and extract this ZIP into the existing checkout, allowing the release files to replace older project files. The ZIP intentionally excludes `.git`, `.env`, `.venv` and local database/upload contents. Then run `PUSH_TO_GITHUB.cmd` from the project root, review the staged changes when prompted, and confirm the push. The helper does not create or change your Git remote.
+The chosen accent and other preferences are stored in local browser storage. They are not sent to the model API. Recent chats are also stored locally in this browser only (up to 10 conversations); they are not synced across devices.
 
 ## Tests and evaluation
 
 ```cmd
-python -m pip install pytest
+python -m pip install -r requirements-test.txt
 python -m pytest -q
+python -m compileall -q app tests
 ```
 
-With the app running:
+With the app running, use:
 
 ```cmd
-python evaluation\run_eval.py --base-url http://127.0.0.1:8000
+python evaluation\\run_eval.py --base-url http://127.0.0.1:8000
 ```
 
-The evaluation runner checks API availability and response generation; it does not certify legal correctness.
+The test suite checks selected functions and integration contracts. The evaluation runner checks API availability and response generation. Neither can certify legal correctness, source support, security or production readiness.
 
 ## Production deployment checklist
 
-Before exposing this application to real users, add authentication and role-based access, API rate limits, HTTPS, secure secret management, encrypted backups, retention/deletion controls, audit logging, malware scanning for uploads, monitoring and an incident-response process. The current starter application is intended for controlled development and evaluation; do not treat it as a production-secure legal case-management system.
+Before opening the service to real users, implement and independently review:
+- Authentication, account lifecycle and role-based authorization.
+- Secure server-side conversation storage with per-user access controls, retention limits, export and deletion.
+- HTTPS, secure secret management, key rotation and restricted deployment permissions.
+- API rate limits, request-size limits and abuse monitoring.
+- Encrypted backups, audit logging, monitoring and incident response.
+- Malware scanning and safe handling for uploaded documents.
+- Privacy notice, data-retention policy and legal basis for uploaded material.
+- Independent security testing and legal-source validation workflows.
 
-## Deployment
-
-The existing `render.yaml`, GitHub Actions workflow and FastAPI start command are retained. Configure `GROQ_API_KEY` through Render Environment settings for hosted deployment. Locally, configure `.env` and run `python run.py`.
+The current project is a development and evaluation platform, not a production-secure legal case-management system.
 
 ## Responsible data and legal use
 
-Index only lawful, public, licensed and non-confidential material. Record jurisdiction, authority, language, URL and effective/as-of date. The bundled landmark-case digests are short secondary educational summaries, not the full official judgments and not proof of current legal status; retrieve and verify the primary decision and later treatment before relying on a proposition. The bundled economic/shortage content is a research framework, not a live data feed or current shortage alert. Use dated official releases for current values. Do not upload privileged or confidential client records without an appropriate legal basis and safeguards. Confirm dataset and model licences before training or distribution. Retrieval augmentation is not fine-tuning; no foundation model weights are retrained by this release.
+Index only lawful, public, licensed and non-confidential material. Record jurisdiction, authority, language, URL and effective/as-of date. Do not upload privileged or confidential client records without an appropriate legal basis and safeguards. Confirm dataset and model licences before training or distribution. Retrieval-augmented generation is not fine-tuning; the normal chat/retrieval path does not retrain foundation-model weights.
 
 ## Developer
 
-Archit Dutta · Siliguri, West Bengal, India
+**Archit Dutta** · Siliguri, West Bengal, India
 
-GitHub: https://github.com/architdutta10-max  
-LinkedIn: https://www.linkedin.com/in/archit-dutta-4522693aa/  
-Instagram: https://www.instagram.com/architdutta17?xtok=MWJoem0yZW9lcWVmOQ==
+- GitHub: https://github.com/architdutta10-max
+- LinkedIn: https://www.linkedin.com/in/archit-dutta-4522693aa/
+- Instagram: https://www.instagram.com/architdutta17/
 
 ## License
 
-MIT. See `LICENSE`.
-
-## User settings and accessibility
-
-Open **Settings** from the top-right area of the application header. Recent chats are stored in this browser only (up to 10 conversations); they are not synced to the server or other devices. Preferences are stored locally in the current browser and are not sent to the AI backend.
-
-Available controls:
-- Appearance: Light or Dark mode
-- Interface language: English, Hindi, or Bengali
-- Text size: Small, Default, Large, or Extra large
-- Higher contrast
-- Reduce motion
-
-The Settings dialog can be closed with its close button, by clicking outside it, or with Escape. Use **Reset preferences** to restore defaults.
+MIT. See [LICENSE](LICENSE).

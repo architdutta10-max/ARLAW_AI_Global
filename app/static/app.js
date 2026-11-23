@@ -33,9 +33,36 @@ $("themeToggle")?.addEventListener('click',()=>{
 });
 
 // User settings: all preferences are local to this browser and never sent to the API.
-const preferenceDefaults={theme:'light',language:'en',fontSize:'medium',highContrast:false,reduceMotion:false};
+const preferenceDefaults={theme:'light',accent:'teal',language:'en',fontSize:'medium',highContrast:false,reduceMotion:false};
+const accentPalettes=[
+ ['teal','#087f79','#066b67'],['ocean','#087ea4','#075d7a'],['sky','#168acb','#0969a5'],
+ ['blue','#315fce','#2347a6'],['royal','#5146c8','#39319a'],['indigo','#5145a8','#39317d'],
+ ['violet','#7952c8','#58399c'],['purple','#914fc1','#71399a'],['orchid','#b34caa','#8a3784'],
+ ['magenta','#c13d8b','#96306b'],['pink','#d14f82','#a63864'],['rose','#c94b63','#9f344a'],
+ ['ruby','#b52d48','#8d2038'],['red','#c43b36','#962b28'],['coral','#d65d45','#a84332'],
+ ['orange','#d97726','#a9571b'],['amber','#b98218','#8e6210'],['gold','#a88a24','#806819'],
+ ['lime','#718e25','#536b19'],['green','#32834c','#23653a'],['emerald','#16866b','#0e654f'],
+ ['mint','#2d927f','#21705f'],['forest','#28634b','#1b4936'],['sage','#718b70','#536a52'],
+ ['cyan','#168b99','#0e6975'],['turquoise','#159b9b','#0d7474'],['aqua','#169baf','#0d7183'],
+ ['slate','#536b83','#3c5065'],['steel','#557b91','#3c5d70'],['graphite','#59616d','#414852'],
+ ['charcoal','#414b57','#2c3540'],['brown','#8b6047','#684632'],['copper','#a96742','#804c30'],
+ ['terracotta','#b75c49','#8d4234'],['plum','#75436f','#573252'],['lavender','#8272b8','#62538f']
+];
+const paletteByName=Object.fromEntries(accentPalettes.map(x=>[x[0],x]));
+function setupAccentPicker(){
+ const select=$('prefAccent'); if(!select)return;
+ select.innerHTML=accentPalettes.map(([name])=>`<option value="${name}">${name[0].toUpperCase()+name.slice(1)}</option>`).join('');
+}
+function applyAccent(name){
+ const palette=paletteByName[name]||paletteByName.teal;
+ document.documentElement.style.setProperty('--teal',palette[1]);
+ document.documentElement.style.setProperty('--teal-dark',palette[2]);
+ document.documentElement.style.setProperty('--accent-soft',`${palette[1]}18`);
+ document.documentElement.dataset.accent=palette[0];
+}
 function readPreferences(){try{return {...preferenceDefaults,...JSON.parse(localStorage.getItem('arlaw-preferences')||'{}')}}catch(e){return {...preferenceDefaults}}}
 let preferences=readPreferences();
+setupAccentPicker();
 const translations={
  en:{assistant:'Legal research assistant',research:'Research assistant',library:'Knowledge library',newChat:'New chat',workspace:'YOUR WORKSPACE',welcome:'What would you like to understand?',welcomeText:'Ask clear questions about law, civil disputes, justice, economics, taxation and financial matters.',message:'Message ARLAW AI… Include the country, state or court when relevant.',jurisdiction:'Jurisdiction',settings:'Settings',settingsTitle:'User settings',settingsIntro:'Choose how ARLAW AI looks and feels on this device. Your preferences are saved locally in this browser.',appearance:'Appearance',appearanceHint:'Choose light or dark mode',language:'Interface language',languageHint:'Language for menus and controls',fontSize:'Text size',fontSizeHint:'Adjust the interface reading size',contrast:'Higher contrast',contrastHint:'Strengthen borders and text contrast',motion:'Reduce motion',motionHint:'Limit non-essential interface animation',done:'Done',reset:'Reset preferences',note:'Language preference changes the interface labels. Legal answers may still use the language you request in your message.',light:'Light',dark:'Dark',small:'Small',medium:'Default',large:'Large',xlarge:'Extra large',close:'Close settings'},
  hi:{assistant:'कानूनी शोध सहायक',research:'शोध सहायक',library:'ज्ञान पुस्तकालय',newChat:'नई चैट',workspace:'आपका कार्यक्षेत्र',welcome:'आप क्या समझना चाहेंगे?',welcomeText:'कानून, नागरिक विवाद, न्याय, अर्थव्यवस्था, कर और वित्त से जुड़े प्रश्न पूछें।',message:'ARLAW AI को संदेश लिखें… आवश्यकता हो तो देश, राज्य या अदालत बताएं।',jurisdiction:'अधिकार क्षेत्र',settings:'सेटिंग्स',settingsTitle:'उपयोगकर्ता सेटिंग्स',settingsIntro:'इस डिवाइस पर ARLAW AI का रूप और अनुभव चुनें। आपकी पसंद इसी ब्राउज़र में सुरक्षित रहती है।',appearance:'दिखावट',appearanceHint:'लाइट या डार्क मोड चुनें',language:'इंटरफ़ेस भाषा',languageHint:'मेनू और नियंत्रणों की भाषा',fontSize:'अक्षर का आकार',fontSizeHint:'पढ़ने के लिए इंटरफ़ेस का आकार बदलें',contrast:'अधिक कंट्रास्ट',contrastHint:'टेक्स्ट और बॉर्डर को अधिक स्पष्ट करें',motion:'एनिमेशन कम करें',motionHint:'अनावश्यक इंटरफ़ेस एनिमेशन सीमित करें',done:'हो गया',reset:'सेटिंग्स रीसेट करें',note:'भाषा विकल्प इंटरफ़ेस के लेबल बदलता है। कानूनी उत्तर के लिए आप संदेश में अपनी पसंदीदा भाषा बता सकते हैं।',light:'लाइट',dark:'डार्क',small:'छोटा',medium:'सामान्य',large:'बड़ा',xlarge:'बहुत बड़ा',close:'सेटिंग्स बंद करें'},
@@ -45,6 +72,8 @@ function tr(key){return (translations[preferences.language]||translations.en)[ke
 function savePreferences(){try{localStorage.setItem('arlaw-preferences',JSON.stringify(preferences));localStorage.setItem('arlaw-theme',preferences.theme)}catch(e){}}
 function applyPreferences(){
  applyTheme(preferences.theme);
+ applyAccent(preferences.accent);
+ if($('prefAccent'))$('prefAccent').value=preferences.accent;
  document.documentElement.dataset.fontSize=preferences.fontSize;
  document.documentElement.classList.toggle('high-contrast',!!preferences.highContrast);
  document.documentElement.classList.toggle('reduce-motion',!!preferences.reduceMotion);
@@ -66,6 +95,7 @@ $('settingsOpen')?.addEventListener('click',openSettings);$('settingsClose')?.ad
 $('settingsDialog')?.addEventListener('click',e=>{if(e.target===$('settingsDialog'))closeSettings()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('settingsDialog').classList.contains('hidden'))closeSettings()});
 $('prefTheme')?.addEventListener('change',e=>{preferences.theme=e.target.value;applyPreferences();savePreferences()});
+$('prefAccent')?.addEventListener('change',e=>{preferences.accent=e.target.value;applyPreferences();savePreferences()});
 $('prefLanguage')?.addEventListener('change',e=>{preferences.language=e.target.value;applyPreferences();savePreferences()});
 $('prefFontSize')?.addEventListener('change',e=>{preferences.fontSize=e.target.value;applyPreferences();savePreferences()});
 $('prefContrast')?.addEventListener('change',e=>{preferences.highContrast=e.target.checked;applyPreferences();savePreferences()});
