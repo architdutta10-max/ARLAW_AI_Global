@@ -28,16 +28,14 @@ See `docs/MULTI_MODEL_ARCHITECTURE.md` and `docs/PROFESSIONAL_WORKSPACES.md` for
 
 ## Run on Windows CMD
 
-```cmd
 python -m venv .venv
 .venv\Scripts\activate
 python -m pip install -r requirements.txt
-python -m pip install pytest
+python -m pip install -r requirements-test.txt
 copy .env.example .env
 notepad .env
 ollama pull qwen3:8b
 python run.py
-```
 
 Install Ollama separately before running `ollama pull qwen3:8b`. Keep Ollama running in the background. The default provider order is `ollama,groq`; local Ollama inference works without a cloud key. Add a Groq key to `.env` as `GROQ_API_KEY=...` only if you want cloud fallback. Save `.env`, run `python run.py`, and open `http://127.0.0.1:8000`. The app loads `.env` automatically. Keep `.env` private and never commit API keys. If you already have a working `.venv`, do not recreate it; activate it and install/update dependencies instead.
 
