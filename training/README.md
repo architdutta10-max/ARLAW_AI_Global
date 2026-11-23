@@ -25,3 +25,11 @@ The script rejects unapproved or untraceable examples and writes a `.report.json
 ## Evaluation
 
 Run the app and use `python evaluation/run_eval.py --base-url http://127.0.0.1:8000`. This is an API smoke test, not a legal accuracy benchmark. Build human-reviewed test sets covering jurisdiction, effective date, authority hierarchy, citation entailment, uncertainty and language quality.
+
+## How the 2.2.0 knowledge layer works
+
+The application now starts with a small bundled set of curated case digests and economic/shortage research frameworks in `app/builtin_knowledge.json`. Startup imports these into the SQLite/FTS5 retrieval index once per title. This is retrieval-augmented generation (RAG): the model reads relevant excerpts at answer time. It is **not** a fine-tuning run and it does not alter Qwen/Groq model weights.
+
+For a genuine fine-tuning dataset, collect lawful public or licensed primary judgments, statutes and official economic datasets; preserve source URLs, jurisdiction, dates, court level, later treatment and licensing metadata; create reviewed question/answer examples; split by source document to prevent leakage; and require qualified legal/economic review before marking examples approved. Never train on unverified AI-generated case summaries as if they were primary law. Economic statistics must retain their release date, unit, revision vintage and whether they are observed data or forecasts.
+
+The starter digests are secondary educational summaries. Replace or supplement them with the full official judgment text through the Knowledge Library upload workflow. The economic entries are analysis frameworks, not live data, forecasts or shortage alerts.

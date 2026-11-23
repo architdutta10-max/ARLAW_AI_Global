@@ -1,26 +1,23 @@
-# ARLAW AI Global 2.1.0
+# ARLAW AI Global 2.3.0 — Release notes
 
-## Reliability and response integrity
+## Retrieval and legal-source integrity
+- Added source categories (`law`, `economy`, `general`) with a migration for existing SQLite databases.
+- Bundled case digests and economic/shortage frameworks are separated during task-aware retrieval.
+- Search now filters unrelated jurisdictions instead of silently falling back to unrelated jurisdictions.
+- Retrieval ranks by query-term coverage, gives a modest title/jurisdiction preference, and collapses duplicate chunks from the same source.
+- Citation checker recognises `[S#]` and `**S#**`, and reports only reference-label existence. It does not validate legal propositions, source support, source currency or authority.
 
-- Detects repeated paragraphs and repeated section descriptions in model output.
-- Makes one bounded rewrite attempt when repeated content is detected.
-- If repetition remains, returns a visible warning rather than silently presenting the output as clean.
-- Uses the provider finish reason to continue responses only when generation stopped at the output-token limit.
-- Caps continuation at two extra calls to avoid runaway generation.
-- Exposes quality, continuation and incomplete-response metadata through `/api/chat`.
-- Raises the default completion budget to 4096 tokens; configurable with `ARLAW_MAX_COMPLETION_TOKENS` (bounded to 512–8192).
-- Adds explicit prompt rules for handling multiple legal provisions independently and marking missing provisions unverified.
+## Interface
+- Added browser-local recent chat history (up to 10 conversations, stored in localStorage on this device).
+- Added request status and loading feedback; disables the composer while a request is in progress.
+- Refined layout, focus indicators, responsive history list, citation notices and dark-mode presentation.
 
-## Preserved
+## Model routing
+- Existing configurable Ollama/Groq preference order and fallback are retained.
+- No provider key is included. No provider availability or answer correctness is guaranteed.
 
-- Existing teal UI and settings.
-- Existing FastAPI backend and SQLite knowledge store.
-- Existing Groq-only provider configuration; no Gemini added.
-- Direct Python launch workflow; no batch-file requirement.
-
-## Verification status
-
-- Automated test suite: 23 passed.
-- Python bytecode compilation: passed.
-- Live Groq/network test: not run in this build environment.
-- Legal accuracy, production readiness and security are not certified. Always verify legal provisions against current official primary sources.
+## Boundaries
+- Bundled landmark-case records are curated secondary educational digests, not full official judgments.
+- Economic/shortage records are research frameworks, not live datasets or alerts.
+- No foundation model weights were retrained. Retrieval augmentation is not fine-tuning.
+- This release is not legally certified, production-certified or independently security-audited.

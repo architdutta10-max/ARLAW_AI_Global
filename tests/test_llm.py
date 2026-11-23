@@ -1,14 +1,23 @@
 from app import llm
 
 
-def test_provider_order_filters_unknown(monkeypatch):
+def test_provider_order_filters_unknown_and_respects_enabled_providers(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "ollama,unknown,groq")
     assert llm.provider_order() == ["groq"]
 
 
+def test_ollama_can_be_primary_without_groq_key(monkeypatch):
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+    monkeypatch.setenv("OLLAMA_ENABLED", "true")
+    monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "ollama,groq")
+    assert llm.provider_order() == ["ollama"]
+
+
 def test_groq_only_provider_failure_is_reported(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
     monkeypatch.setattr(llm, "PROVIDERS", {
         "groq": lambda payload: (_ for _ in ()).throw(RuntimeError("offline")),
     })
@@ -39,9 +48,10 @@ def test_task_specific_provider_route(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq,ollama")
+    monkeypatch.setenv("OLLAMA_ENABLED", "true")
     monkeypatch.setenv("ARLAW_ROUTE_FINANCE_TAX", "ollama,groq")
-    assert llm.provider_order("finance_tax") == ["groq"]
-    assert llm.provider_order("general") == ["groq"]
+    assert llm.provider_order("finance_tax") == ["ollama", "groq"]
+    assert llm.provider_order("general") == ["groq", "ollama"]
 
 
 def test_citation_validation_flags_unknown_labels():
@@ -78,8 +88,9 @@ def test_invalid_task_route_falls_back_to_default(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq,ollama")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
     monkeypatch.setenv("ARLAW_ROUTE_LEGAL_RESEARCH", "not-a-provider")
-    assert llm.provider_order("legal_research") == ["groq"]
+    assert llm.provider_order("legal_research") == []
 
 
 def test_professional_task_classification():
@@ -107,6 +118,7 @@ def test_repetition_report_detects_repeated_sections():
 
 def test_generate_attempts_repair_for_repeated_sections(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
     calls = []
     repeated = "Section 54 has a repeated generic description that is long enough to flag.\n\n" * 4
     corrected = "Section 54: verified provision A.\n\nSection 55: verified provision B.\n\nSection 56: verified provision C."
@@ -123,6 +135,7 @@ def test_generate_attempts_repair_for_repeated_sections(monkeypatch):
 
 def test_generate_continues_only_on_length_finish_reason(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
     calls = []
     def fake_provider(payload):
         calls.append(payload)
@@ -139,6 +152,7 @@ def test_generate_continues_only_on_length_finish_reason(monkeypatch):
 
 def test_repetition_warning_survives_failed_repair(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
     repeated = "A repeated legal section description that should trigger the warning.\n\n" * 4
     monkeypatch.setattr(llm, "PROVIDERS", {"groq": lambda payload: (repeated, "test-model")})
     answer, error, meta = llm.generate([{"role": "user", "content": "List legal sections"}])
@@ -167,3 +181,12 @@ def test_retry_delay_parses_retry_after_header():
         headers = {"retry-after": "3"}
         text = ""
     assert 3 <= llm._retry_delay(Response()) <= 4
+
+
+def test_citation_validation_accepts_bold_labels_and_does_not_claim_verification():
+    result = llm.validate_citations("See **S1** and [S2]; **S9** is unknown.", ["S1", "S2"])
+    assert result["cited"] == ["S1", "S2", "S9"]
+    assert result["valid"] == ["S1", "S2"]
+    assert result["invalid"] == ["S9"]
+    assert result["status"] == "invalid_reference"
+    assert "not verified" in result["scope"]

@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#0b827d">
-  <title>ARLAW AI — Legal Research Assistant</title>
+  <meta name="description" content="ARLAW AI — jurisdiction-aware legal, economic and justice research assistant">
+  <title>ARLAW AI — Global Research Workspace</title>
   <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -12,6 +13,7 @@
     <div class="brand"><b class="logo">A</b><div><b>ARLAW AI</b><small>LEGAL RESEARCH</small></div></div>
     <button id="newChat" class="new"><span>＋</span> New chat</button>
     <p class="label">YOUR WORKSPACE</p>
+    <div id="historyList" class="history-list" aria-label="Recent chats"></div>
     <button id="chatTab" class="nav active"><span>◉</span> Research assistant</button>
     <button id="sourcesTab" class="nav"><span>▤</span> Knowledge library</button>
     <button id="supportTab" class="nav"><span>♡</span> Support</button>
@@ -38,7 +40,7 @@
           </div>
         </div>
       </div>
-      <div class="composer-wrap"><form id="chatForm"><textarea id="prompt" rows="1" placeholder="Message ARLAW AI… Include the country, state or court when relevant." required></textarea><button aria-label="Send message" title="Send message">↑</button></form><small>ARLAW AI can make mistakes. Verify important points with current official sources and a qualified legal professional.</small></div>
+      <div class="composer-wrap"><div id="requestStatus" class="request-status" role="status" aria-live="polite"></div><form id="chatForm"><textarea id="prompt" rows="1" placeholder="Message ARLAW AI… Include the country, state or court when relevant." required></textarea><button aria-label="Send message" title="Send message">↑</button></form><small>AI-generated research can be wrong or incomplete. Check primary sources and consult a qualified professional before relying on legal or financial information.</small></div>
     </section>
     <section id="sourcesView" class="sources hidden"><div class="section-kicker">RESEARCH WORKSPACE</div><h1>Knowledge library</h1><p>Index lawful, public, licensed and non-confidential materials. Record jurisdiction, authority and effective date so answers can be checked against their sources.</p>
       <form id="uploadForm"><label>Document title<input name="title" placeholder="Act, judgment, regulation or report"></label>

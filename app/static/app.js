@@ -1,4 +1,13 @@
-const $=id=>document.getElementById(id);let history=[];
+const $=id=>document.getElementById(id);
+const HISTORY_KEY='arlaw-chat-history-v1';
+let conversations=[];let activeConversationId=null;let history=[];let sending=false;
+try{conversations=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');if(!Array.isArray(conversations))conversations=[];}catch(e){conversations=[];}
+function persistHistory(){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(conversations.slice(0,10)));}catch(e){}}
+function renderHistory(){const host=$('historyList');if(!host)return;host.innerHTML='';conversations.slice(0,12).forEach(item=>{const b=document.createElement('button');b.type='button';b.className='history-item'+(item.id===activeConversationId?' active':'');b.textContent=item.title||'New conversation';b.title=item.title||'New conversation';b.onclick=()=>openConversation(item.id);host.append(b);});}
+function newConversation(){activeConversationId=(Date.now().toString(36)+Math.random().toString(36).slice(2,7));history=[];conversations.unshift({id:activeConversationId,title:'New conversation',messages:[],updatedAt:Date.now()});persistHistory();renderHistory();}
+function saveConversation(){if(!activeConversationId)newConversation();const item=conversations.find(x=>x.id===activeConversationId);if(!item)return;item.messages=history.slice(-30).map(m=>({...m,content:String(m.content||'').slice(0,8000)}));const first=history.find(x=>x.role==='user');if(first)item.title=first.content.slice(0,52)+(first.content.length>52?'…':'');item.updatedAt=Date.now();conversations.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));conversations=conversations.slice(0,10);persistHistory();renderHistory();}
+function openConversation(id){const item=conversations.find(x=>x.id===id);if(!item)return;activeConversationId=id;history=Array.isArray(item.messages)?item.messages.slice():[];$('messages').innerHTML='';if(!history.length){showWelcome();}else{for(const m of history)add(m.role,m.content);}renderHistory();show('chat');}
+function showWelcome(){$('messages').innerHTML='<div class="welcome"><div class="welcome-mark">A</div><div class="eyebrow">ARLAW AI · LEGAL INTELLIGENCE</div><h1 id="welcomeTitle">What would you like to understand?</h1><p id="welcomeText">Ask clear questions about law, civil disputes, justice, economics, taxation and financial matters.</p><div class="suggest"><button data-prompt="Explain the reasonable classification test under Article 14 of the Constitution of India. Distinguish it from equality before law and equal protection of laws. Cite only retrieved sources."><b>⚖ Constitutional law</b><small>Explore rights and legal principles</small></button><button data-prompt="How can I verify that a legal rule is current and binding? Explain primary and secondary authority."><b>⌕ Verify legal authority</b><small>Check laws, judgments and sources</small></button><button data-prompt="Explain how official sources monitor inflation, food security and energy supply risks."><b>▤ Economy & supply</b><small>Understand indicators and data sources</small></button><button data-prompt="Explain the difference between binding precedent and persuasive authority."><b>⇄ Legal concepts</b><small>Understand complex ideas simply</small></button></div></div>';document.querySelectorAll('[data-prompt]').forEach(b=>b.onclick=()=>send(b.dataset.prompt));}
 // Theme preference: light by default; the user's choice is persisted locally.
 function applyTheme(theme){
   const selected=theme==='dark'?'dark':'light';
@@ -79,10 +88,29 @@ function renderAnswer(raw){
   flushPara();flushList();return out.join('')||'<p></p>';
 }
 function add(role,text,cites=[]){document.querySelector(".welcome")?.remove();let row=document.createElement("div");row.className="message "+(role==="user"?"user":"assistant");let av=document.createElement("div");av.className="avatar";av.textContent=role==="user"?"YOU":"A";let body=document.createElement("div");body.className="body";body.innerHTML=role==="assistant"?renderAnswer(text):'<p>'+escapeHTML(text).replace(/\n/g,'<br>')+'</p>';row.append(av,body);$("messages").append(row);if(cites.length){let c=document.createElement("div");c.className="citations";c.textContent="Retrieved sources: "+cites.map(x=>`${x.label}: ${x.title} (${x.jurisdiction}, ${x.authority}, ${x.as_of||"date not supplied"}) ${x.url||""}`).join(" · ");$("messages").append(c)}$("messages").scrollTop=$("messages").scrollHeight}
-async function send(text){if(!text.trim())return;history.push({role:"user",content:text});add("user",text);try{let r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({messages:history,jurisdiction:$("jurisdiction").value})});let d=await r.json();if(!r.ok)throw Error(d.detail||"Request failed");history.push({role:"assistant",content:d.answer});add("assistant",d.answer,d.citations||[]);if(d.quality_warning)add("assistant","Reliability warning: "+d.quality_warning);$("connection").textContent=d.model_connected?`${d.model?.provider||"AI"} · ${d.model?.model||"connected"} · ${d.task||"general"}`:"Model unavailable"}catch(e){add("assistant","Application error: "+e.message)}}
+async function send(text){
+ if(sending||!text.trim())return;
+ if(!activeConversationId)newConversation();
+ sending=true;const sendButton=$('chatForm').querySelector('button');sendButton.disabled=true;$('prompt').disabled=true;
+ history.push({role:'user',content:text});add('user',text);saveConversation();
+ $('requestStatus').textContent='ARLAW AI is preparing a response…';$('connection').textContent='Generating…';
+ const loading=document.createElement('div');loading.className='message assistant loading-message';loading.innerHTML='<div class="avatar">A</div><div class="body"><span class="loading-dots" aria-label="Generating"><i></i><i></i><i></i></span> Researching your question…</div>';$('messages').append(loading);$('messages').scrollTop=$('messages').scrollHeight;
+ try{
+  let r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:history,jurisdiction:$('jurisdiction').value})});
+  let d=await r.json();if(!r.ok)throw Error(d.detail||'Request failed');
+  history.push({role:'assistant',content:d.answer});saveConversation();
+  loading.remove();add('assistant',d.answer,d.citations||[]);
+  if(d.quality_warning)add('assistant','Reliability warning: '+d.quality_warning);
+  const provider=d.model?.provider||'AI';const model=d.model?.model||'connected';$('connection').textContent=d.model_connected?`${provider} · ${model} · ${d.task||'general'}`:'Model unavailable';
+  if(d.citation_validation?.scope){const note=document.createElement('p');note.className='citation-scope';note.textContent='Citation check: '+d.citation_validation.scope;$('messages').append(note);}
+ }catch(e){loading.remove();add('assistant','Application error: '+e.message);$('connection').textContent='Request failed';}
+ finally{sending=false;sendButton.disabled=false;$('prompt').disabled=false;$('prompt').focus();$('requestStatus').textContent='';}
+}
 $("chatForm").onsubmit=e=>{e.preventDefault();let t=$("prompt");send(t.value);t.value="";t.style.height=""};$("prompt").oninput=e=>{e.target.style.height="auto";e.target.style.height=Math.min(e.target.scrollHeight,170)+"px"};$("prompt").onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("chatForm").requestSubmit()}};
 document.querySelectorAll("[data-prompt]").forEach(b=>b.onclick=()=>send(b.dataset.prompt));
-$("newChat").onclick=()=>{history=[];$("messages").innerHTML='<div class="welcome"><div class="welcome-mark">A</div><div class="eyebrow">ARLAW AI · LEGAL INTELLIGENCE</div><h1 id="welcomeTitle">What would you like to understand?</h1><p id="welcomeText">Ask clear questions about law, civil disputes, justice, economics, taxation and financial matters.</p><div class="suggest"><button data-prompt="Explain the steps in a civil case in India, from filing to judgment. Use clear headings and identify the relevant laws."><b>⚖ Civil law</b><small>Understand a civil case step by step</small></button><button data-prompt="Explain how to verify whether an Indian legal rule is current and binding. Distinguish statutes, judgments and commentary."><b>⌕ Verify legal authority</b><small>Check laws, judgments and sources</small></button><button data-prompt="Create a practical legal and financial due-diligence checklist for an Indian business."><b>▤ Business & finance</b><small>Review legal and financial risks</small></button><button data-prompt="Explain the difference between binding precedent and persuasive authority in India, with a simple example."><b>⇄ Legal concepts</b><small>Understand complex ideas simply</small></button></div></div>';document.querySelectorAll("[data-prompt]").forEach(b=>b.onclick=()=>send(b.dataset.prompt));applyPreferences();show("chat")};
+$('newChat').onclick=()=>{newConversation();showWelcome();applyPreferences();show('chat');};
+renderHistory();
+if(conversations.length){openConversation(conversations[0].id);}else{newConversation();}
 function show(v){
   $("chatView").classList.toggle("hidden",v!=="chat");
   $("sourcesView").classList.toggle("hidden",v!=="sources");

@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.3.0 — Retrieval integrity and workspace refinement
+- Added topic-aware source categories and a safe SQLite migration for earlier databases.
+- Separated bundled law digests from economic/shortage frameworks during task-aware retrieval.
+- Added stricter jurisdiction filtering, query-term relevance ranking and duplicate-source collapse.
+- Improved citation label parsing for `[S#]` and `**S#**`; metadata now explicitly states that existence is not source-support verification.
+- Added browser-local recent chat history, request/loading feedback and responsive interface refinements.
+- Preserved configurable Ollama-first/Groq-fallback routing.
+- Added regression tests for legacy database migration, topic separation, jurisdiction filtering and citation formatting.
+- This release is not legally certified, production-certified or security-audited.
+
 ## 2.1.0 — Reliability and response integrity
 - Detects repeated paragraphs and section descriptions in generated answers.
 - Makes one bounded rewrite attempt when repetition is detected; unresolved repetition is surfaced as a visible reliability warning.
@@ -56,3 +66,10 @@
 - Reduced default completion budget to 1,200 tokens (configurable, capped at 2,048).
 - Serialized Groq calls within a worker and added one bounded HTTP 429 retry using provider reset guidance.
 - Preserved existing provider configuration, API shape, UI and conversation storage.
+
+## 2.2.0 — Global knowledge starter and Ollama
+- Added local Ollama chat inference and configurable fallback with Groq.
+- Added bundled, searchable educational digests of selected landmark decisions across multiple jurisdictions.
+- Added economic change, food, energy, critical-material and supply-chain shortage research frameworks.
+- Expanded official court and economic-data source directory.
+- Clarified RAG versus fine-tuning and the limits of bundled summaries/current-data coverage.

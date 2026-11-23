@@ -41,3 +41,12 @@ def test_settings_and_theme_controls_exist():
 def test_support_styles_include_responsive_theme_support():
     assert ".support-card" in CSS
     assert 'html[data-theme="dark"] .support-card' in CSS
+
+
+def test_recent_chat_and_request_feedback_controls_exist():
+    assert 'id="historyList"' in HTML
+    assert 'id="requestStatus"' in HTML
+    assert "const HISTORY_KEY='arlaw-chat-history-v1'" in JS
+    assert 'function renderHistory()' in JS
+    assert 'function saveConversation()' in JS
+    assert 'loading-message' in JS

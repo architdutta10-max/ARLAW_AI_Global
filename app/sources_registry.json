@@ -1,5 +1,5 @@
 {
-  "notice": "Starting points only. Verify current official status, URL, access terms, and completeness before relying on any source.",
+  "notice": "Starting points only. Verify current official status, URL, access terms, and completeness before relying on any source. Curated case digests in the local starter library are secondary educational summaries, not official judgment text. Economic and shortage frameworks are not live alerts; check dated official datasets and reports.",
   "sources": [
     {
       "jurisdiction": "INTL",
@@ -97,6 +97,97 @@
       "name": "Singapore Statutes Online",
       "url": "https://sso.agc.gov.sg/",
       "type": "Legislation",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "IN-DELHI",
+      "name": "Delhi High Court — judgments",
+      "url": "https://delhihighcourt.nic.in/",
+      "type": "High Court judgments",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "CA",
+      "name": "Supreme Court of Canada — decisions",
+      "url": "https://decisions.scc-csc.ca/",
+      "type": "Judgments",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "AU",
+      "name": "High Court of Australia — judgments",
+      "url": "https://www.hcourt.gov.au/",
+      "type": "High Court judgments",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "ZA",
+      "name": "SAFLII — South African case law",
+      "url": "https://www.saflii.org/",
+      "type": "Case law repository",
+      "authority": "case-law repository"
+    },
+    {
+      "jurisdiction": "ECHR",
+      "name": "HUDOC — European Court of Human Rights",
+      "url": "https://hudoc.echr.coe.int/",
+      "type": "Judgments and decisions",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "GLOBAL",
+      "name": "World Bank Open Data",
+      "url": "https://data.worldbank.org/",
+      "type": "Economic indicators",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "GLOBAL",
+      "name": "International Monetary Fund — Data",
+      "url": "https://www.imf.org/en/Data",
+      "type": "Macroeconomic and financial data",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "GLOBAL",
+      "name": "FAO — World Food Situation and Food Price Index",
+      "url": "https://www.fao.org/worldfoodsituation/foodpricesindex/en/",
+      "type": "Food prices and agriculture",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "GLOBAL",
+      "name": "World Food Programme — data and reports",
+      "url": "https://www.wfp.org/publications",
+      "type": "Food security and humanitarian reports",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "GLOBAL",
+      "name": "International Energy Agency — data and statistics",
+      "url": "https://www.iea.org/data-and-statistics",
+      "type": "Energy and supply data",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "GLOBAL",
+      "name": "UNCTAD — statistics",
+      "url": "https://unctad.org/statistics",
+      "type": "Trade and supply-chain statistics",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "GLOBAL",
+      "name": "World Trade Organization — statistics",
+      "url": "https://stats.wto.org/",
+      "type": "Trade statistics",
+      "authority": "official"
+    },
+    {
+      "jurisdiction": "GLOBAL",
+      "name": "Bank for International Settlements — statistics",
+      "url": "https://www.bis.org/statistics/",
+      "type": "Financial statistics",
       "authority": "official"
     }
   ]

@@ -1,8 +1,8 @@
 {
   "name": "ARLAW AI Global",
-  "version": "2.1.2",
-  "release": "Groq rate-limit and long-session reliability upgrade",
-  "release_scope": "Conservative prompt budgeting, bounded completion tokens, process-local request serialization, provider-directed HTTP 429 retry, and regression coverage; preserves Groq-only provider configuration and existing interface",
+  "version": "2.3.0",
+  "release": "Retrieval integrity, local chat history and interface refinement",
+  "release_scope": "Adds topic- and jurisdiction-aware retrieval, citation-label existence reporting with explicit limits, browser-local recent chat history, UI request feedback and responsive refinements. Ollama-first/Groq-fallback routing remains configurable. Bundled digests remain secondary summaries, not full judgments or live feeds.",
   "requires_maintenance": true,
   "production_certified": false,
   "legal_accuracy_certified": false,
