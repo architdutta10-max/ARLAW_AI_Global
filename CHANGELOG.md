@@ -50,3 +50,9 @@
 - Added bounded, typed chat-message input validation and rejected unsupported message roles at the API boundary.
 - Updated API release metadata and FastAPI startup lifecycle handling.
 - Added release notes and a production-readiness checklist that clearly identifies security and evaluation work still required.
+
+## 2.1.2
+- Added conservative prompt budgeting for long conversations and multilingual content.
+- Reduced default completion budget to 1,200 tokens (configurable, capped at 2,048).
+- Serialized Groq calls within a worker and added one bounded HTTP 429 retry using provider reset guidance.
+- Preserved existing provider configuration, API shape, UI and conversation storage.

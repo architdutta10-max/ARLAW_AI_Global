@@ -1,8 +1,8 @@
 {
   "name": "ARLAW AI Global",
-  "version": "2.1.0",
-  "release": "Reliability and response-integrity upgrade",
-  "release_scope": "Bounded token-limit continuation, repeated-section detection, one bounded rewrite attempt, response-quality metadata and regression tests; preserves Groq-only provider configuration and existing interface",
+  "version": "2.1.2",
+  "release": "Groq rate-limit and long-session reliability upgrade",
+  "release_scope": "Conservative prompt budgeting, bounded completion tokens, process-local request serialization, provider-directed HTTP 429 retry, and regression coverage; preserves Groq-only provider configuration and existing interface",
   "requires_maintenance": true,
   "production_certified": false,
   "legal_accuracy_certified": false,

@@ -145,3 +145,25 @@ def test_repetition_warning_survives_failed_repair(monkeypatch):
     assert error is None
     assert meta["quality"]["is_repetitive"] is True
     assert "quality_warning" in meta
+
+
+def test_messages_budget_long_history():
+    messages = [{"role": "user", "content": "x" * 5000} for _ in range(30)]
+    payload = llm._messages(messages, context="c" * 20000, task="general")
+    assert len(payload) <= 14
+    assert sum(len(str(x.get("content", ""))) for x in payload) < 18000
+    assert payload[-1]["role"] == "user"
+
+
+def test_retry_delay_parses_groq_body():
+    class Response:
+        headers = {}
+        text = '{"error":{"message":"Please try again in 27.9075s."}}'
+    assert 27 < llm._retry_delay(Response()) < 30
+
+
+def test_retry_delay_parses_retry_after_header():
+    class Response:
+        headers = {"retry-after": "3"}
+        text = ""
+    assert 3 <= llm._retry_delay(Response()) <= 4
