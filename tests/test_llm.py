@@ -190,3 +190,32 @@ def test_citation_validation_accepts_bold_labels_and_does_not_claim_verification
     assert result["invalid"] == ["S9"]
     assert result["status"] == "invalid_reference"
     assert "not verified" in result["scope"]
+
+
+def test_provider_failure_details_are_safe_and_specific():
+    import requests
+
+    assert llm._provider_failure_detail(
+        "groq", RuntimeError("GROQ_API_KEY is not configured")
+    ) == "groq: API key not configured"
+
+    assert llm._provider_failure_detail(
+        "ollama", RuntimeError("Ollama returned an empty response")
+    ) == "ollama: empty response"
+
+    assert llm._provider_failure_detail(
+        "groq", requests.Timeout()
+    ) == "groq: timeout"
+
+    assert llm._provider_failure_detail(
+        "ollama", requests.ConnectionError()
+    ) == "ollama: connection error"
+
+
+def test_provider_failure_details_do_not_expose_unknown_error_text():
+    secret_like_text = "private-token-example"
+    result = llm._provider_failure_detail(
+        "groq", RuntimeError(secret_like_text)
+    )
+    assert result == "groq: RuntimeError"
+    assert secret_like_text not in result

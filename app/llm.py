@@ -255,6 +255,30 @@ def validate_citations(answer: str, available_labels: list[str]):
             "status": "invalid_reference" if invalid else ("reference_exists_not_verified" if valid else "no_retrieved_citations"),
             "scope": "Label existence only; source relevance, claim support, authority and currency are not verified."}
 
+def _provider_failure_detail(name: str, exc: Exception) -> str:
+    """Return a safe, useful provider error without exposing secrets or raw responses."""
+    status = getattr(getattr(exc, "response", None), "status_code", None)
+    if status:
+        return f"{name}: HTTP {status}"
+
+    if isinstance(exc, requests.Timeout):
+        return f"{name}: timeout"
+    if isinstance(exc, requests.ConnectionError):
+        return f"{name}: connection error"
+
+    if isinstance(exc, RuntimeError):
+        safe_reasons = {
+            "GROQ_API_KEY is not configured": "API key not configured",
+            "Ollama returned an empty response": "empty response",
+            "empty response": "empty response",
+        }
+        reason = safe_reasons.get(str(exc).strip())
+        if reason:
+            return f"{name}: {reason}"
+
+    return f"{name}: {type(exc).__name__}"
+
+
 def generate(messages, context="", source_labels=None):
     """Generate with bounded continuation and one anti-repetition repair attempt."""
     question = next((str(m.get("content", "")) for m in reversed(messages) if m.get("role") == "user"), "")
@@ -267,8 +291,7 @@ def generate(messages, context="", source_labels=None):
             primary = _generate_complete(name, payload)
             break
         except (requests.RequestException, RuntimeError, KeyError, IndexError, TypeError, ValueError) as exc:
-            status = getattr(getattr(exc, "response", None), "status_code", None)
-            failures.append(f"{name}: HTTP {status}" if status else f"{name}: {type(exc).__name__}")
+            failures.append(_provider_failure_detail(name, exc))
     if primary is None:
         detail = "; ".join(failures) if failures else "no providers enabled"
         return None, "All configured AI providers failed or are unavailable: " + detail, {
