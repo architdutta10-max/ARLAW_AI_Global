@@ -299,3 +299,22 @@ def test_ordinary_article_writing_is_not_legal_research():
     assert llm.classify_task(
         "Do Article 14 protections apply to all persons?"
     ) == "legal_research"
+
+def test_negative_legal_topic_instructions_do_not_trigger_legal_research():
+    assert llm.classify_task(
+        "Write a short educational article about climate change. "
+        "Do not discuss laws or legal regulations."
+    ) == "general"
+    assert llm.classify_task(
+        "Explain climate change without discussing legal regulations."
+    ) == "general"
+
+
+def test_positive_legal_intent_survives_unrelated_negative_instruction():
+    assert llm.classify_task(
+        "Explain Article 14 of the Constitution. "
+        "Do not discuss unrelated laws."
+    ) == "legal_research"
+    assert llm.classify_task(
+        "Explain constitutional rights. Do not discuss unrelated laws."
+    ) == "legal_research"

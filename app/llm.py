@@ -56,13 +56,25 @@ def classify_task(text: str) -> str:
         return "finance_tax"
     if any(x in q for x in ("civil procedure", "suit", "plaint", "limitation", "court filing", "appeal", "injunction", "দেওয়ানি", "दीवानी")):
         return "civil_procedure"
-    if re.search(r"\barticles?\s+\d+[a-z]?\b", q):
+    # Remove explicitly negated legal-topic instructions before checking
+    # legal intent. Preserve positive legal references elsewhere in the prompt.
+    legal_intent_text = re.sub(
+        r"\b(?:do not|don't|dont|avoid|without)\s+"
+        r"(?:(?:discuss(?:ing)?|mention(?:ing)?|include|cover|"
+        r"talk(?:ing)? about|address(?:ing)?)\s+)?"
+        r"(?:any\s+)?(?:laws?|legal(?:\s+(?:regulations?|rules?|issues?|topics?|matters?))?|acts?|statutes?|court\s+cases?)"
+        r"(?:\s+(?:or|and)\s+(?:any\s+)?(?:laws?|legal(?:\s+(?:regulations?|rules?|issues?|topics?|matters?))?|acts?|statutes?|court\s+cases?))*",
+        " ",
+        q,
+        flags=re.IGNORECASE,
+    )
+    if re.search(r"\barticles?\s+\d+[a-z]?\b", legal_intent_text):
         return "legal_research"
-    if any(x in q for x in (
+    if any(x in legal_intent_text for x in (
         "law", "legal", "act", "section",
         "judgment", "case law", "court", "statute", "constitution",
         "constitutional", "fundamental right", "human rights",
-        "precedent", "jurisdiction", "আইন", "कानून"
+        "precedent", "jurisdiction", "\u0986\u0987\u09a8", "\u0915\u093e\u0928\u0942\u0928"
     )):
         return "legal_research"
     return "general"
