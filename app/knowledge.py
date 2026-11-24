@@ -118,7 +118,8 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
         "about", "explain", "under", "between", "both", "their", "them",
         "your", "you", "how", "why", "which", "article", "section", "act",
         "case", "law", "of", "cite", "cited", "citation", "citations",
-        "authoritative", "legal", "sources", "source", "united", "states"
+        "authoritative", "legal", "sources", "source", "united", "states",
+        "india", "constitution"
     }
     terms = []
     for token in re.findall(r"[\w]+", (query or "").lower(), flags=re.UNICODE):
@@ -128,7 +129,28 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
     if not terms:
         return []
 
-    terms = terms[:16]
+    terms = terms[:32]  # Keep named authorities appearing later in long, structured prompts.
+
+    # Extract explicit legal anchors. Generic token overlap is not enough for a
+    # question about a numbered provision: "21" can occur in dates, footnotes
+    # and unrelated constitutional articles.
+    provision_anchors = [
+        (kind.lower(), number.upper())
+        for kind, number in re.findall(
+            r"\b(article|art\.?|section|sec\.?)\s+(\d+[a-z]?)\b",
+            query or "", flags=re.IGNORECASE
+        )
+    ]
+    amendment_anchors = [
+        " ".join(match.lower().split())
+        for match in re.findall(
+            r"\b(first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|"
+            r"tenth|eleventh|twelfth|thirteenth|fourteenth|fifteenth|sixteenth|"
+            r"seventeenth|eighteenth|nineteenth|twentieth)\s+amendment\b",
+            query or "", flags=re.IGNORECASE
+        )
+    ]
+
     expr = " OR ".join('"' + t.replace('"', '""') + '"' for t in terms)
     j = (jurisdiction or "GLOBAL").upper().strip()
     task = (task or "general").lower()
@@ -141,7 +163,7 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
         else {"law", "economy", "general"}
     )
 
-    candidate_limit = max(60, top_k * 30)
+    candidate_limit = max(2000, top_k * 100) if provision_anchors else max(60, top_k * 30)
 
     with connect() as c:
         base_sql = (
@@ -191,12 +213,52 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
             continue
 
         haystack = (h["title"] + " " + h["content"]).lower()
+
+        # Explicit ordinal amendments must be present in the retrieved passage.
+        # This prevents a generic constitutional case digest from being passed
+        # off as authority for (for example) the First Amendment.
+        if amendment_anchors and not all(anchor in haystack for anchor in amendment_anchors):
+            continue
+
+        provision_matches = 0
+        provision_heading_matches = 0
+        for kind, number in provision_anchors:
+            if kind in {"article", "art", "art."}:
+                reference_pattern = rf"\b(?:article|arts?\.?)[ \t]*{re.escape(number)}\b"
+            else:
+                reference_pattern = rf"\b(?:section|sec|sec\.?)[ \t]*{re.escape(number)}\b"
+            referenced = bool(re.search(reference_pattern, haystack, flags=re.IGNORECASE))
+            # Official legislative texts commonly print a provision as
+            # "21. Protection of life..." without repeating the word Article.
+            heading_pattern = re.compile(
+                rf"(?<![0-9A-Za-z]){re.escape(number)}\.\s+([^—]{{2,100}}?)\s*[.]?\s+—"
+            )
+            heading = False
+            for heading_match in heading_pattern.finditer(h["content"]):
+                heading_text = heading_match.group(1).strip()
+                preceding_context = h["content"][max(0, heading_match.start() - 180):heading_match.start()]
+                if (
+                    not re.search(
+                        r"\b(amendment|schedule|appendix|entry|entries|list|act)\b",
+                        heading_text, flags=re.IGNORECASE
+                    )
+                    and not re.search(r"\b(schedule|appendix)\b", preceding_context, flags=re.IGNORECASE)
+                ):
+                    heading = True
+                    break
+            if referenced or heading:
+                provision_matches += 1
+                if heading:
+                    provision_heading_matches += 1
+        if provision_anchors and provision_matches == 0:
+            continue
+
         matched = sum(1 for term in terms if term in haystack)
         # Require stronger overlap for multi-term legal questions. This avoids
         # returning unrelated case digests merely because they mention generic
         # words such as "United States" or "constitution". Empty retrieval is
         # safer than presenting weak matches as legal support.
-        minimum = 1 if len(terms) <= 2 else min(3, len(terms))
+        minimum = 1 if provision_anchors or len(terms) <= 2 else min(3, len(terms))
         if matched < minimum:
             continue
 
@@ -212,8 +274,14 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
         )
         h["authority_priority"] = _authority_priority(h.get("authority"))
         h["jurisdiction_relation"] = jurisdiction_relation
+        provision_bonus = (
+            0.55 * provision_matches + 1.50 * provision_heading_matches
+            if provision_anchors else 0.0
+        )
+        h["provision_matches"] = provision_matches
+        h["provision_heading_matches"] = provision_heading_matches
         h["ranking_score"] = round(
-            h["relevance"] + h["authority_priority"] * 0.10, 4
+            h["relevance"] + h["authority_priority"] * 0.10 + provision_bonus, 4
         )
 
         previous = best_by_source.get(h["id"])

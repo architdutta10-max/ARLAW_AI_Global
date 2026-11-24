@@ -1,8 +1,8 @@
 {
   "name": "ARLAW AI Global",
-  "version": "3.0.4",
-  "release": "Packaging cleanup on top of 3.0.3 accuracy fixes",
-  "release_scope": "3.0.4 removes retired installers and stale changelog text, with no functional changes. 3.0.3 merged accuracy and citation hardening: whole-word task routing, context/citation consistency, per-unit citation coverage, homepage-URL cleanup, targeted abstention, jurisdiction-code repair and frontend fixes. Earlier scope: Preserves the existing hybrid AI, retrieval, jurisdiction, citation-label reporting and browser workspace while adding request throttling, strict request validation, safer uploads, security headers, clean packaging and explicit deployment safeguards. Adds conservative clarification checks for underspecified legal references and a transparent /api/coverage registry inventory. Fixes the browser client so chat requests remain within the API 30-message and 14,000-character validation limits during long conversations; adds a PowerShell API smoke-test helper. Tightens legal retrieval overlap requirements to suppress weakly related citations when the indexed corpus lacks topic-specific support.",
+  "version": "3.0.7",
+  "release": "Provision-aware legal retrieval precision and diagnostic script repair",
+  "release_scope": "Adds explicit article/section anchor matching, improves passage ranking for numbered provisions, widens candidate retrieval for anchored legal questions, and adds regressions that check actual provision text rather than source titles alone. Repairs the optional Groq connectivity diagnostic. Does not add legal authorities, expand country coverage, certify legal accuracy, or complete production hardening.",
   "requires_maintenance": true,
   "production_certified": false,
   "legal_accuracy_certified": false,

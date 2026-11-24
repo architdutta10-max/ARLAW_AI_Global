@@ -23,7 +23,7 @@ from .knowledge import init_db, add_source, search, list_sources, seed_builtin_k
 from .llm import generate, provider_order, classify_task, fit_context
 from .ambiguity import clarification_for, names_specific_authority
 
-VERSION = "3.0.4"
+VERSION = "3.0.7"
 MAX_UPLOAD_BYTES = int(os.getenv("ARLAW_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
 MAX_PDF_PAGES = int(os.getenv("ARLAW_MAX_PDF_PAGES", "300"))
 CHAT_RATE_LIMIT = int(os.getenv("ARLAW_CHAT_RATE_LIMIT", "20"))
@@ -200,7 +200,7 @@ class ChatMessage(BaseModel):
 
 class ChatRequest(BaseModel):
     messages: list[ChatMessage] = Field(min_length=1, max_length=30)
-    jurisdiction: str = Field(default="GLOBAL", min_length=1, max_length=80)
+    jurisdiction: str = Field(default="IN", min_length=1, max_length=80)
     use_knowledge: bool = True
 
     @field_validator("jurisdiction")
@@ -332,7 +332,7 @@ async def upload_document(
     request: Request,
     file: UploadFile = File(...),
     title: str = Form(""),
-    jurisdiction: str = Form("GLOBAL"),
+    jurisdiction: str = Form("IN"),
     source_url: str = Form(""),
     as_of: str = Form(""),
     authority: str = Form("unspecified"),

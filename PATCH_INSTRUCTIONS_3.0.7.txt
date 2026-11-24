@@ -1,0 +1,37 @@
+ARLAW AI GLOBAL 3.0.7 PATCH
+==============================
+
+This is a small source-code patch for an existing 3.0.6 installation.
+It does NOT contain or replace your legal database, uploads, .env, or API keys.
+
+BEFORE APPLYING
+1. Close the ARLAW server window (Ctrl+C).
+2. Back up the entire project folder.
+3. Keep your existing data/arlaw.db and data/arlaw.db.v3-original.
+
+APPLY IN WINDOWS POWERSHELL 5.1
+$Project = "$env:USERPROFILE\\OneDrive\\Desktop\\ARLAW_AI_Global"
+$Patch = "$env:USERPROFILE\\Desktop\\ARLAW_AI_Global_3.0.7_Retrieval_Patch.zip"
+$Backup = "$Project-backup-before-3.0.7"
+
+Copy-Item -LiteralPath $Project -Destination $Backup -Recurse
+Expand-Archive -LiteralPath $Patch -DestinationPath $Project -Force
+
+VERIFY
+Set-Location $Project
+.\\.venv\\Scripts\\python.exe -m compileall -q app tests check_groq.py
+.\\.venv\\Scripts\\python.exe -m pytest -q
+
+Expected test result: 98 passed.
+
+The patch changes only:
+- app/knowledge.py
+- app/main.py
+- tests/test_knowledge.py
+- tests/test_security_v3.py
+- check_groq.py
+- VERSION.json
+- CHANGELOG_3.0.7.md
+
+Do not upload .env or share API keys.
+This patch does not add legal sources or certify ARLAW AI for professional use.

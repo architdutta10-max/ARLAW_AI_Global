@@ -156,6 +156,10 @@ def test_india_article_21_query_still_retrieves_primary_material(monkeypatch, tm
     )
     assert results
     assert any(row["authority"] == "official primary source" for row in results)
+    assert any(
+        "No person shall be deprived of his life or personal liberty" in row["content"]
+        for row in results
+    )
 
 
 
@@ -169,3 +173,61 @@ def test_document_level_source_url_is_preserved():
     from app.knowledge import _specific_source_url
     url = "https://api.sci.gov.in/jonew/judis/5154.pdf"
     assert _specific_source_url(url) == url
+
+
+def test_long_structured_article_21_prompt_retrieves_primary_sources(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "article-21-long-prompt.db")
+    knowledge.init_db()
+    knowledge.seed_builtin_knowledge()
+    question = (
+        "Explain Article 21 of the Constitution of India. Requirements: quote or accurately "
+        "paraphrase the relevant constitutional provision. Explain the legal principles "
+        "established in Maneka Gandhi v. Union of India (1978). Distinguish the original "
+        "judgment from later interpretations. Cite primary legal sources with direct links "
+        "and relevant paragraph or page references wherever available. Clearly distinguish "
+        "binding law from secondary commentary. Do not invent case citations or quotations. "
+        "Include the date or edition of the legal materials used."
+    )
+    results = knowledge.search(question, 5, "IN", "legal_research")
+    titles = [row["title"] for row in results]
+    assert any("Maneka Gandhi" in title and "official judgment" in title for title in titles)
+    assert any("Constitution of India" in title and "official primary text" in title for title in titles)
+    assert any(
+        "No person shall be deprived of his life or personal liberty" in row["content"]
+        for row in results
+    )
+
+
+def test_article_21_retrieval_prefers_the_actual_provision_passage(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "article-21-precision.db")
+    knowledge.init_db()
+    knowledge.add_source(
+        "Constitution of India (2026 edition) - official primary text",
+        "171. Composition of the Legislative Council. This provision includes 21-2-2002 "
+        "as a commencement date and territorial constituencies.",
+        "IN", authority="official primary source", category="law"
+    )
+    knowledge.add_source(
+        "Constitution of India (2026 edition) - official primary text",
+        "21. Protection of life and personal liberty. —No person shall be deprived of "
+        "his life or personal liberty except according to procedure established by law.",
+        "IN", authority="official primary source", category="law"
+    )
+    results = knowledge.search("Explain Article 21 of the Constitution of India.", 5, "IN", "legal_research")
+    assert results
+    assert "No person shall be deprived" in results[0]["content"]
+
+
+def test_first_amendment_query_does_not_return_unrelated_constitutional_digest(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "first-amendment-precision.db")
+    knowledge.init_db()
+    knowledge.add_source(
+        "Obergefell v. Hodges — case digest",
+        "The Supreme Court held that the Fourteenth Amendment requires states to "
+        "license and recognize marriages between two people of the same sex.",
+        "US", authority="secondary", category="law"
+    )
+    assert knowledge.search("What is the First Amendment of the United States Constitution?", 5, "US", "legal_research") == []

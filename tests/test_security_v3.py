@@ -25,7 +25,7 @@ def test_health_endpoint_reports_v3_and_security_headers():
     with TestClient(app) as client:
         response = client.get("/api/health")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.0.4"
+    assert response.json()["version"] == "3.0.7"
     assert response.headers["x-content-type-options"] == "nosniff"
     assert response.headers["x-frame-options"] == "DENY"
     assert response.headers["cache-control"] == "no-store"
@@ -53,3 +53,8 @@ def test_upload_filename_is_generated_not_user_controlled():
     assert result.endswith(".pdf")
     assert "confidential" not in result
     assert "/" not in result and "\\\\" not in result
+
+
+def test_chat_request_defaults_to_india_for_india_focused_release():
+    request = ChatRequest(messages=[ChatMessage(role="user", content="Explain Article 21")])
+    assert request.jurisdiction == "IN"
