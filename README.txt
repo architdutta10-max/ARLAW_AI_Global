@@ -1,4 +1,4 @@
-ARLAW AI Global 3.0.3
+ARLAW AI Global 3.0.4
 
 Quick start
   Windows : double-click start_windows.bat
@@ -9,5 +9,4 @@ Chat history is stored in the current browser only (localStorage). It is not
 synchronised, encrypted or shared with the server. Do not store confidential or
 privileged material in it.
 
-The old install_chat_history.py patch has been retired; do not use it.
 See README.md, DEPLOYMENT.md and RELEASE_QA.md for details and limitations.

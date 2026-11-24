@@ -156,3 +156,16 @@ def test_india_article_21_query_still_retrieves_primary_material(monkeypatch, tm
     )
     assert results
     assert any(row["authority"] == "official primary source" for row in results)
+
+
+
+def test_generic_homepage_is_not_accepted_as_document_source():
+    from app.knowledge import _specific_source_url
+    assert _specific_source_url("https://www.sci.gov.in/") == ""
+    assert _specific_source_url("https://api.sci.gov.in/jonew/judis/5154.pdf") == "https://api.sci.gov.in/jonew/judis/5154.pdf"
+
+
+def test_document_level_source_url_is_preserved():
+    from app.knowledge import _specific_source_url
+    url = "https://api.sci.gov.in/jonew/judis/5154.pdf"
+    assert _specific_source_url(url) == url

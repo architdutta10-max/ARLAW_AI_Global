@@ -73,3 +73,26 @@ def clarification_for(question: str, jurisdiction: str = "GLOBAL") -> dict | Non
             }
 
     return None
+
+
+_SPECIFIC_AUTHORITY_RE = re.compile(
+    r"\b(?:art(?:icle)?|sec(?:tion)?|rule|order)\.?\s*\d+"
+    r"|\bacts?,?\s+(?:of\s+)?(?:18|19|20)\d{2}\b"
+    r"|\bresolution\s+(?:no\.?\s*)?\d+",
+    re.I,
+)
+
+
+_CASE_NAME_RE = re.compile(r"\b[A-Z][\w.&'-]*\s+(?:v\.?|vs\.?)\s+[A-Z]")
+
+
+def names_specific_authority(question: str) -> bool:
+    """True when the question asks about a named provision, case or numbered instrument.
+
+    Such questions cannot be answered responsibly without the actual source, so the
+    API abstains if retrieval finds none. Broad conceptual questions are answered
+    as clearly labelled general information instead.
+    """
+    text = question or ""
+    # Case names need capitalised parties ("Roe v. Wade"), so "precedent vs persuasive" is not one.
+    return bool(_SPECIFIC_AUTHORITY_RE.search(text) or _CASE_NAME_RE.search(text))

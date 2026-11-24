@@ -1,7 +1,7 @@
-# ARLAW AI Global 3.0.3 — Release and QA status
+# ARLAW AI Global 3.0.4 — Release and QA status
 
 ## Automated checks run in the release workspace
-- Python test suite (3.0.3 packaging sandbox, no network): 75 tests passed with stubbed `requests`/`dotenv`; the ~10 tests that need FastAPI/httpx (`test_security_v3.py`, two endpoint tests in `test_ambiguity.py`, one schema test in `test_llm.py`) could **not** be run there. **Run `pip install -r requirements.txt -r requirements-test.txt && python -m pytest -q` locally before release.**
+- Python test suite (3.0.3 packaging sandbox, no network; 3.0.4 changes no code): 82 tests passed with stubbed `requests`/`dotenv`; the ~10 tests that need FastAPI/httpx (`test_security_v3.py`, two endpoint tests in `test_ambiguity.py`, one schema test in `test_llm.py`) could **not** be run there. **Run `pip install -r requirements.txt -r requirements-test.txt && python -m pytest -q` locally before release.**
 - Python bytecode compilation: passed (`python -m compileall -q app run.py`).
 - Frontend JavaScript syntax: passed (`node --check app/static/app.js`).
 - FastAPI smoke checks: `/api/health`, `/api/health/model`, `/api/capabilities`, `/api/jurisdictions`, `/api/registry` and `/api/sources` returned HTTP 200 in the local test client.

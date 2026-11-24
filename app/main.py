@@ -21,9 +21,9 @@ from pydantic import BaseModel, Field, field_validator
 from .config import STATIC_DIR, UPLOAD_DIR, TOP_K
 from .knowledge import init_db, add_source, search, list_sources, seed_builtin_knowledge
 from .llm import generate, provider_order, classify_task, fit_context
-from .ambiguity import clarification_for
+from .ambiguity import clarification_for, names_specific_authority
 
-VERSION = "3.0.3"
+VERSION = "3.0.4"
 MAX_UPLOAD_BYTES = int(os.getenv("ARLAW_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
 MAX_PDF_PAGES = int(os.getenv("ARLAW_MAX_PDF_PAGES", "300"))
 CHAT_RATE_LIMIT = int(os.getenv("ARLAW_CHAT_RATE_LIMIT", "20"))
@@ -240,7 +240,36 @@ def chat(req: ChatRequest, request: Request):
             "needs_clarification": True,
             "clarification": clarification,
         }
-    hits = search(question, TOP_K, req.jurisdiction, classify_task(question)) if req.use_knowledge else []
+    task = classify_task(question)
+    hits = search(question, TOP_K, req.jurisdiction, task) if req.use_knowledge else []
+    legal_tasks = {"legal_research", "civil_procedure", "lawyer_assistance", "judicial_research"}
+    no_legal_source = req.use_knowledge and task in legal_tasks and not hits
+    # Abstain only when a specific provision/case is asked about and nothing was retrieved;
+    # broad conceptual questions get clearly labelled general information instead.
+    if no_legal_source and names_specific_authority(question):
+        return {
+            "answer": (
+                f"I could not retrieve a jurisdiction-matched legal source for {req.jurisdiction} that covers this question. "
+                "To avoid guessing, I cannot give a source-backed answer about a specific provision or case from the current knowledge base. "
+                "Add or locate the relevant official statute, regulation or judgment (Knowledge library), then retry."
+            ),
+            "citations": [],
+            "model_connected": None,
+            "model": {"provider": None, "model": None, "task": task},
+            "jurisdiction": req.jurisdiction,
+            "task": task,
+            "citation_validation": {
+                "status": "no_retrieved_citations", "cited": [], "valid": [], "invalid": [],
+                "paragraphs_checked": 0, "paragraphs_with_citations": 0, "uncited_paragraphs": 0,
+                "coverage_status": "no_retrieved_sources",
+                "scope": "No jurisdiction-matched source was retrieved; no legal conclusion was generated.",
+            },
+            "quality": None,
+            "quality_warning": "No jurisdiction-matched legal source was retrieved. No legal conclusion was generated.",
+            "incomplete": False,
+            "needs_clarification": False,
+            "clarification": None,
+        }
     context = []
     citations = []
     for i, hit in enumerate(hits, 1):
@@ -272,6 +301,10 @@ def chat(req: ChatRequest, request: Request):
     answer, error, model_info = generate(messages, context_text, [c["label"] for c in citations])
     if error:
         answer = "ARLAW could not connect to any configured AI provider.\n\n" + error
+    quality_warning = model_info.get("quality_warning")
+    if no_legal_source and not error:
+        quality_warning = ("No jurisdiction-matched source was retrieved; this is general, unverified information. "
+                           + (quality_warning or "")).strip()
     return {
         "answer": answer,
         "citations": citations,
@@ -281,7 +314,7 @@ def chat(req: ChatRequest, request: Request):
         "task": model_info.get("task"),
         "citation_validation": model_info.get("citation_validation"),
         "quality": model_info.get("quality"),
-        "quality_warning": model_info.get("quality_warning"),
+        "quality_warning": quality_warning,
         "incomplete": model_info.get("incomplete", False),
         "needs_clarification": False,
         "clarification": None,

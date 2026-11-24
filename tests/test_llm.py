@@ -255,7 +255,7 @@ def test_citation_coverage_reports_missing_retrieved_sources():
     assert result["uncited_paragraphs"] == 1
 
 
-def test_citation_coverage_ignores_headings_and_markdown_tables():
+def test_citation_coverage_checks_table_rows_and_prose():
     answer = (
         "# Heading\n\n"
         "| Topic | Explanation |\n"
@@ -264,9 +264,24 @@ def test_citation_coverage_ignores_headings_and_markdown_tables():
         "This prose paragraph contains a citation. [S1]"
     )
     result = llm.validate_citations(answer, ["S1"])
-    assert result["paragraphs_checked"] == 1
+    assert result["paragraphs_checked"] == 2
     assert result["paragraphs_with_citations"] == 1
-    assert result["uncited_paragraphs"] == 0
+    assert result["uncited_paragraphs"] == 1
+    assert result["units_by_type"]["table_row"] == 1
+    assert result["units_by_type"]["paragraph"] == 1
+
+
+def test_citation_coverage_checks_each_list_item():
+    answer = (
+        "- This legal proposition has a source. [S1]\n"
+        "- This second legal proposition is missing a source."
+    )
+    result = llm.validate_citations(answer, ["S1"])
+    assert result["paragraphs_checked"] == 2
+    assert result["paragraphs_with_citations"] == 1
+    assert result["uncited_paragraphs"] == 1
+    assert result["units_by_type"]["list_item"] == 2
+
 
 def test_constitutional_questions_are_legal_research():
     import app.llm as llm

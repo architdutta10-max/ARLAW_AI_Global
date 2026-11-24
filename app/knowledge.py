@@ -19,7 +19,28 @@ def init_db():
         # Backfill rows created by earlier releases without changing user-uploaded sources.
         c.execute("UPDATE sources SET category='law' WHERE file_name='bundled-curated-digest'")
         c.execute("UPDATE sources SET category='economy' WHERE file_name='bundled-curated-digest' AND (lower(title) LIKE '%economic change%' OR lower(title) LIKE '%food,%' OR lower(title) LIKE '%energy and critical%' OR lower(title) LIKE '%macroeconomic%' OR lower(title) LIKE '%trade, logistics%')")
+        # A generic institution homepage is not a document-level citation URL.
+        for sid, url in c.execute("SELECT id, source_url FROM sources WHERE COALESCE(source_url,'')<>''").fetchall():
+            if not _specific_source_url(url):
+                c.execute("UPDATE sources SET source_url='' WHERE id=?", (sid,))
         c.execute("CREATE VIRTUAL TABLE IF NOT EXISTS chunks USING fts5(source_id UNINDEXED, chunk_no UNINDEXED, content, tokenize='unicode61')")
+
+def _specific_source_url(source_url):
+    """Reject generic organisation homepages as if they were document-level citations."""
+    from urllib.parse import urlparse
+    value = (source_url or "").strip()
+    if not value:
+        return ""
+    try:
+        parsed = urlparse(value)
+    except ValueError:
+        return ""
+    if parsed.scheme not in {"http", "https"} or not parsed.netloc:
+        return ""
+    if not (parsed.path or "").strip("/") and not parsed.query:
+        return ""
+    return value
+
 
 def split_text(text, size=1200, overlap=180):
     text = " ".join(text.split())
@@ -46,6 +67,7 @@ def infer_category(title="", text="", file_name=""):
 def add_source(title, text, jurisdiction="GLOBAL", source_url="", as_of="", file_name="", authority="unspecified", language="und", category=None):
     parts = split_text(text)
     if not parts: raise ValueError("No readable text found.")
+    source_url = _specific_source_url(source_url)
     category = (category or infer_category(title, text, file_name)).lower()
     if category not in {"law", "economy", "general"}:
         category = "general"

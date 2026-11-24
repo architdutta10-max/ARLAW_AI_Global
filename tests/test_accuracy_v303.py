@@ -123,3 +123,45 @@ def test_reseeding_repairs_relabelled_bundled_digest(monkeypatch, tmp_path):
     knowledge.seed_builtin_knowledge()
     hits = knowledge.search("Naz Foundation section 377 Delhi High Court", 5, "IN", "legal_research")
     assert any("Naz Foundation" in h["title"] for h in hits)
+
+
+# --- merged hardening: abstention, URL hygiene, citation units --------------
+def test_specific_authority_detection():
+    from app.ambiguity import names_specific_authority as f
+    assert f("What does Section 1983 provide?")
+    assert f("Explain Roe v. Wade")
+    assert f("Summarise the Companies Act, 2013")
+    assert not f("Explain binding precedent vs persuasive authority")
+    assert not f("Explain the steps in a civil case in India")
+
+
+def test_no_source_prompt_forbids_invented_specifics():
+    payload = llm._messages([{"role": "user", "content": "Explain precedent"}], context="", task="legal_research")
+    system_text = " ".join(m["content"] for m in payload if m["role"] == "system")
+    assert "NO SOURCES WERE RETRIEVED" in system_text
+    general = llm._messages([{"role": "user", "content": "hi"}], context="", task="general")
+    assert "NO SOURCES WERE RETRIEVED" not in " ".join(m["content"] for m in general)
+
+
+def test_uncited_table_rows_and_lists_raise_a_quality_warning(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
+    monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq")
+    answer = "- This legal proposition has a source. [S1]\n- This second legal proposition has no source label."
+    monkeypatch.setattr(llm, "PROVIDERS", {"groq": lambda payload: (answer, "m")})
+    _text, _err, meta = llm.generate([{"role": "user", "content": "Explain Article 14"}], "ctx", ["S1"])
+    assert "no detected citation label" in meta["quality_warning"]
+
+
+def test_homepage_urls_are_cleared_in_new_and_existing_sources(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "url.db")
+    knowledge.init_db()
+    knowledge.add_source("Doc A", "x" * 80, "IN", "https://www.sci.gov.in/")
+    knowledge.add_source("Doc B", "y" * 80, "IN", "https://api.sci.gov.in/jonew/judis/5154.pdf")
+    with knowledge.connect() as c:
+        c.execute("UPDATE sources SET source_url='https://www.supremecourt.gov/' WHERE title='Doc A'")
+    knowledge.init_db()
+    urls = {s["title"]: s["source_url"] for s in knowledge.list_sources()}
+    assert urls["Doc A"] == ""
+    assert urls["Doc B"].endswith("5154.pdf")

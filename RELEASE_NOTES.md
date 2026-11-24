@@ -1,6 +1,6 @@
-# ARLAW AI Global 3.0.3 — Release notes
+# ARLAW AI Global 3.0.4 — Release notes
 
-See CHANGELOG.md for the 3.0.3 accuracy and consistency fixes.
+See CHANGELOG.md for the 3.0.4 packaging cleanup and the 3.0.3 accuracy fixes.
 
 ## Preserved capabilities
 - FastAPI backend and existing browser workspace, themes, accent palettes and local chat history.

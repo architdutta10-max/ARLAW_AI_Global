@@ -2,7 +2,7 @@
 
 **An AI-assisted global legal, civil, economic, financial and justice research workspace.**
 
-- **Release:** 3.0.3 — Accuracy fixes: task routing, citation/context consistency, retrieval metadata
+- **Release:** 3.0.4 — Accuracy fixes: task routing, citation/context consistency, retrieval metadata
 - **Live application:** https://arlaw-ai-global.onrender.com
 - **Repository:** https://github.com/architdutta10-max/ARLAW_AI_Global
 
