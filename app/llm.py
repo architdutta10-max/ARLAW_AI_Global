@@ -244,17 +244,95 @@ def _generate_complete(name: str, payload: list[dict]) -> dict:
     return result
 
 
+def _citation_coverage(answer: str):
+    """Heuristically count prose paragraphs containing citation labels.
+
+    This measures citation presence only, not whether a source supports a claim.
+    """
+    lines = []
+    in_code = False
+
+    for line in (answer or "").splitlines():
+        stripped = line.strip()
+
+        if stripped.startswith("```"):
+            in_code = not in_code
+            continue
+        if in_code:
+            continue
+        if not stripped:
+            lines.append("")
+            continue
+        if stripped.startswith("|"):
+            continue
+        if re.fullmatch(r"[\s|:\-]+", stripped):
+            continue
+        if re.match(r"^#{1,6}\s+", stripped):
+            stripped = re.sub(r"^#{1,6}\s+", "", stripped).strip()
+            if not stripped:
+                continue
+        if re.fullmatch(r"[-*_]{3,}", stripped):
+            continue
+
+        lines.append(stripped)
+
+    paragraphs = [
+        item.strip()
+        for item in re.split(r"\n\s*\n", "\n".join(lines))
+        if item.strip()
+    ]
+
+    checked = [
+        item for item in paragraphs
+        if len(re.sub(r"[*_`#>-]", "", item).strip()) >= 20
+    ]
+
+    with_citations = [
+        item for item in checked
+        if re.search(r"\[(S\d+)\]|\*\*(S\d+)\*\*", item)
+    ]
+
+    return {
+        "paragraphs_checked": len(checked),
+        "paragraphs_with_citations": len(with_citations),
+        "uncited_paragraphs": len(checked) - len(with_citations),
+    }
+
+
 def validate_citations(answer: str, available_labels: list[str]):
-    """Check reference-label existence only; this does not validate claim support."""
+    """Check reference-label existence and heuristic paragraph citation coverage."""
     matches = re.findall(r"\[(S\d+)\]|\*\*(S\d+)\*\*", answer or "")
     cited = list(dict.fromkeys(next(group for group in item if group) for item in matches))
     available = set(available_labels or [])
     valid = [x for x in cited if x in available]
     invalid = [x for x in cited if x not in available]
-    return {"cited": cited, "valid": valid, "invalid": invalid,
-            "status": "invalid_reference" if invalid else ("reference_exists_not_verified" if valid else "no_retrieved_citations"),
-            "scope": "Label existence only; source relevance, claim support, authority and currency are not verified."}
 
+    coverage = _citation_coverage(answer)
+
+    if coverage["paragraphs_checked"] == 0:
+        coverage_status = "not_assessed"
+    elif not available:
+        coverage_status = "no_retrieved_sources"
+    elif coverage["uncited_paragraphs"]:
+        coverage_status = "uncited_paragraphs_detected"
+    else:
+        coverage_status = "citation_labels_present_in_checked_paragraphs"
+
+    return {
+        "cited": cited,
+        "valid": valid,
+        "invalid": invalid,
+        "status": "invalid_reference" if invalid else (
+            "reference_exists_not_verified" if valid else "no_retrieved_citations"
+        ),
+        **coverage,
+        "coverage_status": coverage_status,
+        "scope": (
+            "Reference-label existence and heuristic prose-paragraph citation "
+            "presence only. Tables and code are excluded. This does not verify "
+            "source relevance, claim support, authority, jurisdiction or currency."
+        ),
+    }
 def _provider_failure_detail(name: str, exc: Exception) -> str:
     """Return a safe, useful provider error without exposing secrets or raw responses."""
     status = getattr(getattr(exc, "response", None), "status_code", None)

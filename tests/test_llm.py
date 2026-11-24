@@ -267,4 +267,3 @@ def test_citation_coverage_ignores_headings_and_markdown_tables():
     assert result["paragraphs_checked"] == 1
     assert result["paragraphs_with_citations"] == 1
     assert result["uncited_paragraphs"] == 0
-
