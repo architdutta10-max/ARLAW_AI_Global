@@ -56,7 +56,14 @@ def classify_task(text: str) -> str:
         return "finance_tax"
     if any(x in q for x in ("civil procedure", "suit", "plaint", "limitation", "court filing", "appeal", "injunction", "দেওয়ানি", "दीवानी")):
         return "civil_procedure"
-    if any(x in q for x in ("law", "legal", "act", "section", "judgment", "case law", "court", "statute", "আইন", "कानून")):
+    if re.search(r"\barticles?\s+\d+[a-z]?\b", q):
+        return "legal_research"
+    if any(x in q for x in (
+        "law", "legal", "act", "section",
+        "judgment", "case law", "court", "statute", "constitution",
+        "constitutional", "fundamental right", "human rights",
+        "precedent", "jurisdiction", "আইন", "कानून"
+    )):
         return "legal_research"
     return "general"
 

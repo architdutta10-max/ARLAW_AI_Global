@@ -53,3 +53,79 @@ def test_legacy_database_migration_adds_and_backfills_categories(monkeypatch, tm
     with knowledge.connect() as c:
         category = c.execute("SELECT category FROM sources WHERE id=1").fetchone()[0]
     assert category == "economy"
+
+def test_legal_search_ranks_declared_official_authority_above_secondary(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "authority-test.db")
+    knowledge.init_db()
+    text = "constitutional equality judicial review fundamental rights"
+    knowledge.add_source("Constitutional equality official text", text, "IN", authority="official")
+    knowledge.add_source("Constitutional equality secondary note", text, "IN", authority="secondary")
+    results = knowledge.search("constitutional equality judicial review", 5, "IN", "legal_research")
+    assert len(results) == 2
+    assert results[0]["authority"] == "official"
+    assert results[0]["authority_priority"] > results[1]["authority_priority"]
+
+
+def test_legal_search_excludes_global_and_international_fallback(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "strict-legal-test.db")
+    knowledge.init_db()
+    text = "constitutional equality judicial review fundamental rights"
+    knowledge.add_source("India constitutional material", text, "IN", authority="official")
+    knowledge.add_source("Global constitutional material", text, "GLOBAL", authority="official")
+    knowledge.add_source("International constitutional material", text, "INTL", authority="official")
+    results = knowledge.search("constitutional equality judicial review", 10, "IN", "legal_research")
+    assert results
+    assert all(row["jurisdiction"] == "IN" for row in results)
+    assert all(row["jurisdiction_relation"] == "exact" for row in results)
+
+
+def test_nonlegal_search_labels_global_and_international_context(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "context-test.db")
+    knowledge.init_db()
+    text = "food security agricultural supply economic indicators"
+    knowledge.add_source("India food security indicators", text, "IN", authority="official")
+    knowledge.add_source("Global food security indicators", text, "GLOBAL", authority="official")
+    knowledge.add_source("International food security indicators", text, "INTL", authority="official")
+    results = knowledge.search("food security agricultural indicators", 10, "IN", "finance_tax")
+    relations = {row["jurisdiction_relation"] for row in results}
+    assert "exact" in relations
+    assert "global_context" in relations
+    assert "international_context" in relations
+
+def test_legal_sql_filter_precedes_candidate_limit(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "sql-filter-test.db")
+    knowledge.init_db()
+
+    text = "constitutional equality judicial review fundamental rights"
+
+    # Many GLOBAL matches must not crowd out the exact domestic source.
+    for index in range(75):
+        knowledge.add_source(
+            f"Global constitutional material {index}",
+            text,
+            "GLOBAL",
+            authority="official"
+        )
+
+    knowledge.add_source(
+        "India constitutional equality source",
+        text,
+        "IN",
+        authority="official"
+    )
+
+    results = knowledge.search(
+        "constitutional equality judicial review",
+        1,
+        "IN",
+        "legal_research"
+    )
+
+    assert results
+    assert results[0]["jurisdiction"] == "IN"
+    assert results[0]["title"] == "India constitutional equality source"

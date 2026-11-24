@@ -267,3 +267,35 @@ def test_citation_coverage_ignores_headings_and_markdown_tables():
     assert result["paragraphs_checked"] == 1
     assert result["paragraphs_with_citations"] == 1
     assert result["uncited_paragraphs"] == 0
+
+def test_constitutional_questions_are_legal_research():
+    import app.llm as llm
+
+    assert llm.classify_task(
+        "Do Article 14 protections apply to all persons?"
+    ) == "legal_research"
+    assert llm.classify_task(
+        "Explain constitutional rights"
+    ) == "legal_research"
+    assert llm.classify_task(
+        "What does the Constitution say about equality?"
+    ) == "legal_research"
+
+def test_bengali_and_hindi_legal_keywords():
+    import app.llm as llm
+
+    assert llm.classify_task("\u0986\u0987\u09a8") == "legal_research"
+    assert llm.classify_task("\u0915\u093e\u0928\u0942\u0928") == "legal_research"
+
+def test_ordinary_article_writing_is_not_legal_research():
+    import app.llm as llm
+
+    assert llm.classify_task(
+        "Write an article about climate change"
+    ) == "general"
+    assert llm.classify_task(
+        "Write articles about science"
+    ) == "general"
+    assert llm.classify_task(
+        "Do Article 14 protections apply to all persons?"
+    ) == "legal_research"

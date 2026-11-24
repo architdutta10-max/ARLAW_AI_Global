@@ -78,8 +78,8 @@ def chat(req: ChatRequest):
     context=[]; citations=[]
     for i,h in enumerate(hits,1):
         label=f"S{i}"
-        context.append(f"[{label}] {h['title']} | Jurisdiction: {h['jurisdiction']} | Authority: {h['authority']} | Language: {h['language']} | As of: {h['as_of'] or 'not supplied'} | URL: {h['source_url'] or 'not supplied'}\n{h['content']}")
-        citations.append({"label":label,"title":h["title"],"jurisdiction":h["jurisdiction"],"authority":h["authority"],"language":h["language"],"category":h.get("category", "general"),"retrieval_relevance":h.get("relevance"),"as_of":h["as_of"],"url":h["source_url"]})
+        context.append(f"[{label}] {h['title']} | Jurisdiction: {h['jurisdiction']} | Jurisdiction relationship: {h.get('jurisdiction_relation', 'unspecified')} | Declared authority: {h['authority']} (ranking priority {h.get('authority_priority', 0)}; not independently verified) | Language: {h['language']} | Recorded date: {h['as_of'] or 'not supplied'} (does not establish current validity) | URL: {h['source_url'] or 'not supplied'}\n{h['content']}")
+        citations.append({"label":label,"title":h["title"],"jurisdiction":h["jurisdiction"],"jurisdiction_relation":h.get("jurisdiction_relation", "unspecified"),"authority":h["authority"],"authority_priority":h.get("authority_priority", 0),"language":h["language"],"category":h.get("category", "general"),"retrieval_relevance":h.get("relevance"),"as_of":h["as_of"],"url":h["source_url"]})
     answer,error,model_info=generate(messages,"\n\n".join(context),[c["label"] for c in citations])
     if error: answer="ARLAW could not connect to any configured AI provider.\n\n"+error
     return {"answer":answer,"citations":citations,"model_connected":error is None,"model":model_info,"jurisdiction":req.jurisdiction,"task":model_info.get("task"),"citation_validation":model_info.get("citation_validation"),"quality":model_info.get("quality"),"quality_warning":model_info.get("quality_warning"),"incomplete":model_info.get("incomplete", False)}

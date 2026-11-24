@@ -56,60 +56,159 @@ def add_source(title, text, jurisdiction="GLOBAL", source_url="", as_of="", file
         c.executemany("INSERT INTO chunks(source_id,chunk_no,content) VALUES(?,?,?)", [(sid,i,x) for i,x in enumerate(parts)])
     return {"id": sid, "chunks": len(parts)}
 
-def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
-    """Return jurisdiction- and topic-aware source chunks ranked by query-term coverage.
+_AUTHORITY_PRIORITY = {
+    "official": 4,
+    "official primary source": 4,
+    "primary": 4,
+    "primary source": 4,
+    "court": 3,
+    "regulator": 3,
+    "official secondary": 2,
+    "case-law repository": 2,
+    "case law repository": 2,
+    "secondary": 1,
+    "unspecified": 0,
+}
 
-    FTS5's OR expression is retained for recall, but weak one-word matches are filtered,
-    results from unrelated jurisdictions are excluded, and duplicate chunks from one
-    source are collapsed to the best matching chunk.
+_LEGAL_TASKS = {
+    "legal_research", "civil_procedure", "lawyer_assistance",
+    "judicial_research", "document_review",
+}
+
+
+def _authority_priority(authority):
+    """Rank declared metadata only; this does not independently verify a source."""
+    label = " ".join(str(authority or "unspecified").strip().lower().split())
+    return _AUTHORITY_PRIORITY.get(label, 0)
+
+
+def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
+    """Retrieve relevant sources with conservative legal-jurisdiction boundaries.
+
+    Legal tasks require an exact jurisdiction match. GLOBAL and INTL sources
+    are not silently mixed into domestic legal research. Non-legal research
+    may use global/international context, explicitly labelled as such.
+    Authority ranking uses declared metadata, not independent verification.
     """
-    stop = {"the", "and", "for", "with", "from", "that", "this", "what", "when", "where",
-            "who", "does", "have", "has", "are", "was", "were", "into", "about", "explain",
-            "under", "between", "both", "their", "them", "your", "you", "how", "why", "which",
-            "article", "section", "act", "case", "law"}
+    stop = {
+        "the", "and", "for", "with", "from", "that", "this", "what", "when",
+        "where", "who", "does", "have", "has", "are", "was", "were", "into",
+        "about", "explain", "under", "between", "both", "their", "them",
+        "your", "you", "how", "why", "which", "article", "section", "act",
+        "case", "law"
+    }
     terms = []
     for token in re.findall(r"[\w]+", (query or "").lower(), flags=re.UNICODE):
         if len(token) > 1 and token not in stop and token not in terms:
             terms.append(token)
+
     if not terms:
         return []
+
     terms = terms[:16]
     expr = " OR ".join('"' + t.replace('"', '""') + '"' for t in terms)
     j = (jurisdiction or "GLOBAL").upper().strip()
     task = (task or "general").lower()
-    allowed_categories = ({"law", "general"} if task in {"legal_research", "civil_procedure", "lawyer_assistance", "judicial_research", "document_review"}
-                          else {"economy", "general"} if task in {"finance_tax", "accounting", "ca_tax"}
-                          else {"law", "economy", "general"})
+    legal_task = task in _LEGAL_TASKS
+
+    allowed_categories = (
+        {"law", "general"} if legal_task
+        else {"economy", "general"}
+        if task in {"finance_tax", "accounting", "ca_tax"}
+        else {"law", "economy", "general"}
+    )
+
+    candidate_limit = max(60, top_k * 30)
+
     with connect() as c:
-        rows = c.execute(
-            "SELECT s.id,s.title,s.jurisdiction,s.source_url,s.as_of,s.authority,s.language,s.category,c.chunk_no,c.content,bm25(chunks) score "
-            "FROM chunks c JOIN sources s ON s.id=c.source_id WHERE chunks MATCH ? ORDER BY score LIMIT ?",
-            (expr, max(60, top_k * 30))).fetchall()
+        base_sql = (
+            "SELECT s.id,s.title,s.jurisdiction,s.source_url,s.as_of,"
+            "s.authority,s.language,s.category,c.chunk_no,c.content,bm25(chunks) score "
+            "FROM chunks c JOIN sources s ON s.id=c.source_id "
+        )
+
+        if legal_task:
+            rows = c.execute(
+                base_sql +
+                "WHERE chunks MATCH ? "
+                "AND UPPER(TRIM(COALESCE(s.jurisdiction, 'GLOBAL'))) = ? "
+                "ORDER BY score LIMIT ?",
+                (expr, j, candidate_limit)
+            ).fetchall()
+        else:
+            rows = c.execute(
+                base_sql +
+                "WHERE chunks MATCH ? ORDER BY score LIMIT ?",
+                (expr, candidate_limit)
+            ).fetchall()
+
     best_by_source = {}
     for row in rows:
         h = dict(row)
-        source_j = (h.get("jurisdiction") or "GLOBAL").upper()
-        if source_j not in {j, "GLOBAL", "INTL"}:
-            continue
-        category = (h.get("category") or infer_category(h["title"], h["content"], "")).lower()
+        source_j = (h.get("jurisdiction") or "GLOBAL").upper().strip()
+
+        if legal_task:
+            if source_j != j:
+                continue
+            jurisdiction_relation = "exact"
+        else:
+            if source_j not in {j, "GLOBAL", "INTL"}:
+                continue
+            jurisdiction_relation = (
+                "exact" if source_j == j
+                else "international_context" if source_j == "INTL"
+                else "global_context"
+            )
+
+        category = (
+            h.get("category")
+            or infer_category(h["title"], h["content"], "")
+        ).lower()
         if category not in allowed_categories:
             continue
+
         haystack = (h["title"] + " " + h["content"]).lower()
         matched = sum(1 for term in terms if term in haystack)
-        # A single generic word should not pull an otherwise unrelated source.
         minimum = 1 if len(terms) <= 2 else 2
         if matched < minimum:
             continue
+
         coverage = matched / len(terms)
         title_hits = sum(1 for term in terms if term in h["title"].lower())
-        jurisdiction_bonus = 0.08 if source_j == j and j not in {"GLOBAL", "INTL"} else 0.0
-        h["relevance"] = round(coverage + min(title_hits, 3) * 0.04 + jurisdiction_bonus, 4)
+        jurisdiction_bonus = (
+            0.08
+            if jurisdiction_relation == "exact" and j not in {"GLOBAL", "INTL"}
+            else 0.0
+        )
+        h["relevance"] = round(
+            coverage + min(title_hits, 3) * 0.04 + jurisdiction_bonus, 4
+        )
+        h["authority_priority"] = _authority_priority(h.get("authority"))
+        h["jurisdiction_relation"] = jurisdiction_relation
+        h["ranking_score"] = round(
+            h["relevance"] + h["authority_priority"] * 0.035, 4
+        )
+
         previous = best_by_source.get(h["id"])
-        if previous is None or (h["relevance"], -float(h["score"])) > (previous["relevance"], -float(previous["score"])):
+        if previous is None or (
+            h["ranking_score"], h["relevance"], -float(h["score"])
+        ) > (
+            previous["ranking_score"], previous["relevance"],
+            -float(previous["score"])
+        ):
             h["category"] = category
             best_by_source[h["id"]] = h
-    ranked = sorted(best_by_source.values(), key=lambda h: (h["relevance"], -float(h["score"])), reverse=True)
+
+    ranked = sorted(
+        best_by_source.values(),
+        key=lambda h: (
+            h["ranking_score"], h["relevance"], -float(h["score"])
+        ),
+        reverse=True,
+    )
     return ranked[:max(1, min(int(top_k), 20))]
+
+
 
 def list_sources():
     with connect() as c:
