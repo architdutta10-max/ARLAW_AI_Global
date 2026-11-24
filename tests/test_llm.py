@@ -219,3 +219,52 @@ def test_provider_failure_details_do_not_expose_unknown_error_text():
     )
     assert result == "groq: RuntimeError"
     assert secret_like_text not in result
+
+
+def test_citation_coverage_detects_uncited_prose_paragraphs():
+    answer = (
+        "## Overview\n\n"
+        "The rule applies to all persons within the territory. [S1]\n\n"
+        "A second legal proposition is presented here without a citation."
+    )
+    result = llm.validate_citations(answer, ["S1"])
+    assert result["paragraphs_checked"] == 2
+    assert result["paragraphs_with_citations"] == 1
+    assert result["uncited_paragraphs"] == 1
+    assert result["coverage_status"] == "uncited_paragraphs_detected"
+    assert "does not verify" in result["scope"]
+
+
+def test_citation_coverage_does_not_claim_source_support():
+    answer = (
+        "This paragraph includes a citation label. [S1]\n\n"
+        "Another paragraph also includes a citation label. **S1**"
+    )
+    result = llm.validate_citations(answer, ["S1"])
+    assert result["paragraphs_checked"] == 2
+    assert result["paragraphs_with_citations"] == 2
+    assert result["uncited_paragraphs"] == 0
+    assert result["coverage_status"] == "citation_labels_present_in_checked_paragraphs"
+    assert result["status"] == "reference_exists_not_verified"
+
+
+def test_citation_coverage_reports_missing_retrieved_sources():
+    answer = "This paragraph contains a legal statement but no source label."
+    result = llm.validate_citations(answer, [])
+    assert result["coverage_status"] == "no_retrieved_sources"
+    assert result["uncited_paragraphs"] == 1
+
+
+def test_citation_coverage_ignores_headings_and_markdown_tables():
+    answer = (
+        "# Heading\n\n"
+        "| Topic | Explanation |\n"
+        "|---|---|\n"
+        "| Rule | A table entry without a citation |\n\n"
+        "This prose paragraph contains a citation. [S1]"
+    )
+    result = llm.validate_citations(answer, ["S1"])
+    assert result["paragraphs_checked"] == 1
+    assert result["paragraphs_with_citations"] == 1
+    assert result["uncited_paragraphs"] == 0
+

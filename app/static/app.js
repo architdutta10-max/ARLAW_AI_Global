@@ -132,7 +132,7 @@ async function send(text){
   loading.remove();add('assistant',d.answer,d.citations||[]);
   if(d.quality_warning)add('assistant','Reliability warning: '+d.quality_warning);
   const provider=d.model?.provider||'AI';const model=d.model?.model||'connected';$('connection').textContent=d.model_connected?`${provider} · ${model} · ${d.task||'general'}`:'Model unavailable';
-  if(d.citation_validation?.scope){const note=document.createElement('p');note.className='citation-scope';note.textContent='Citation check: '+d.citation_validation.scope;$('messages').append(note);}
+  if(d.citation_validation?.scope){const cv=d.citation_validation;const note=document.createElement('p');note.className='citation-scope';note.textContent='Citation check: '+(cv.paragraphs_checked??0)+' prose paragraphs checked; '+(cv.paragraphs_with_citations??0)+' contain citation labels; '+(cv.uncited_paragraphs??0)+' have no detected citation. Status: '+(cv.coverage_status||'not assessed')+'. '+cv.scope;$('messages').append(note);}
  }catch(e){loading.remove();add('assistant','Application error: '+e.message);$('connection').textContent='Request failed';}
  finally{sending=false;sendButton.disabled=false;$('prompt').disabled=false;$('prompt').focus();$('requestStatus').textContent='';}
 }
