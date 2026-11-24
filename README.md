@@ -2,7 +2,7 @@
 
 **An AI-assisted global legal, civil, economic, financial and justice research workspace.**
 
-- **Release:** 2.4.0 — Workspace redesign and colour personalization
+- **Release:** 3.0.0 — Security baseline, safer uploads and deployment hygiene
 - **Live application:** https://arlaw-ai-global.onrender.com
 - **Repository:** https://github.com/architdutta10-max/ARLAW_AI_Global
 
@@ -136,6 +136,19 @@ python evaluation\\run_eval.py --base-url http://127.0.0.1:8000
 
 The test suite checks selected functions and integration contracts. The evaluation runner checks API availability and response generation. Neither can certify legal correctness, source support, security or production readiness.
 
+## Version 3.0 security and deployment changes
+
+- Per-IP, in-process request throttling for chat and uploads (defaults: 20 chat requests/minute and 5 uploads/minute). This is a basic abuse control, not distributed rate limiting.
+- Strict user/assistant message-role validation and jurisdiction-code validation.
+- Bounded upload reads, UTF-8 text validation, PDF encryption/page-count checks, extracted-text limits and generated storage filenames that do not retain user-supplied filenames.
+- Response security headers and no-store caching for API responses.
+- Clean release packaging: secrets, local databases, virtual environments, Git metadata, caches and backup folders are excluded.
+- Storage paths remain configurable with `ARLAW_DATA_DIR`, `ARLAW_DB_PATH` and `ARLAW_UPLOAD_DIR`.
+
+**Important deployment limits:** Render Free uses ephemeral filesystem storage. SQLite data and uploaded files can be lost during restarts or redeploys. The included `render.yaml` deliberately stays on the free plan and does not pretend to provide persistent storage. Attach a paid persistent disk mounted at `/var/data` and set `ARLAW_DATA_DIR=/var/data`, or use managed external database/object storage, before expecting durable data.
+
+**Authentication is not yet implemented.** Do not use this public deployment for privileged, confidential, personal, client, financial or other sensitive documents. Before production use, add user login, authorization, per-user data isolation, secure session/CSRF controls, deletion and retention workflows, malware scanning, shared rate limiting and an independent security review.
+
 ## Production deployment checklist
 
 Before opening the service to real users, implement and independently review:
@@ -148,7 +161,7 @@ Before opening the service to real users, implement and independently review:
 - Privacy notice, data-retention policy and legal basis for uploaded material.
 - Independent security testing and legal-source validation workflows.
 
-The current project is a development and evaluation platform, not a production-secure legal case-management system.
+Version 3.0 adds request throttling, stricter request validation, safer document handling, security headers and clean release packaging. It still does not include user accounts, role-based access control, distributed rate limiting, malware scanning, persistent storage on Render Free, or an independent security/legal-accuracy audit. Treat it as a public research demo until those controls are added.
 
 ## Responsible data and legal use
 

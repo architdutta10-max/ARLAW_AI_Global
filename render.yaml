@@ -11,5 +11,16 @@ services:
         value: 3.11.9
       - key: GROQ_MODEL
         value: openai/gpt-oss-20b
+      - key: OLLAMA_ENABLED
+        value: "false"
+      - key: ARLAW_PROVIDER_ORDER
+        value: groq,ollama
       - key: GROQ_API_KEY
         sync: false
+# IMPORTANT:
+# The free Render filesystem is ephemeral. Uploaded documents and SQLite data
+# can be lost on restart/redeploy. For persistent data, attach a paid Render
+# disk (mount path /var/data) and set ARLAW_DATA_DIR=/var/data, or configure
+# external managed database/object storage. Do not upload confidential client
+# material until authentication, authorization, retention and security reviews
+# are in place.

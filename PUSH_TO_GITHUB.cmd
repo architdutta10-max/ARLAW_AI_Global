@@ -3,7 +3,7 @@ setlocal EnableExtensions
 cd /d "%~dp0"
 
 echo ==================================================
-echo  ARLAW AI Global 2.3.0 - GitHub release push
+echo  ARLAW AI Global 3.0.0 - GitHub release push
 echo ==================================================
 
 git rev-parse --is-inside-work-tree >nul 2>&1
@@ -14,7 +14,7 @@ if errorlevel 1 (
   exit /b 1
 )
 
-for %%F in (.env .env.local) do (
+for %%F in (.env .env.local .env.backup .env.production) do (
   git ls-files --error-unmatch "%%F" >nul 2>&1
   if not errorlevel 1 (
     echo ERROR: %%F is tracked by Git. Remove secrets from tracking before pushing.
@@ -72,7 +72,7 @@ if not errorlevel 1 (
   echo.
   choice /M "Commit these staged changes"
   if errorlevel 2 exit /b 0
-  git commit -m "Release ARLAW AI Global 2.3.0"
+  git commit -m "Release ARLAW AI Global 3.0.0"
   if errorlevel 1 goto :failed
 )
 

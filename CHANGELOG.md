@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.0.0 — Security baseline and deployment hygiene
+- Preserved existing frontend, provider routing, knowledge retrieval, jurisdictions, source registry and local browser history.
+- Added per-IP chat/upload throttling, strict request and jurisdiction validation, safer bounded document ingestion and response security headers.
+- Documented persistent storage requirements and production security blockers; Render Free remains explicitly ephemeral.
+- Cleaned the release package of credentials, databases, Git metadata, virtual environments, backups and caches.
+- Added regression coverage for security headers, rate limits, role/jurisdiction validation and safe upload filenames.
+- Not production-certified, legally certified or independently security-audited.
+
+
 ## 2.4.0 — Workspace redesign and personalization
 
 - Refined responsive workspace styling and navigation presentation.
@@ -29,6 +38,15 @@
 - This release does not certify legal accuracy; legal provisions still require verification against current primary sources.
 
 # Changelog
+
+## 3.0.0 — Security baseline and deployment hygiene
+- Preserved existing frontend, provider routing, knowledge retrieval, jurisdictions, source registry and local browser history.
+- Added per-IP chat/upload throttling, strict request and jurisdiction validation, safer bounded document ingestion and response security headers.
+- Documented persistent storage requirements and production security blockers; Render Free remains explicitly ephemeral.
+- Cleaned the release package of credentials, databases, Git metadata, virtual environments, backups and caches.
+- Added regression coverage for security headers, rate limits, role/jurisdiction validation and safe upload filenames.
+- Not production-certified, legally certified or independently security-audited.
+
 
 ## 2.0.0 — Final Stable Package
 

@@ -186,7 +186,7 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
         h["authority_priority"] = _authority_priority(h.get("authority"))
         h["jurisdiction_relation"] = jurisdiction_relation
         h["ranking_score"] = round(
-            h["relevance"] + h["authority_priority"] * 0.035, 4
+            h["relevance"] + h["authority_priority"] * 0.10, 4
         )
 
         previous = best_by_source.get(h["id"])
@@ -231,7 +231,7 @@ def seed_builtin_knowledge():
             continue
         add_source(item["title"], item["text"], item.get("jurisdiction", "GLOBAL"),
                    item.get("source_url", ""), item.get("as_of", ""),
-                   "bundled-curated-digest", item.get("authority", "secondary"),
+                   item.get("file_name", "bundled-curated-digest"), item.get("authority", "secondary"),
                    item.get("language", "en"), item.get("category"))
         inserted += 1
     return inserted

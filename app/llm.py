@@ -54,7 +54,13 @@ def classify_task(text: str) -> str:
         return "document_review"
     if any(x in q for x in ("tax", "gst", "income tax", "accounting", "financial", "economy", "economic", "investment", "budget")):
         return "finance_tax"
-    if any(x in q for x in ("civil procedure", "suit", "plaint", "limitation", "court filing", "appeal", "injunction", "দেওয়ানি", "दीवानी")):
+    # Constitutional Article questions take priority over broad procedure keywords.
+    if re.search(r"\barticles?\s+\d+[a-z]?\b", q):
+        return "legal_research"
+    # Recognise named legal cases, including Maneka Gandhi v Union of India.
+    if re.search(r"\b[A-Za-z][\w.&'-]*(?:\s+[A-Za-z][\w.&'-]*){0,5}\s+v\.?\s+[A-Za-z][\w.&'-]*", q):
+        return "legal_research"
+    if any(x in q for x in ("civil procedure", "suit", "plaint", "limitation period", "period of limitation", "statute of limitations", "court filing", "appeal", "injunction", "দেওয়ানি", "दीवानी")):
         return "civil_procedure"
     # Remove explicitly negated legal-topic instructions before checking
     # legal intent. Preserve positive legal references elsewhere in the prompt.

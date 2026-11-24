@@ -1,23 +1,25 @@
-# ARLAW AI Global 2.3.0 — Release notes
+# ARLAW AI Global 3.0.0 — Release notes
 
-## Retrieval and legal-source integrity
-- Added source categories (`law`, `economy`, `general`) with a migration for existing SQLite databases.
-- Bundled case digests and economic/shortage frameworks are separated during task-aware retrieval.
-- Search now filters unrelated jurisdictions instead of silently falling back to unrelated jurisdictions.
-- Retrieval ranks by query-term coverage, gives a modest title/jurisdiction preference, and collapses duplicate chunks from the same source.
-- Citation checker recognises `[S#]` and `**S#**`, and reports only reference-label existence. It does not validate legal propositions, source support, source currency or authority.
+## Preserved capabilities
+- FastAPI backend and existing browser workspace, themes, accent palettes and local chat history.
+- Groq and optional Ollama provider routing.
+- SQLite/FTS5 knowledge retrieval, topic-aware categories and jurisdiction-aware filtering.
+- Existing legal research, civil, accounting, tax, judicial research and professional workflow prompts.
+- Existing source registry, citations metadata and document indexing for PDF, TXT and Markdown.
 
-## Interface
-- Added browser-local recent chat history (up to 10 conversations, stored in localStorage on this device).
-- Added request status and loading feedback; disables the composer while a request is in progress.
-- Refined layout, focus indicators, responsive history list, citation notices and dark-mode presentation.
+## Security and reliability baseline
+- Per-IP in-process throttling for chat and document upload endpoints.
+- Strict user/assistant message role validation and supported-jurisdiction validation.
+- Bounded upload reads, UTF-8 validation, PDF encryption/page-count checks, extracted-text cap and generated upload storage names.
+- Response security headers and no-store caching on API routes.
+- Deployment documentation covers secret rotation, ephemeral Render Free storage and persistent-volume options.
+- Clean distribution excludes `.env`, private databases, Git internals, virtual environments, backups and caches.
 
-## Model routing
-- Existing configurable Ollama/Groq preference order and fallback are retained.
-- No provider key is included. No provider availability or answer correctness is guaranteed.
-
-## Boundaries
-- Bundled landmark-case records are curated secondary educational digests, not full official judgments.
-- Economic/shortage records are research frameworks, not live datasets or alerts.
-- No foundation model weights were retrained. Retrieval augmentation is not fine-tuning.
+## Important limitations
+- No user authentication, per-user authorization or data isolation is included in this release.
+- Rate limiting is process-local, not shared across workers/instances.
+- Render Free storage is ephemeral; SQLite and uploads are not durable across all restarts/redeploys.
+- No malware scanning or independent security penetration test is included.
+- Citation labels and paragraph coverage are not proof that a source supports a legal proposition.
+- No foundation-model weights were trained. Retrieval augmentation is not fine-tuning.
 - This release is not legally certified, production-certified or independently security-audited.
