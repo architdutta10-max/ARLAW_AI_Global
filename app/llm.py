@@ -330,7 +330,7 @@ def validate_citations(answer: str, available_labels: list[str]):
         "scope": (
             "Reference-label existence and heuristic prose-paragraph citation "
             "presence only. Tables and code are excluded. This does not verify "
-            "source relevance, claim support, authority, jurisdiction or currency."
+            "source relevance, claim support, authority, jurisdiction or currency; these are not verified."
         ),
     }
 def _provider_failure_detail(name: str, exc: Exception) -> str:
