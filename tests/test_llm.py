@@ -318,3 +318,76 @@ def test_positive_legal_intent_survives_unrelated_negative_instruction():
     assert llm.classify_task(
         "Explain constitutional rights. Do not discuss unrelated laws."
     ) == "legal_research"
+
+
+def test_groq_gpt_oss_requests_final_answer_without_reasoning(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("GROQ_MODEL", "openai/gpt-oss-20b")
+
+    captured = {}
+
+    class FakeResponse:
+        status_code = 200
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {
+                "choices": [{
+                    "message": {"content": "Final answer"},
+                    "finish_reason": "stop"
+                }]
+            }
+
+    def fake_post(url, headers, json, timeout):
+        captured["url"] = url
+        captured["json"] = json
+        return FakeResponse()
+
+    monkeypatch.setattr(llm.requests, "post", fake_post)
+
+    answer, model, finish_reason = llm._groq([
+        {"role": "user", "content": "Explain Article 14"}
+    ])
+
+    assert answer == "Final answer"
+    assert model == "openai/gpt-oss-20b"
+    assert finish_reason == "stop"
+    assert captured["json"]["include_reasoning"] is False
+    assert captured["json"]["reasoning_effort"] == "low"
+
+
+def test_groq_non_gpt_oss_does_not_receive_gpt_oss_parameters(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+
+    captured = {}
+
+    class FakeResponse:
+        status_code = 200
+
+        def raise_for_status(self):
+            pass
+
+        def json(self):
+            return {
+                "choices": [{
+                    "message": {"content": "Test answer"},
+                    "finish_reason": "stop"
+                }]
+            }
+
+    def fake_post(url, headers, json, timeout):
+        captured["json"] = json
+        return FakeResponse()
+
+    monkeypatch.setattr(llm.requests, "post", fake_post)
+
+    answer, model, finish_reason = llm._groq([
+        {"role": "user", "content": "Test"}
+    ])
+
+    assert answer == "Test answer"
+    assert "include_reasoning" not in captured["json"]
+    assert "reasoning_effort" not in captured["json"]

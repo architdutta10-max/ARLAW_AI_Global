@@ -169,6 +169,12 @@ def _groq(payload):
     max_tokens = max(512, min(2048, int(os.getenv("ARLAW_MAX_COMPLETION_TOKENS", "1200"))))
     request_json = {"model": model, "messages": payload, "temperature": 0.2,
                     "max_completion_tokens": max_tokens}
+
+    # GPT-OSS can spend its completion budget on a separate reasoning field.
+    # Request only the final answer and use low reasoning effort.
+    if model.lower().startswith("openai/gpt-oss-"):
+        request_json["include_reasoning"] = False
+        request_json["reasoning_effort"] = "low"
     url = os.getenv("GROQ_BASE_URL", "https://api.groq.com/openai/v1").rstrip("/") + "/chat/completions"
     headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
     # One bounded retry for TPM/RPM 429s. Honor Groq's reset guidance; do not
