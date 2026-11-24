@@ -129,3 +129,30 @@ def test_legal_sql_filter_precedes_candidate_limit(monkeypatch, tmp_path):
     assert results
     assert results[0]["jurisdiction"] == "IN"
     assert results[0]["title"] == "India constitutional equality source"
+
+
+def test_us_first_amendment_query_does_not_return_unrelated_case_digests(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "first-amendment-test.db")
+    knowledge.init_db()
+    knowledge.seed_builtin_knowledge()
+    results = knowledge.search(
+        "Explain the First Amendment of the United States Constitution and cite authoritative legal sources.",
+        6, "US", "legal_research"
+    )
+    # The bundled US corpus has case digests, but no primary First Amendment text.
+    # Do not cite unrelated cases as if they support this specific question.
+    assert results == []
+
+
+def test_india_article_21_query_still_retrieves_primary_material(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "article-21-test.db")
+    knowledge.init_db()
+    knowledge.seed_builtin_knowledge()
+    results = knowledge.search(
+        "Explain Article 21 of the Constitution of India and cite authoritative legal sources.",
+        6, "IN", "legal_research"
+    )
+    assert results
+    assert any(row["authority"] == "official primary source" for row in results)

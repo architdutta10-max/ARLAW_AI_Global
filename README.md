@@ -2,7 +2,7 @@
 
 **An AI-assisted global legal, civil, economic, financial and justice research workspace.**
 
-- **Release:** 3.0.0 — Security baseline, safer uploads and deployment hygiene
+- **Release:** 3.0.3 — Accuracy fixes: task routing, citation/context consistency, retrieval metadata
 - **Live application:** https://arlaw-ai-global.onrender.com
 - **Repository:** https://github.com/architdutta10-max/ARLAW_AI_Global
 
@@ -64,6 +64,7 @@ The application exposes:
 - `GET /api/capabilities` — declared workflows, language prompting and verification boundary.
 - `GET /api/health` and `GET /api/health/model` — application and provider configuration status.
 - `GET /api/jurisdictions` — jurisdiction list.
+- `GET /api/coverage` — source-registry inventory only; not proof of indexed or current law.
 - `GET /api/registry` — source-directory metadata.
 - `GET /api/sources` — indexed-source metadata.
 - `POST /api/documents` — local indexing for supported document formats.
@@ -178,3 +179,10 @@ Index only lawful, public, licensed and non-confidential material. Record jurisd
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Accuracy and jurisdiction coverage safeguards
+
+- `GET /api/coverage` reports which jurisdictions have source-registry starting points. This is an inventory only; it does not claim full-text indexing, completeness, currency, or legal authority for a particular issue.
+- The chat endpoint asks a clarification question for selected underspecified numbered references (for example, an agenda number without an issuing body/session, a resolution number without issuer/year, or an article/section number without its legal instrument). It does not call the language model for these cases.
+- Legal retrieval remains jurisdiction-restricted. A registry link is not treated as retrieved evidence, and a declared authority label is not independently verified.
+- Before expanding any jurisdiction's corpus, verify the official publisher, version/effective date, reuse terms, language, and stable document identifier. Keep official primary texts separate from case summaries and commentary.

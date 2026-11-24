@@ -3,7 +3,7 @@ setlocal EnableExtensions
 cd /d "%~dp0"
 
 echo ==================================================
-echo  ARLAW AI Global 3.0.0 - GitHub release push
+echo  ARLAW AI Global 3.0.3 - GitHub release push
 echo ==================================================
 
 git rev-parse --is-inside-work-tree >nul 2>&1
@@ -72,7 +72,7 @@ if not errorlevel 1 (
   echo.
   choice /M "Commit these staged changes"
   if errorlevel 2 exit /b 0
-  git commit -m "Release ARLAW AI Global 3.0.0"
+  git commit -m "Release ARLAW AI Global 3.0.3"
   if errorlevel 1 goto :failed
 )
 

@@ -38,13 +38,40 @@ SPECIALISTS = {
 }
 
 
+def _has_word(text: str, words) -> bool:
+    """Whole-token match for short ASCII keywords (avoids 'itr' in 'nitrogen')."""
+    return any(re.search(r"(?<![a-z0-9])" + re.escape(w) + r"(?![a-z0-9])", text) for w in words)
+
+
+def _mentions_act(original: str) -> bool:
+    """Detect a statute reference such as 'IT Act', 'Act, 2000' or 'under the Act'.
+
+    The bare substring 'act' matches 'fact', 'contract' and 'practical', so it
+    must never be used on its own as a legal-intent signal.
+    """
+    return bool(
+        re.search(r"\b[A-Z][\w&.-]*\s+Act\b", original)
+        or re.search(r"\bacts?,?\s+(?:of\s+)?(?:18|19|20)\d{2}\b", original, re.I)
+        or re.search(r"\b(?:the|this|that|under|which)\s+acts?\b", original, re.I)
+    )
+
+
+_LEGAL_WORD_RE = re.compile(
+    r"(?<![a-z])(?:laws?|courts?|sections?)(?![a-z])"
+    r"|(?<![a-z])(?:il)?legal"
+    r"|(?<![a-z])(?:judg(?:e)?ment|statute|constitution|precedent|jurisdiction)"
+    r"|(?<![a-z])case law|(?<![a-z])fundamental rights?|(?<![a-z])human rights"
+)
+
+
 def classify_task(text: str) -> str:
-    q = (text or "").lower()
+    original = text or ""
+    q = original.lower()
     if any(x in q for x in ("translate", "translation", "अनुवाद", "অনুবাদ")):
         return "translation"
     if any(x in q for x in ("judge", "judicial", "judgment draft", "court reasoning", "evidence matrix", "precedent comparison", " বিচার", "न्यायिक")):
         return "judicial_research"
-    if any(x in q for x in ("chartered accountant", " ca ", "income tax return", "itr", "gst return", "tax filing", "tax audit", "tax computation", "assessment year", "advance tax", "tds", "tax compliance")):
+    if _has_word(q, ("itr", "tds")) or any(x in q for x in ("chartered accountant", " ca ", "income tax return", "gst return", "tax filing", "tax audit", "tax computation", "assessment year", "advance tax", "tax compliance")):
         return "ca_tax"
     if any(x in q for x in ("bookkeeping", "ledger", "trial balance", "bank reconciliation", "journal entry", "balance sheet", "profit and loss", "cash flow statement", "accounting standard", "accounts payable", "accounts receivable")):
         return "accounting"
@@ -52,7 +79,7 @@ def classify_task(text: str) -> str:
         return "lawyer_assistance"
     if any(x in q for x in ("pdf", "document", "agreement", "clause", "review this", "review the contract", "analyze this contract", "অঙ্গীকার", "समझौता")):
         return "document_review"
-    if any(x in q for x in ("tax", "gst", "income tax", "accounting", "financial", "economy", "economic", "investment", "budget")):
+    if re.search(r"(?<![a-z])tax(?!i)", q) or any(x in q for x in ("gst", "accounting", "financial", "economy", "economic", "investment", "budget")):
         return "finance_tax"
     # Constitutional Article questions take priority over broad procedure keywords.
     if re.search(r"\barticles?\s+\d+[a-z]?\b", q):
@@ -60,7 +87,7 @@ def classify_task(text: str) -> str:
     # Recognise named legal cases, including Maneka Gandhi v Union of India.
     if re.search(r"\b[A-Za-z][\w.&'-]*(?:\s+[A-Za-z][\w.&'-]*){0,5}\s+v\.?\s+[A-Za-z][\w.&'-]*", q):
         return "legal_research"
-    if any(x in q for x in ("civil procedure", "suit", "plaint", "limitation period", "period of limitation", "statute of limitations", "court filing", "appeal", "injunction", "দেওয়ানি", "दीवानी")):
+    if re.search(r"(?<![a-z])suits?(?![a-z])|lawsuit", q) or any(x in q for x in ("civil procedure", "plaint", "limitation period", "period of limitation", "statute of limitations", "court filing", "appeal", "injunction", "দেওয়ানি", "दीवानी")):
         return "civil_procedure"
     # Remove explicitly negated legal-topic instructions before checking
     # legal intent. Preserve positive legal references elsewhere in the prompt.
@@ -76,21 +103,53 @@ def classify_task(text: str) -> str:
     )
     if re.search(r"\barticles?\s+\d+[a-z]?\b", legal_intent_text):
         return "legal_research"
-    if any(x in legal_intent_text for x in (
-        "law", "legal", "act", "section",
-        "judgment", "case law", "court", "statute", "constitution",
-        "constitutional", "fundamental right", "human rights",
-        "precedent", "jurisdiction", "\u0986\u0987\u09a8", "\u0915\u093e\u0928\u0942\u0928"
-    )):
+    if (
+        _LEGAL_WORD_RE.search(legal_intent_text)
+        or _mentions_act(re.sub(r"(?i)\b(?:do not|don't|dont|avoid|without)\s+\w+(?:\s+\w+){0,3}\s+acts?\b", " ", original))
+        or any(x in legal_intent_text for x in ("\u0986\u0987\u09a8", "\u0915\u093e\u0928\u0942\u0928"))
+    ):
         return "legal_research"
     return "general"
+
+
+def context_limit() -> int:
+    """Character budget for retrieved excerpts sent to the model (bounded, env-tunable)."""
+    try:
+        value = int(os.getenv("ARLAW_CONTEXT_CHARS", "4200"))
+    except ValueError:
+        value = 4200
+    return max(1500, min(16000, value))
+
+
+def fit_context(entries, limit=None):
+    """Join source entries without silently cutting later sources off.
+
+    Returns (context_text, included_count). Entries are kept in rank order; the
+    caller must expose only the first `included_count` citations, otherwise the
+    UI would list sources the model never saw. A final entry that only partly
+    fits is kept if enough room remains and is visibly marked as truncated.
+    """
+    limit = limit or context_limit()
+    parts, used = [], 0
+    marker = " [excerpt truncated]"
+    for entry in entries:
+        sep = 2 if parts else 0
+        room = limit - used - sep
+        if len(entry) <= room:
+            parts.append(entry)
+            used += sep + len(entry)
+            continue
+        if room >= 700 or (not parts and room > len(marker)):
+            parts.append(entry[:room - len(marker)].rstrip() + marker)
+        break
+    return "\n\n".join(parts), len(parts)
 
 
 def _messages(messages, context="", task=None):
     """Build a bounded prompt so long chats do not consume the whole TPM window."""
     payload = [{"role": "system", "content": SYSTEM + "\n\n" + SPECIALISTS.get(task or "general", SPECIALISTS["general"])}]
     if context:
-        payload.append({"role": "system", "content": "Retrieved source excerpts; these may be incomplete or outdated. Use only as evidence and cite as [S#]:\n" + str(context)[:4200]})
+        payload.append({"role": "system", "content": "Retrieved source excerpts; these may be incomplete or outdated. Use only as evidence and cite as [S#]:\n" + str(context)[:context_limit()]})
     # Keep recent turns first. A character budget is intentionally conservative because
     # tokenization varies by language; it also bounds Hindi/Bengali prompts safely.
     remaining = 10500
@@ -117,6 +176,20 @@ def _messages(messages, context="", task=None):
 _GROQ_REQUEST_LOCK = threading.Lock()
 
 
+def _parse_duration(raw):
+    """Parse '3', '250ms', '27.9s' or compound '1m30.5s' into seconds (None if invalid)."""
+    raw = str(raw or "").strip().lower()
+    if not raw:
+        return None
+    if re.fullmatch(r"[0-9]*\.?[0-9]+", raw):
+        return float(raw)
+    parts = re.findall(r"([0-9]*\.?[0-9]+)\s*(ms|h|m|s)", raw)
+    if not parts or re.sub(r"([0-9]*\.?[0-9]+)\s*(ms|h|m|s)|\s", "", raw):
+        return None
+    scale = {"ms": 0.001, "s": 1.0, "m": 60.0, "h": 3600.0}
+    return sum(float(number) * scale[unit] for number, unit in parts)
+
+
 def _retry_delay(response):
     """Extract provider-directed retry delay from headers or Groq's error body."""
     headers = getattr(response, "headers", {}) or {}
@@ -127,24 +200,15 @@ def _retry_delay(response):
         body = response.text or ""
     except Exception:
         pass
-    match = re.search(r"try again in\s+([0-9.]+)\s*(ms|s|m)", body, re.I)
+    match = re.search(r"try again in\s+((?:[0-9]*\.?[0-9]+\s*(?:ms|h|m|s)\s*)+)", body, re.I)
     if match:
-        value, unit = float(match.group(1)), match.group(2).lower()
-        candidates.insert(0, value / 1000 if unit == "ms" else value * 60 if unit == "m" else value)
+        candidates.insert(0, match.group(1))
     for value in candidates:
         if value is None:
             continue
-        try:
-            raw = str(value).strip().lower()
-            m = re.fullmatch(r"([0-9.]+)\s*(ms|s|m)?", raw)
-            if not m:
-                continue
-            number = float(m.group(1)); unit = m.group(2) or "s"
-            seconds = number / 1000 if unit == "ms" else number * 60 if unit == "m" else number
-            if seconds >= 0:
-                return min(65.0, max(1.0, seconds + 0.5))
-        except (TypeError, ValueError):
-            continue
+        seconds = _parse_duration(value)
+        if seconds is not None and seconds >= 0:
+            return min(65.0, max(1.0, seconds + 0.5))
     return 10.0
 
 
@@ -162,7 +226,10 @@ def _ollama(payload):
     )
     response.raise_for_status()
     data = response.json()
-    answer = str((data.get("message") or {}).get("content") or "").strip()
+    answer = str((data.get("message") or {}).get("content") or "")
+    # Some reasoning models (e.g. qwen3) inline their chain of thought in <think> tags.
+    answer = re.sub(r"<think>.*?</think>", "", answer, flags=re.S | re.I)
+    answer = re.sub(r"^.*?</think>", "", answer, flags=re.S | re.I).strip()
     if not answer:
         raise RuntimeError("Ollama returned an empty response")
     return answer, model, "stop"
@@ -275,6 +342,17 @@ def _generate_complete(name: str, payload: list[dict]) -> dict:
     return result
 
 
+# Accepts [S1], [S1, S2], [S1; S2] and **S1**.
+_CITE_RE = re.compile(r"\[(S\d+(?:\s*[,;]\s*S\d+)*)\]|\*\*(S\d+)\*\*")
+
+
+def _cited_labels(text: str) -> list[str]:
+    labels = []
+    for grouped, bold in _CITE_RE.findall(text or ""):
+        labels.extend(re.findall(r"S\d+", grouped) if grouped else [bold])
+    return list(dict.fromkeys(labels))
+
+
 def _citation_coverage(answer: str):
     """Heuristically count prose paragraphs containing citation labels.
 
@@ -320,7 +398,7 @@ def _citation_coverage(answer: str):
 
     with_citations = [
         item for item in checked
-        if re.search(r"\[(S\d+)\]|\*\*(S\d+)\*\*", item)
+        if _CITE_RE.search(item)
     ]
 
     return {
@@ -332,8 +410,7 @@ def _citation_coverage(answer: str):
 
 def validate_citations(answer: str, available_labels: list[str]):
     """Check reference-label existence and heuristic paragraph citation coverage."""
-    matches = re.findall(r"\[(S\d+)\]|\*\*(S\d+)\*\*", answer or "")
-    cited = list(dict.fromkeys(next(group for group in item if group) for item in matches))
+    cited = _cited_labels(answer)
     available = set(available_labels or [])
     valid = [x for x in cited if x in available]
     invalid = [x for x in cited if x not in available]

@@ -64,3 +64,9 @@ def test_readme_discloses_verification_and_history_limitations():
     assert "does not determine whether that source actually supports" in README
     assert "not synchronized to the server or other devices" in README
     assert "do not constitute a production security audit" in README
+
+
+def test_chat_request_is_bounded_to_backend_schema_limits():
+    assert "history.slice(-30)" in JS
+    assert "content:String(m.content||'').slice(0,14000)" in JS
+    assert 'maxlength="14000"' in HTML

@@ -12,7 +12,7 @@
   <aside class="sidebar">
     <div class="brand"><b class="logo">A</b><div><b>ARLAW AI</b><small>LEGAL RESEARCH</small></div></div>
     <button id="newChat" class="new"><span>＋</span> New chat</button>
-    <p class="label">YOUR WORKSPACE</p>
+    <p class="label" id="workspaceLabel">YOUR WORKSPACE</p>
     <div id="historyList" class="history-list" aria-label="Recent chats"></div>
     <button id="chatTab" class="nav active"><span>◉</span> Research assistant</button>
     <button id="sourcesTab" class="nav"><span>▤</span> Knowledge library</button>
@@ -21,13 +21,13 @@
     <div class="foot">Clear legal research.<br>Grounded in sources. Built for clarity.<br><br>Created by <b>Archit Dutta</b>.</div>
   </aside>
   <main>
-    <header><div class="mobile-brand">ARLAW <span>AI</span></div><div class="top-title">Legal research assistant</div><div class="top-right"><span id="connection" class="status">Checking model…</span><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span></button><button id="settingsOpen" class="settings-open" type="button" aria-haspopup="dialog" aria-controls="settingsDialog" title="User settings">⚙ <span>Settings</span></button><label>Jurisdiction <select id="jurisdiction"><option value="GLOBAL">Global / unspecified</option></select></label></div></header>
+    <header><div class="mobile-brand">ARLAW <span>AI</span></div><div class="top-title" id="topTitle">Legal research assistant</div><div class="top-right"><span id="connection" class="status">Checking model…</span><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span></button><button id="settingsOpen" class="settings-open" type="button" aria-haspopup="dialog" aria-controls="settingsDialog" title="User settings">⚙ <span>Settings</span></button><label>Jurisdiction <select id="jurisdiction"><option value="GLOBAL">Global / unspecified</option></select></label></div></header>
     <section id="chatView" class="chat">
       <div id="messages" class="messages">
         <div class="welcome">
           <div class="welcome-mark">A</div><div class="eyebrow">ARLAW AI · LEGAL INTELLIGENCE</div>
-          <h1>What would you like to understand?</h1>
-          <p>Ask clear questions about law, civil disputes, justice, economics, taxation and financial matters.</p>
+          <h1 id="welcomeTitle">What would you like to understand?</h1>
+          <p id="welcomeText">Ask clear questions about law, civil disputes, justice, economics, taxation and financial matters.</p>
           <div class="suggest">
             <button data-prompt="Explain the steps in a civil case in India, from filing to judgment. Use clear headings and identify the relevant laws."><b>⚖ Civil law</b><small>Understand a civil case step by step</small></button>
             <button data-prompt="Explain how to verify whether an Indian legal rule is current and binding. Distinguish statutes, judgments and commentary."><b>⌕ Verify legal authority</b><small>Check laws, judgments and sources</small></button>
@@ -40,7 +40,7 @@
           </div>
         </div>
       </div>
-      <div class="composer-wrap"><div id="requestStatus" class="request-status" role="status" aria-live="polite"></div><form id="chatForm"><textarea id="prompt" rows="1" placeholder="Message ARLAW AI… Include the country, state or court when relevant." required></textarea><button aria-label="Send message" title="Send message">↑</button></form><small>AI-generated research can be wrong or incomplete. Check primary sources and consult a qualified professional before relying on legal or financial information.</small></div>
+      <div class="composer-wrap"><div id="requestStatus" class="request-status" role="status" aria-live="polite"></div><form id="chatForm"><textarea id="prompt" maxlength="14000" rows="1" placeholder="Message ARLAW AI… Include the country, state or court when relevant." required></textarea><button aria-label="Send message" title="Send message">↑</button></form><small>AI-generated research can be wrong or incomplete. Check primary sources and consult a qualified professional before relying on legal or financial information.</small></div>
     </section>
     <section id="sourcesView" class="sources hidden"><div class="section-kicker">RESEARCH WORKSPACE</div><h1>Knowledge library</h1><p>Index lawful, public, licensed and non-confidential materials. Record jurisdiction, authority and effective date so answers can be checked against their sources.</p>
       <form id="uploadForm"><label>Document title<input name="title" placeholder="Act, judgment, regulation or report"></label>
@@ -67,15 +67,15 @@
 <div id="settingsDialog" class="settings-backdrop hidden" role="presentation">
   <section class="settings-panel" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" tabindex="-1">
     <div class="settings-heading"><div><div class="section-kicker">PERSONALIZE YOUR WORKSPACE</div><h2 id="settingsTitle">User settings</h2></div><button id="settingsClose" class="settings-close" type="button" aria-label="Close settings">×</button></div>
-    <p class="settings-intro">Personalize your research workspace. Appearance, colour, language and accessibility preferences are saved in this browser.</p>
-    <div class="setting-row"><label for="prefTheme"><b>Appearance</b><small>Choose light or dark mode</small></label><select id="prefTheme"><option value="light">Light</option><option value="dark">Dark</option></select></div>
+    <p class="settings-intro" id="settingsIntro">Personalize your research workspace. Appearance, colour, language and accessibility preferences are saved in this browser.</p>
+    <div class="setting-row"><label for="prefTheme"><b id="appearanceLabel">Appearance</b><small id="appearanceHint">Choose light or dark mode</small></label><select id="prefTheme"><option value="light">Light</option><option value="dark">Dark</option></select></div>
     <div class="setting-row"><label for="prefAccent"><b>Colour theme</b><small>Choose from 36 interface accent palettes</small></label><select id="prefAccent" aria-label="Colour theme"></select></div>
-    <div class="setting-row"><label for="prefLanguage"><b>Interface language</b><small>Language for menus and controls</small></label><select id="prefLanguage"><option value="en">English</option><option value="hi">हिन्दी</option><option value="bn">বাংলা</option></select></div>
-    <div class="setting-row"><label for="prefFontSize"><b>Text size</b><small>Adjust the interface reading size</small></label><select id="prefFontSize"><option value="small">Small</option><option value="medium">Default</option><option value="large">Large</option><option value="xlarge">Extra large</option></select></div>
-    <div class="setting-row setting-check"><label for="prefContrast"><b>Higher contrast</b><small>Strengthen borders and text contrast</small></label><input id="prefContrast" type="checkbox"></div>
-    <div class="setting-row setting-check"><label for="prefMotion"><b>Reduce motion</b><small>Limit non-essential interface animation</small></label><input id="prefMotion" type="checkbox"></div>
+    <div class="setting-row"><label for="prefLanguage"><b id="languageLabel">Interface language</b><small id="languageHint">Language for menus and controls</small></label><select id="prefLanguage"><option value="en">English</option><option value="hi">हिन्दी</option><option value="bn">বাংলা</option></select></div>
+    <div class="setting-row"><label for="prefFontSize"><b id="fontSizeLabel">Text size</b><small id="fontSizeHint">Adjust the interface reading size</small></label><select id="prefFontSize"><option value="small">Small</option><option value="medium">Default</option><option value="large">Large</option><option value="xlarge">Extra large</option></select></div>
+    <div class="setting-row setting-check"><label for="prefContrast"><b id="contrastLabel">Higher contrast</b><small id="contrastHint">Strengthen borders and text contrast</small></label><input id="prefContrast" type="checkbox"></div>
+    <div class="setting-row setting-check"><label for="prefMotion"><b id="motionLabel">Reduce motion</b><small id="motionHint">Limit non-essential interface animation</small></label><input id="prefMotion" type="checkbox"></div>
     <div class="settings-actions"><button id="settingsReset" class="settings-reset" type="button">Reset preferences</button><button id="settingsDone" class="primary" type="button">Done</button></div>
-    <p class="settings-note">Language preference changes the interface labels. Legal answers may still use the language you request in your message.</p>
+    <p class="settings-note" id="settingsNote">Language preference changes the interface labels. Legal answers may still use the language you request in your message.</p>
   </section>
 </div>
 <script src="/static/app.js"></script>

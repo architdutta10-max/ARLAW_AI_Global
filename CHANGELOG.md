@@ -1,5 +1,26 @@
 # Changelog
 
+## 3.0.3 — Accuracy and consistency fixes
+- Task routing: the substring "act" (and "law", "court", "tax", "suit", "itr") matched ordinary words such as "fact", "contract", "nitrogen" and "taxi", sending unrelated questions into strict legal retrieval. Short keywords now use whole-token matching; statute references ("IT Act", "Act, 2000") are still recognised.
+- Context/citation consistency: retrieved excerpts were cut at a fixed character count, so sources S3-S5 could be listed as citations (and accepted as valid) although the model never received them. Sources are now fitted whole, truncation is marked, and only sources actually sent are returned as citations. Budget is tunable with `ARLAW_CONTEXT_CHARS` (default 4200).
+- Citation parsing now accepts grouped labels such as `[S1, S2]`.
+- The Delhi High Court (Naz Foundation) digest and registry entry used the unselectable jurisdiction code `IN-DELHI`, so they could never be retrieved or reported; both are now `IN`, and existing databases are repaired on startup.
+- Ambiguity checks no longer demand an instrument name when one is plainly given (IPC, CrPC, IT Act, U.S.C., GDPR, lease/contract agreements, etc.).
+- Ollama adapter strips inline `<think>` reasoning; Groq retry parsing handles compound durations such as `1m30.5s`.
+- Frontend: readable error messages for validation/429/non-JSON failures, no pile-up of empty "New conversation" entries, translated interface labels now apply, registry links readable in light mode.
+- CI now installs `requirements-test.txt` (httpx is required by FastAPI's TestClient).
+- Removed the retired `install_chat_history.py` patch and orphaned `history.js` (the patch overwrote the request-size safeguards) and stray `__pycache__` files from the package.
+
+## 3.0.2 — Chat request and retrieval precision fixes
+- Bound browser chat requests to the API's 30-message and 14,000-character limits, including long-running conversations.
+- Tightened legal retrieval overlap so generic jurisdiction wording cannot cause unrelated case digests to appear as relevant support.
+- Added PowerShell 5.1 API smoke tests and regression tests for request bounds and retrieval precision.
+- Reconfirmed that an empty retrieval result is preferable to a misleading citation when the indexed corpus lacks a topic-specific source.
+
+## 3.0.1 — Ambiguity and coverage transparency
+- Added conservative clarification for underspecified agenda, resolution and provision references.
+- Added `/api/coverage` as a registry inventory with explicit limits.
+
 ## 3.0.0 — Security baseline and deployment hygiene
 - Preserved existing frontend, provider routing, knowledge retrieval, jurisdictions, source registry and local browser history.
 - Added per-IP chat/upload throttling, strict request and jurisdiction validation, safer bounded document ingestion and response security headers.

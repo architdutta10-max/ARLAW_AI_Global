@@ -95,7 +95,8 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
         "where", "who", "does", "have", "has", "are", "was", "were", "into",
         "about", "explain", "under", "between", "both", "their", "them",
         "your", "you", "how", "why", "which", "article", "section", "act",
-        "case", "law"
+        "case", "law", "of", "cite", "cited", "citation", "citations",
+        "authoritative", "legal", "sources", "source", "united", "states"
     }
     terms = []
     for token in re.findall(r"[\w]+", (query or "").lower(), flags=re.UNICODE):
@@ -169,7 +170,11 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
 
         haystack = (h["title"] + " " + h["content"]).lower()
         matched = sum(1 for term in terms if term in haystack)
-        minimum = 1 if len(terms) <= 2 else 2
+        # Require stronger overlap for multi-term legal questions. This avoids
+        # returning unrelated case digests merely because they mention generic
+        # words such as "United States" or "constitution". Empty retrieval is
+        # safer than presenting weak matches as legal support.
+        minimum = 1 if len(terms) <= 2 else min(3, len(terms))
         if matched < minimum:
             continue
 
@@ -228,6 +233,12 @@ def seed_builtin_knowledge():
         existing = {r[0] for r in c.execute("SELECT title FROM sources").fetchall()}
     for item in records:
         if item["title"] in existing:
+            # Keep already-seeded bundled digests in sync with corrected metadata.
+            with connect() as c:
+                c.execute(
+                    "UPDATE sources SET jurisdiction=? WHERE title=? AND file_name='bundled-curated-digest' AND jurisdiction<>?",
+                    (item.get("jurisdiction", "GLOBAL").upper(), item["title"], item.get("jurisdiction", "GLOBAL").upper()),
+                )
             continue
         add_source(item["title"], item["text"], item.get("jurisdiction", "GLOBAL"),
                    item.get("source_url", ""), item.get("as_of", ""),

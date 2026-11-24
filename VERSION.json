@@ -1,8 +1,8 @@
 {
   "name": "ARLAW AI Global",
-  "version": "3.0.0",
-  "release": "Security baseline, safer document ingestion and deployment hygiene",
-  "release_scope": "Preserves the existing hybrid AI, retrieval, jurisdiction, citation-label reporting and browser workspace while adding request throttling, strict request validation, safer uploads, security headers, clean packaging and explicit deployment safeguards.",
+  "version": "3.0.3",
+  "release": "Accuracy fixes: task routing, citation/context consistency, retrieval metadata, CI",
+  "release_scope": "Preserves the existing hybrid AI, retrieval, jurisdiction, citation-label reporting and browser workspace while adding request throttling, strict request validation, safer uploads, security headers, clean packaging and explicit deployment safeguards. Adds conservative clarification checks for underspecified legal references and a transparent /api/coverage registry inventory. Fixes the browser client so chat requests remain within the API 30-message and 14,000-character validation limits during long conversations; adds a PowerShell API smoke-test helper. Tightens legal retrieval overlap requirements to suppress weakly related citations when the indexed corpus lacks topic-specific support.",
   "requires_maintenance": true,
   "production_certified": false,
   "legal_accuracy_certified": false,

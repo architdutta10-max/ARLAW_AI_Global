@@ -20,9 +20,10 @@ from pydantic import BaseModel, Field, field_validator
 
 from .config import STATIC_DIR, UPLOAD_DIR, TOP_K
 from .knowledge import init_db, add_source, search, list_sources, seed_builtin_knowledge
-from .llm import generate, provider_order, classify_task
+from .llm import generate, provider_order, classify_task, fit_context
+from .ambiguity import clarification_for
 
-VERSION = "3.0.0"
+VERSION = "3.0.3"
 MAX_UPLOAD_BYTES = int(os.getenv("ARLAW_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
 MAX_PDF_PAGES = int(os.getenv("ARLAW_MAX_PDF_PAGES", "300"))
 CHAT_RATE_LIMIT = int(os.getenv("ARLAW_CHAT_RATE_LIMIT", "20"))
@@ -159,6 +160,39 @@ def source_registry():
     return json.loads((Path(__file__).parent / "sources_registry.json").read_text(encoding="utf-8"))
 
 
+@app.get("/api/coverage")
+def legal_source_coverage():
+    """Report source-registry presence without pretending it is corpus completeness."""
+    registry = source_registry()
+    by_jurisdiction = {}
+    for item in registry.get("sources", []):
+        code = str(item.get("jurisdiction", "GLOBAL")).upper()
+        by_jurisdiction.setdefault(code, []).append({
+            "name": item.get("name", "Unnamed source"),
+            "url": item.get("url", ""),
+            "type": item.get("type", "unspecified"),
+            "authority": item.get("authority", "unspecified"),
+        })
+    jurisdictions_data = json.loads((Path(__file__).parent / "jurisdictions.json").read_text(encoding="utf-8"))
+    rows = []
+    for group in jurisdictions_data.get("groups", []):
+        for item in group.get("items", []):
+            code = str(item.get("code", "")).upper()
+            sources = by_jurisdiction.get(code, [])
+            rows.append({
+                "code": code,
+                "name": item.get("name", code),
+                "registry_source_count": len(sources),
+                "coverage_status": "official_or_listed_starting_points" if sources else "no_curated_source_registered",
+                "sources": sources,
+            })
+    return {
+        "coverage_scope": "Registry inventory only; does not prove that full text is indexed, current, comprehensive, or legally authoritative for every issue.",
+        "jurisdictions": rows,
+        "registered_source_count": sum(len(items) for items in by_jurisdiction.values()),
+    }
+
+
 class ChatMessage(BaseModel):
     role: Literal["user", "assistant"]
     content: str = Field(min_length=1, max_length=14000)
@@ -186,6 +220,26 @@ def chat(req: ChatRequest, request: Request):
     if not last:
         raise HTTPException(400, "A user message is required.")
     question = last["content"]
+    clarification = clarification_for(question, req.jurisdiction)
+    if clarification:
+        return {
+            "answer": (
+                "I need one detail before I can answer accurately.\n\n"
+                + clarification["question"]
+                + "\n\nI will not assume which document, authority, or jurisdiction you mean."
+            ),
+            "citations": [],
+            "model_connected": None,
+            "model": {"provider": None, "model": None, "task": classify_task(question)},
+            "jurisdiction": req.jurisdiction,
+            "task": classify_task(question),
+            "citation_validation": {"status": "not_applicable", "scope": "Clarification requested before research."},
+            "quality": None,
+            "quality_warning": "The question is underspecified; no legal conclusion has been generated.",
+            "incomplete": False,
+            "needs_clarification": True,
+            "clarification": clarification,
+        }
     hits = search(question, TOP_K, req.jurisdiction, classify_task(question)) if req.use_knowledge else []
     context = []
     citations = []
@@ -211,7 +265,11 @@ def chat(req: ChatRequest, request: Request):
             "as_of": hit["as_of"],
             "url": hit["source_url"],
         })
-    answer, error, model_info = generate(messages, "\n\n".join(context), [c["label"] for c in citations])
+    # Expose only the sources the model actually receives; otherwise the UI would
+    # list (and the validator would accept) citations the model never saw.
+    context_text, included = fit_context(context)
+    citations = citations[:included]
+    answer, error, model_info = generate(messages, context_text, [c["label"] for c in citations])
     if error:
         answer = "ARLAW could not connect to any configured AI provider.\n\n" + error
     return {
@@ -225,6 +283,8 @@ def chat(req: ChatRequest, request: Request):
         "quality": model_info.get("quality"),
         "quality_warning": model_info.get("quality_warning"),
         "incomplete": model_info.get("incomplete", False),
+        "needs_clarification": False,
+        "clarification": None,
     }
 
 

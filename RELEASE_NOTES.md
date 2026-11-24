@@ -1,4 +1,6 @@
-# ARLAW AI Global 3.0.0 — Release notes
+# ARLAW AI Global 3.0.3 — Release notes
+
+See CHANGELOG.md for the 3.0.3 accuracy and consistency fixes.
 
 ## Preserved capabilities
 - FastAPI backend and existing browser workspace, themes, accent palettes and local chat history.
@@ -23,3 +25,21 @@
 - Citation labels and paragraph coverage are not proof that a source supports a legal proposition.
 - No foundation-model weights were trained. Retrieval augmentation is not fine-tuning.
 - This release is not legally certified, production-certified or independently security-audited.
+
+
+## Version 3.0.1 — Accuracy and global coverage safeguards
+
+- Added a conservative ambiguity gate for numbered agenda, resolution, article and section references that lack identifying context.
+- Ambiguous requests now return a clarification prompt without invoking the language model or presenting unsupported citations.
+- Added `GET /api/coverage` to disclose which supported jurisdictions have source-registry starting points, with explicit limits on what that inventory means.
+- Added regression tests for clarification behaviour and coverage reporting.
+
+
+## Version 3.0.2 — Long-conversation request fix
+
+- Browser chat requests now send at most the 30 messages accepted by the API.
+- Previous message content is bounded to the API's 14,000-character per-message limit.
+- The prompt input enforces the same character limit.
+- Added a frontend regression test for these request bounds.
+- Added a PowerShell smoke-test script that uses the actual `messages` request shape and jurisdiction codes.
+- Legal retrieval now requires stronger query-term overlap for multi-term questions; a missing topic-specific source yields no retrieved citation rather than weakly related case digests.
