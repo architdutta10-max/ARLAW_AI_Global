@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#0b827d">
   <meta name="description" content="ARLAW AI — jurisdiction-aware legal, economic and justice research assistant">
   <title>ARLAW AI — Global Research Workspace</title>
-  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/style.css?v=3.0.6">
 </head>
 <body>
 <div class="app">
@@ -21,7 +21,7 @@
     <div class="foot">Clear legal research.<br>Grounded in sources. Built for clarity.<br><br>Created by <b>Archit Dutta</b>.</div>
   </aside>
   <main>
-    <header><div class="mobile-brand">ARLAW <span>AI</span></div><div class="top-title" id="topTitle">Legal research assistant</div><div class="top-right"><span id="connection" class="status">Checking model…</span><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span></button><button id="settingsOpen" class="settings-open" type="button" aria-haspopup="dialog" aria-controls="settingsDialog" title="User settings">⚙ <span>Settings</span></button><label>Jurisdiction <select id="jurisdiction"><option value="GLOBAL">Global / unspecified</option></select></label></div></header>
+    <header><div class="mobile-brand">ARLAW <span>AI</span></div><div class="top-title" id="topTitle">Legal research assistant</div><div class="top-right"><span id="connection" class="status">Checking model…</span><button id="themeToggle" class="theme-toggle" type="button" aria-label="Switch to dark mode" title="Switch to dark mode"><span class="theme-icon" aria-hidden="true">☾</span><span class="theme-label">Dark mode</span></button><button id="settingsOpen" class="settings-open" type="button" aria-haspopup="dialog" aria-controls="settingsDialog" title="User settings">⚙ <span>Settings</span></button><label>Jurisdiction <select id="jurisdiction" aria-label="Jurisdiction"><option value="IN" selected>India</option></select></label></div></header>
     <section id="chatView" class="chat">
       <div id="messages" class="messages">
         <div class="welcome">
@@ -44,7 +44,7 @@
     </section>
     <section id="sourcesView" class="sources hidden"><div class="section-kicker">RESEARCH WORKSPACE</div><h1>Knowledge library</h1><p>Index lawful, public, licensed and non-confidential materials. Record jurisdiction, authority and effective date so answers can be checked against their sources.</p>
       <form id="uploadForm"><label>Document title<input name="title" placeholder="Act, judgment, regulation or report"></label>
-        <div class="two"><label>Jurisdiction<select name="jurisdiction" id="uploadJurisdiction"><option value="GLOBAL">Global</option></select></label><label>Authority<select name="authority"><option value="official">Official primary source</option><option value="court">Court / tribunal</option><option value="regulator">Regulator</option><option value="secondary">Secondary commentary</option><option value="unspecified">Unspecified</option></select></label></div>
+        <div class="two"><label>Jurisdiction<select name="jurisdiction" id="uploadJurisdiction" aria-label="Source jurisdiction"><option value="IN" selected>India</option></select></label><label>Authority<select name="authority"><option value="official">Official primary source</option><option value="court">Court / tribunal</option><option value="regulator">Regulator</option><option value="secondary">Secondary commentary</option><option value="unspecified">Unspecified</option></select></label></div>
         <div class="two"><label>As-of / effective date<input name="as_of" placeholder="YYYY-MM-DD"></label><label>Language code<input name="language" value="en" placeholder="en, hi, bn, fr…"></label></div>
         <label>Official source URL<input name="source_url" placeholder="https://…"></label><label>File<input name="file" type="file" accept=".txt,.md,.pdf" required></label><button class="primary">Index document locally</button><span id="uploadStatus" class="upload-status"></span></form>
       <h2>Indexed sources</h2><div id="sourceList" class="source-list"></div><h2>Official-source directory</h2><p id="registryNotice"></p><div id="registryList" class="source-list"></div>
@@ -78,5 +78,5 @@
     <p class="settings-note" id="settingsNote">Language preference changes the interface labels. Legal answers may still use the language you request in your message.</p>
   </section>
 </div>
-<script src="/static/app.js"></script>
+<script src="/static/app.js?v=3.0.6"></script>
 </body></html>

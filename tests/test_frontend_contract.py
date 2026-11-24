@@ -70,3 +70,9 @@ def test_chat_request_is_bounded_to_backend_schema_limits():
     assert "history.slice(-30)" in JS
     assert "content:String(m.content||'').slice(0,14000)" in JS
     assert 'maxlength="14000"' in HTML
+
+
+def test_india_is_the_initial_chat_and_upload_jurisdiction():
+    assert '<option value="IN" selected>India</option>' in HTML
+    assert '$("jurisdiction").value="IN"' in JS
+    assert '$("uploadJurisdiction").value="IN"' in JS

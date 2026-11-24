@@ -165,3 +165,26 @@ def test_homepage_urls_are_cleared_in_new_and_existing_sources(monkeypatch, tmp_
     urls = {s["title"]: s["source_url"] for s in knowledge.list_sources()}
     assert urls["Doc A"] == ""
     assert urls["Doc B"].endswith("5154.pdf")
+
+
+def test_legal_prompt_distinguishes_primary_sources_and_secondary_digests():
+    payload = llm._messages(
+        [{"role": "user", "content": "Explain the current effect of Maneka Gandhi"}],
+        context="[S1] Maneka Gandhi case digest | Declared authority: secondary\\nA short educational digest.",
+        task="legal_research",
+    )
+    combined = " ".join(m["content"] for m in payload if m["role"] == "system")
+    assert "never describe a digest as the official judgment" in combined.lower()
+    assert "subsequent controlling decisions" in combined.lower()
+    assert "conflict" in combined.lower()
+
+
+def test_legal_prompt_does_not_claim_citation_labels_verify_support():
+    payload = llm._messages(
+        [{"role": "user", "content": "Explain Article 21"}],
+        context="[S1] Constitution excerpt",
+        task="legal_research",
+    )
+    combined = " ".join(m["content"] for m in payload if m["role"] == "system")
+    assert "does not prove that the source supports the sentence" in combined
+    assert "independent verification" in combined.lower()

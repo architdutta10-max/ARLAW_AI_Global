@@ -71,3 +71,12 @@
 - Added guarded Windows integration script with backup and protected local files (retired in 3.0.4).
 - Documented automated verification, release boundaries and maintenance policy.
 - Preserved existing backend, frontend, provider configuration and project workflows.
+
+
+## 3.0.5 — 2026-11-25
+
+- Strengthened legal-source hierarchy instructions: primary legal text and secondary digests must be distinguished.
+- Prevented the assistant from describing a digest as an official judgment or statute.
+- Added a safeguard against presenting an older decision as current law unless retrieved sources establish subsequent developments.
+- Required conflicts and incomplete evidence to be surfaced rather than silently resolved.
+- These are generation safeguards; they do not independently verify source relevance, legal correctness, or currency.
