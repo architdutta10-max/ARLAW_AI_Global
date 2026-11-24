@@ -23,7 +23,7 @@ from .knowledge import init_db, add_source, search, list_sources, seed_builtin_k
 from .llm import generate, provider_order, classify_task, fit_context
 from .ambiguity import clarification_for, names_specific_authority
 
-VERSION = "3.0.7"
+VERSION = "3.0.8"
 MAX_UPLOAD_BYTES = int(os.getenv("ARLAW_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
 MAX_PDF_PAGES = int(os.getenv("ARLAW_MAX_PDF_PAGES", "300"))
 CHAT_RATE_LIMIT = int(os.getenv("ARLAW_CHAT_RATE_LIMIT", "20"))
@@ -75,6 +75,139 @@ def _jurisdiction_codes() -> set[str]:
 
 
 SUPPORTED_JURISDICTIONS = _jurisdiction_codes()
+
+
+# Explicit jurisdiction routing is applied only when the user selects GLOBAL.
+# A deliberate country selection remains authoritative and is never silently overridden.
+_JURISDICTION_MARKERS = (
+    ("IN", re.compile(r"\b(?:india|indian|rbi|reserve bank of india|constitution of india|supreme court of india)\b", re.I)),
+    ("DE", re.compile(r"\b(?:germany|german)\b", re.I)),
+    ("UK", re.compile(r"\b(?:united kingdom|u\.?k\.?|british|england and wales|scotland|northern ireland)\b", re.I)),
+    ("US", re.compile(r"\b(?:united states|u\.?s\.?a?\.?|american)\b", re.I)),
+    ("EU", re.compile(r"\b(?:european union|e\.?u\.?|eu law|eu regulation|gdpr)\b", re.I)),
+    ("SG", re.compile(r"\b(?:singapore|singaporean)\b", re.I)),
+    ("CA", re.compile(r"\b(?:canada|canadian)\b", re.I)),
+    ("AU", re.compile(r"\b(?:australia|australian)\b", re.I)),
+    ("NZ", re.compile(r"\b(?:new zealand)\b", re.I)),
+    ("BD", re.compile(r"\b(?:bangladesh|bangladeshi)\b", re.I)),
+    ("PK", re.compile(r"\b(?:pakistan|pakistani)\b", re.I)),
+    ("FR", re.compile(r"\b(?:france|french)\b", re.I)),
+    ("IE", re.compile(r"\b(?:ireland|irish)\b", re.I)),
+)
+_INTERNATIONAL_MARKER = re.compile(
+    r"\b(?:international law|international trade|cross-border|cross border|"
+    r"international sanctions|transnational)\b", re.I
+)
+_LEGAL_TOPIC_MARKER = re.compile(
+    r"\b(?:law|laws|legal|court|case|statute|constitution|regulation|regulatory|"
+    r"rights|contract|fraud|sanctions?|cartel|antitrust|competition|privacy|"
+    r"data protection|jurisdiction|criminal|civil|burden of proof|rbi|compliance|liability|"
+    r"international trade|trade law|trade compliance|export[- ]controls?|"
+    r"import[- ]export|customs law|tariffs?|embargo(?:es)?)\b",
+    re.I,
+)
+_QUESTION_HEADING = re.compile(
+    r"(?im)^\s*(?:#{1,6}\s*)?QUESTION\s+(\d{1,2})\s*(?:[\u2014\u2013:.)?\-\ufffd])\s*(.*?)\s*$"
+)
+
+
+def _split_research_sections(question: str) -> list[dict]:
+    """Split explicitly numbered QUESTION headings without splitting ordinary prose."""
+    matches = list(_QUESTION_HEADING.finditer(question or ""))
+    if len(matches) < 2:
+        return [{"number": None, "title": "", "text": question or ""}]
+    sections = []
+    for index, match in enumerate(matches):
+        start = match.end()
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(question)
+        body = (question[start:end] or "").strip()
+        sections.append({
+            "number": int(match.group(1)),
+            "title": (match.group(2) or "").strip(),
+            "text": body,
+        })
+    return sections
+
+
+def _explicit_jurisdictions(text: str) -> list[str]:
+    """Return only jurisdictions explicitly named in a question section."""
+    found = [code for code, pattern in _JURISDICTION_MARKERS if pattern.search(text or "")]
+    if _INTERNATIONAL_MARKER.search(text or "") and "INTL" in SUPPORTED_JURISDICTIONS:
+        found.append("INTL")
+    # Preserve marker order while removing duplicates and unsupported codes.
+    return list(dict.fromkeys(code for code in found if code in SUPPORTED_JURISDICTIONS))
+
+
+def _section_task(text: str) -> str:
+    """Prevent economic keywords from masking an explicitly legal research task."""
+    task = classify_task(text)
+    if task in {"finance_tax", "accounting", "ca_tax", "general"} and _LEGAL_TOPIC_MARKER.search(text or ""):
+        return "legal_research"
+    return task
+
+
+def _retrieve_request(question: str, selected_jurisdiction: str, top_k: int):
+    """Retrieve per question and per explicit jurisdiction for GLOBAL/mixed prompts.
+
+    Returns (hits, coverage, aggregate_task). If a specific jurisdiction is selected,
+    it remains the sole jurisdiction searched. Missing sources are recorded per section.
+    """
+    sections = _split_research_sections(question)
+    combined_hits = []
+    seen_ids = set()
+    coverage = []
+    section_tasks = []
+
+    for section in sections:
+        # The heading often carries the jurisdiction/topic (e.g. "Privacy: Germany").
+        # Keep it in the routing/search query rather than silently dropping it.
+        body = section["text"] or question
+        text = (section.get("title", "") + "\n" + body).strip()
+        section_task = _section_task(text)
+        section_tasks.append(section_task)
+        if selected_jurisdiction != "GLOBAL":
+            jurisdictions = [selected_jurisdiction]
+        else:
+            jurisdictions = _explicit_jurisdictions(text) or ["GLOBAL"]
+
+        per_jurisdiction = []
+        for code in jurisdictions:
+            # Small per-scope retrievals prevent the first issue from crowding out
+            # every later question in a long, multi-jurisdiction request.
+            section_hits = search(text, min(max(int(top_k), 1), 3), code, section_task)
+            per_jurisdiction.append({"jurisdiction": code, "sources": len(section_hits)})
+            for hit in section_hits:
+                source_id = hit.get("id")
+                dedupe_key = (code, source_id) if source_id is not None else (
+                    hit.get("title"), hit.get("jurisdiction"), hit.get("content", "")[:120]
+                )
+                if dedupe_key in seen_ids:
+                    continue
+                seen_ids.add(dedupe_key)
+                hit = dict(hit)
+                hit["matched_question"] = section.get("number")
+                combined_hits.append(hit)
+
+        retrieved_codes = [item["jurisdiction"] for item in per_jurisdiction if item["sources"]]
+        missing_codes = [item["jurisdiction"] for item in per_jurisdiction if not item["sources"]]
+        coverage.append({
+            "question": section.get("number"),
+            "title": section.get("title", ""),
+            "jurisdictions_searched": jurisdictions,
+            "jurisdictions_with_sources": retrieved_codes,
+            "jurisdictions_without_sources": missing_codes,
+            "status": "retrieved" if retrieved_codes and not missing_codes else
+                      "partial" if retrieved_codes else "no_sources",
+        })
+
+    # Legal research takes precedence for a mixed prompt containing legal issues;
+    # the specialist prompt then enforces source-backed answers and gap disclosure.
+    legal_tasks = {
+        "legal_research", "civil_procedure", "lawyer_assistance",
+        "judicial_research", "document_review",
+    }
+    aggregate_task = "legal_research" if any(task in legal_tasks for task in section_tasks) else classify_task(question)
+    return combined_hits[:24], coverage, aggregate_task
 
 
 @asynccontextmanager
@@ -240,9 +373,11 @@ def chat(req: ChatRequest, request: Request):
             "needs_clarification": True,
             "clarification": clarification,
         }
-    task = classify_task(question)
-    hits = search(question, TOP_K, req.jurisdiction, task) if req.use_knowledge else []
-    legal_tasks = {"legal_research", "civil_procedure", "lawyer_assistance", "judicial_research"}
+    if req.use_knowledge:
+        hits, retrieval_coverage, task = _retrieve_request(question, req.jurisdiction, TOP_K)
+    else:
+        hits, retrieval_coverage, task = [], [], classify_task(question)
+    legal_tasks = {"legal_research", "civil_procedure", "lawyer_assistance", "judicial_research", "document_review"}
     no_legal_source = req.use_knowledge and task in legal_tasks and not hits
     # Abstain only when a specific provision/case is asked about and nothing was retrieved;
     # broad conceptual questions get clearly labelled general information instead.
@@ -258,6 +393,7 @@ def chat(req: ChatRequest, request: Request):
             "model": {"provider": None, "model": None, "task": task},
             "jurisdiction": req.jurisdiction,
             "task": task,
+            "retrieval_coverage": retrieval_coverage,
             "citation_validation": {
                 "status": "no_retrieved_citations", "cited": [], "valid": [], "invalid": [],
                 "paragraphs_checked": 0, "paragraphs_with_citations": 0, "uncited_paragraphs": 0,
@@ -294,6 +430,23 @@ def chat(req: ChatRequest, request: Request):
             "as_of": hit["as_of"],
             "url": hit["source_url"],
         })
+    # Give the model a per-question coverage map. This is essential for mixed prompts:
+    # it must answer supported parts and explicitly mark unsupported jurisdictions.
+    if context and retrieval_coverage:
+        coverage_lines = ["REQUEST ROUTING AND SOURCE COVERAGE (not legal authority):"]
+        for item in retrieval_coverage:
+            label = f"Question {item['question']}" if item.get("question") is not None else "Question"
+            coverage_lines.append(
+                f"{label}: searched {', '.join(item['jurisdictions_searched'])}; "
+                f"sources found for {', '.join(item['jurisdictions_with_sources']) or 'none'}; "
+                f"no sources for {', '.join(item['jurisdictions_without_sources']) or 'none'}."
+            )
+        coverage_lines.append(
+            "Answer each question independently. Use retrieved sources only for propositions they support. "
+            "For any jurisdiction or issue with no retrieved source, explicitly say it is not established by the indexed sources; do not fill the gap from memory."
+        )
+        context[0] = "\n".join(coverage_lines) + "\n\n" + context[0]
+
     # Expose only the sources the model actually receives; otherwise the UI would
     # list (and the validator would accept) citations the model never saw.
     context_text, included = fit_context(context)
@@ -311,6 +464,7 @@ def chat(req: ChatRequest, request: Request):
         "model_connected": error is None,
         "model": model_info,
         "jurisdiction": req.jurisdiction,
+        "retrieval_coverage": retrieval_coverage,
         "task": model_info.get("task"),
         "citation_validation": model_info.get("citation_validation"),
         "quality": model_info.get("quality"),
