@@ -189,6 +189,94 @@
       "url": "https://www.bis.org/statistics/",
       "type": "Financial statistics",
       "authority": "official"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Bharatiya Nyaya Sanhita, 2023 (BNS) — official statute retrieval guide",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/20062/1/a202345.pdf",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2025-10-06"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Bharatiya Nagarik Suraksha Sanhita, 2023 (BNSS) — official statute retrieval guide",
+      "url": "https://www.indiacode.nic.in/bitstream/123456789/21920/1/the_bharatiya_nagarik_suraksha_sanhita%2C_2023.pdf",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2025-10-06"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Bharatiya Sakshya Adhiniyam, 2023 (BSA) — official statute retrieval guide",
+      "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/20063/1/aa202347.pdf",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2025-10-06"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Digital Personal Data Protection Act, 2023 — Act text (separate source)",
+      "url": "https://www.indiacode.nic.in/bitstream/123456789/22037/1/a2023-22.pdf",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2025-11-13"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Digital Personal Data Protection Rules, 2025 — G.S.R. 846(E) (separate source)",
+      "url": "https://www.meity.gov.in/static/uploads/2025/11/53450e6e5dc0bfa85ebd78686cadad39.pdf",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2025-11-13"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — DPDP Act commencement notification — G.S.R. 843(E) (separate source)",
+      "url": "https://www.meity.gov.in/static/uploads/2025/11/c56ceae6c383460ca69577428d36828b.pdf",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2025-11-13"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Limitation Act, 1963 — full Act and Schedule retrieval",
+      "url": "https://www.indiacode.nic.in/bitstream/123456789/1565/5/A1963-36.pdf",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2026-11-25"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Indian Contract Act, 1872 — Sections 2, 19, 22 and 23 (focused retrieval)",
+      "url": "https://www.indiacode.nic.in/bitstream/123456789/2187/2/A187209.pdf",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2026-11-25"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Income-tax Act, 2025 — Tax Year 2026–27 primary law and transition",
+      "url": "https://www.incometax.gov.in/iec/foportal/newdownloads/income-tax-act-2025",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2026-11-25"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Income-tax Rules, 2026 — G.S.R. 198(E) and official forms",
+      "url": "https://www.incometax.gov.in/iec/foportal/sites/default/files/2026-03/En-Notified-IT-Rules-2026-20-03-2026.pdf",
+      "type": "Primary legislation",
+      "authority": "official primary source",
+      "as_of": "2026-03-20"
+    },
+    {
+      "jurisdiction": "IN",
+      "name": "India — Income Tax Department official Tax Year 2026–27 FAQs and forms",
+      "url": "https://www.incometax.gov.in/iec/foportal/help/all-topics/e-filing-services/income-tax-forms",
+      "type": "Official tax guidance",
+      "authority": "official secondary",
+      "as_of": "2026-11-25"
     }
   ]
 }

@@ -260,13 +260,14 @@ class HFInferenceRequest(BaseModel):
     text: str = Field(min_length=1, max_length=12000)
     task: str = Field(default="sentiment-analysis", max_length=64)
     model: str | None = Field(default=None, max_length=256)
+    candidate_labels: list[str] | None = Field(default=None, max_length=20)
 
 
 @app.post("/api/models/huggingface")
 def huggingface_inference(req: HFInferenceRequest):
     from .optional_models import run_hf_text
     try:
-        return run_hf_text(req.text, req.task, req.model)
+        return run_hf_text(req.text, req.task, req.model, req.candidate_labels)
     except (RuntimeError, ValueError) as exc:
         raise HTTPException(status_code=503 if isinstance(exc, RuntimeError) else 400, detail=str(exc)) from exc
 

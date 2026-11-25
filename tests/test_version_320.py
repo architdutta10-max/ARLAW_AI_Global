@@ -11,7 +11,10 @@ def test_version_320_optional_model_routes_and_lazy_imports():
     assert '/api/models' in main
     assert '/api/models/huggingface' in main
     assert '/api/models/vision/{model_name}' in main
-    assert 'from tensorflow.keras.applications import MobileNet, ResNet50, VGG16' in module
+    assert 'tfhub.dev/google/imagenet/mobilenet_v2_100_224/classification/5' in module
+    assert 'tfhub.dev/google/imagenet/resnet_v1_50/classification/5' in module
+    assert 'VGG-16' in module and 'tensorflow.keras.applications' in module
+    assert 'trust_remote_code=False' in module
     assert 'from transformers import pipeline' in module
     assert 'lru_cache' in module
     assert 'not a legal-answer model' in module
@@ -33,23 +36,4 @@ def test_optional_model_dependencies_are_not_added_to_default_requirements():
     requirements = (ROOT / 'requirements.txt').read_text(encoding='utf-8').lower()
     optional = (ROOT / 'requirements-ml.txt').read_text(encoding='utf-8').lower()
     assert 'tensorflow' not in requirements and 'transformers' not in requirements and 'torch' not in requirements
-    assert 'tensorflow-cpu' in optional and 'transformers' in optional and 'torch' in optional
-
-
-def test_history_uses_only_the_browser_local_implementation():
-    html = (ROOT / 'app/static/index.html').read_text(encoding='utf-8')
-    js = (ROOT / 'app/static/app.js').read_text(encoding='utf-8')
-    assert '/static/app.js?v=3.2.0' in html
-    assert 'history.js' not in html
-    assert not (ROOT / 'app/static/history.js').exists()
-    assert "const HISTORY_KEY='arlaw-chat-history-v1'" in js
-    assert 'function deleteConversation(id)' in js
-
-
-def test_hugging_face_models_are_allow_listed(monkeypatch):
-    from app import optional_models
-    monkeypatch.setenv('ARLAW_HF_ALLOWED_MODELS', 'org/approved-model')
-    monkeypatch.setattr(optional_models, 'DEFAULT_HF_MODEL', 'org/default-model')
-    import pytest
-    with pytest.raises(ValueError, match='not allowed'):
-        optional_models.run_hf_text('test input', model='org/untrusted-model')
+    assert 'tensorflow-cpu' in optional and 'tensorflow-hub' in optional and 'transformers' in optional and 'torch' in optional

@@ -1,8 +1,8 @@
 {
   "name": "ARLAW AI Global",
   "version": "3.2.0",
-  "release": "Optional vision and Hugging Face integrations; selective history management",
-  "release_scope": "Adds opt-in MobileNet, ResNet50 and VGG16 image classification via tf.keras.applications, configurable Hugging Face NLP inference, and browser-local multi-select and clear-all chat deletion. Heavy model dependencies remain optional. Legal accuracy is not certified.",
+  "release": "Optional TensorFlow Hub/Keras vision models, Hugging Face NLP, and expanded Indian legal retrieval",
+  "release_scope": "Adds MobileNetV2 and ResNet-50 via TensorFlow Hub, VGG-16 via TensorFlow Keras Applications, configurable Hugging Face NLP inference, and official-source retrieval/refresh coverage for BNS, BNSS, BSA, DPDP Act/Rules/commencement, Income-tax Act 2025 and Rules 2026 for Tax Year 2026-27, Limitation Act 1963 including Schedule, and Indian Contract Act 1872 Sections 2, 19, 22 and 23. Full legal documents can be refreshed explicitly from allowlisted official URLs. Heavy model dependencies remain optional. Legal accuracy is not certified.",
   "requires_maintenance": true,
   "production_certified": false,
   "legal_accuracy_certified": false,

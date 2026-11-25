@@ -138,6 +138,34 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
         expansions.extend(["fraud", "concealment", "false", "statements", "deceive"])
     if re.search(r"\b(transfers?|diverts?|misappropriat(?:e|es|ed|ion)?)\b", query_lower) and re.search(r"\bassets?\b", query_lower):
         expansions.extend(["misappropriation", "undue", "advantage", "abuse", "position"])
+    # Indian statutory aliases: add the full instrument names and topic vocabulary
+    # so acronyms, colloquial references and former-code terminology converge.
+    statute_aliases = {
+        "bns": [r"\bbns\b", r"bharatiya nyaya sanhita", r"new penal code"],
+        "bnss": [r"\bbnss\b", r"bharatiya nagarik suraksha sanhita", r"new criminal procedure"],
+        "bsa": [r"\bbsa\b", r"bharatiya sakshya adhiniyam", r"new evidence law"],
+        "dpdp": [r"\bdpdp\b", r"digital personal data protection"],
+        "limitation": [r"limitation act", r"period of limitation", r"schedule article"],
+        "contract": [r"indian contract act", r"contract act"],
+        "income_tax_2025": [r"income[- ]tax act,? 2025", r"tax year 2026[-–]27", r"income tax act 2025"],
+    }
+    for alias, patterns in statute_aliases.items():
+        if any(re.search(pattern, query_lower, re.I) for pattern in patterns):
+            expansions.append(alias)
+    if re.search(r"\b(?:ipc|indian penal code)\b", query_lower):
+        expansions.extend(["bns", "bharatiya", "nyaya", "sanhita", "repeal", "savings"])
+    if re.search(r"\b(?:crpc|code of criminal procedure)\b", query_lower):
+        expansions.extend(["bnss", "nagarik", "suraksha", "sanhita", "repeal", "savings"])
+    if re.search(r"\b(?:indian evidence act|evidence act)\b", query_lower):
+        expansions.extend(["bsa", "sakshya", "adhiniyam", "electronic", "digital"])
+    if re.search(r"\b(?:dpdp|digital personal data protection)\b", query_lower):
+        expansions.extend(["act", "rules", "commencement", "notification", "gazette", "843", "846"])
+    if re.search(r"\b(?:limitation act|limitation period|schedule article)\b", query_lower):
+        expansions.extend(["schedule", "suits", "appeals", "applications", "article", "prescribed", "period"])
+    if re.search(r"\b(?:contract act|indian contract act)\b", query_lower):
+        expansions.extend(["proposal", "acceptance", "consideration", "consent", "coercion", "fraud", "mistake", "lawful", "object"])
+    if re.search(r"\b(?:tax year 2026[-–]27|income[- ]tax act,? 2025|income tax 2026[-–]27)\b", query_lower):
+        expansions.extend(["income-tax", "2025", "2026", "rules", "2026", "forms", "CBDT"])
     for token in expansions:
         if token not in terms:
             terms.append(token)

@@ -2,19 +2,27 @@
 
 ## Automated checks
 
-- `python -m pytest -q`: 140 passed in the audited source tree.
+- `python -m pytest -q`: **144 passed** in the local build environment.
+- `python -m compileall -q app tests scripts`: passed.
 - `node --check app/static/app.js`: passed.
-- `python -m compileall -q app tests`: passed.
-- Optional model routes and lazy imports are covered by source-level regression tests.
-- Chat-history controls and the single active browser-local history script are covered by regression tests.
+- Added regression checks for BNS, BNSS, BSA, separate DPDP Act/Rules/commencement records, Limitation Act Schedule retrieval, Contract Act sections 22/23 separation, Tax Year 2026-27 sources, Hugging Face zero-shot labels and model allowlisting.
 
-## Scope and limitations
+## Model integration
 
-- Chat history is stored in this browser's local storage. Individual, selected and clear-all deletion affect only this browser; there is no server-side history or cross-device synchronization.
-- The history UI has passed source and syntax checks, but a full interactive browser test is still required on the target deployment.
-- MobileNet, ResNet-50 and VGG-16 are implemented with `tf.keras.applications`, not TensorFlow Hub.
-- TensorFlow/PyTorch/Transformers/Pillow remain optional and are not installed by the default Render build. The optional model endpoints will report missing dependencies until the ML requirements are installed in an adequately resourced environment.
-- The default Hugging Face model is a general sentiment classifier, not a legal-answer model.
-- Retrieval tests validate source discovery and routing only. They do not validate generated legal answers, legal correctness, source authenticity, or current validity.
-- No independent legal-professional review or statistically validated accuracy benchmark has been completed. No legal accuracy percentage is claimed.
-- This release is not production-certified or independently security-audited, and has not been pushed to GitHub or deployed to Render.
+- MobileNetV2 and ResNet-50 use TensorFlow Hub ImageNet classification handles.
+- VGG-16 uses TensorFlow Keras Applications; a matching maintained VGG-16 classification handle is not listed in the official TensorFlow Hub image-classification tutorial.
+- Hugging Face supports text classification, zero-shot classification, token classification/NER and feature extraction. Optional dependencies remain outside the default install.
+- Model downloads and real inference were not executed in this lightweight QA environment; verify on a machine with the optional ML dependencies and adequate RAM/disk.
+
+## Indian legal retrieval coverage
+
+- Bundled retrieval guides and official-source metadata cover BNS, BNSS, BSA, DPDP Act, DPDP Rules 2025, DPDP commencement notification G.S.R. 843(E), Limitation Act 1963 including Schedule, Indian Contract Act 1872 sections 2, 19, 22 and 23, Income-tax Act 2025, Income-tax Rules 2026 and official Income Tax Department Tax Year 2026-27 guidance.
+- `scripts/refresh_indian_legal_corpus.py` fetches complete official documents from a fixed HTTPS allowlist and indexes them into SQLite. It is operator-invoked and has not been run in this build environment; the bundled guides are not full reproductions of those statutes.
+- Retrieval tests validate source discovery and routing only. They do not certify generated legal answers, statutory completeness, source authenticity, legal correctness or current validity.
+
+## Limitations
+
+- TensorFlow Hub/Keras vision models classify generic ImageNet objects; they are not OCR or legal-document understanding systems.
+- The default Hugging Face model is general sentiment analysis, not a legal-answer model. Hugging Face output does not bypass the legal evidence gate.
+- Browser-local chat-history deletion is not server-side deletion or cross-device synchronization.
+- No independent legal-professional review, statistically validated legal-accuracy benchmark, production certification or security audit has been completed.

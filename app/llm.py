@@ -71,7 +71,7 @@ def classify_task(text: str) -> str:
         return "translation"
     if any(x in q for x in ("judge", "judicial", "judgment draft", "court reasoning", "evidence matrix", "precedent comparison", " বিচার", "न्यायिक")):
         return "judicial_research"
-    if _has_word(q, ("itr", "tds")) or any(x in q for x in ("chartered accountant", " ca ", "income tax return", "gst return", "tax filing", "tax audit", "tax computation", "assessment year", "advance tax", "tax compliance")):
+    if _has_word(q, ("itr", "tds")) or any(x in q for x in ("chartered accountant", " ca ", "income tax return", "gst return", "tax filing", "tax audit", "tax computation", "assessment year", "tax year", "advance tax", "tax compliance", "income-tax act, 2025", "income tax act 2025", "income-tax rules, 2026", "income tax rules 2026")):
         return "ca_tax"
     if any(x in q for x in ("bookkeeping", "ledger", "trial balance", "bank reconciliation", "journal entry", "balance sheet", "profit and loss", "cash flow statement", "accounting standard", "accounts payable", "accounts receivable")):
         return "accounting"

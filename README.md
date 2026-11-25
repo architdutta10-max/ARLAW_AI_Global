@@ -189,6 +189,17 @@ MIT. See [LICENSE](LICENSE).
 
 ## Version 3.2 optional model integrations
 
-The standard installation remains lightweight. Optional image and NLP models are installed separately with `pip install -r requirements-ml.txt` (TensorFlow CPU, Pillow, Transformers and PyTorch). The model catalog is available at `GET /api/models`; image classification is exposed at `POST /api/models/vision/{mobilenet|resnet50|vgg16}` using a multipart `file`, and Hugging Face text inference at `POST /api/models/huggingface` with JSON `{ "text": "...", "task": "sentiment-analysis", "model": "..." }`. Models load lazily and may require substantial RAM, disk space and first-run downloads; do not install the ML extra on a small Render instance unless its resources support it. Vision backbones are provided by `tf.keras.applications`, not TensorFlow Hub. Hugging Face model IDs are limited to `ARLAW_HF_MODEL` plus comma-separated IDs in `ARLAW_HF_ALLOWED_MODELS`. The vision models classify images and the default Hugging Face model is not a legal-answer model. They do not replace the legal retrieval/evidence gate or certify legal accuracy.
+The standard installation remains lightweight. Optional image and NLP models are installed separately with `pip install -r requirements-ml.txt` (TensorFlow CPU, TensorFlow Hub, Pillow, Transformers and PyTorch). The model catalog is available at `GET /api/models`; image classification is exposed at `POST /api/models/vision/{mobilenet|resnet50|vgg16}` using a multipart `file`, and Hugging Face text inference at `POST /api/models/huggingface` with JSON `{ "text": "...", "task": "sentiment-analysis", "model": "..." }`. Models load lazily and may require substantial RAM, disk space and first-run downloads; do not install the ML extra on a small Render instance unless its resources support it. MobileNetV2 and ResNet-50 use TensorFlow Hub ImageNet classifiers; VGG-16 uses TensorFlow Keras Applications because a maintained matching VGG-16 classifier is not listed in the TensorFlow Hub image-classification catalogue. These are generic object classifiers, not OCR or legal-document models. The Hugging Face endpoint supports sentiment/text classification, zero-shot classification (supply 2–20 `candidate_labels`), token classification/NER and feature extraction. Set `ARLAW_HF_ALLOWED_MODELS` to a comma-separated model allowlist if exposing inference to untrusted callers. The default Hugging Face model is sentiment analysis, not a legal-answer model. They do not replace the legal retrieval/evidence gate or certify legal accuracy.
 
 Chat history is stored in browser local storage. Version 3.2 adds individual deletion, selecting and deleting multiple conversations, and clearing all local conversations. It is not synchronized between devices.
+
+
+### Indian legal corpus refresh (3.2.0)
+
+The bundled retrieval guides cover BNS, BNSS, BSA, the DPDP Act, DPDP Rules 2025, the DPDP commencement notification, the Limitation Act 1963 (including Schedule navigation), Indian Contract Act 1872 Sections 2, 19, 22 and 23, and Income-tax Act 2025 / Income-tax Rules 2026 material for Tax Year 2026-27. These guides are not full statutory reproductions. To fetch and index the complete official PDFs and official Income Tax Department HTML guidance, run this explicitly from the project root:
+
+```bash
+python scripts/refresh_indian_legal_corpus.py
+```
+
+The script uses a fixed HTTPS host allowlist and size limit, refuses short/empty extracts, replaces only its own managed records, and does not run during web-service startup. Review the result for every source and check later Gazette amendments before legal use.
