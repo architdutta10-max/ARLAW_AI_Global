@@ -1,8 +1,8 @@
 {
   "name": "ARLAW AI Global",
-  "version": "3.0.8",
-  "release": "Jurisdiction-aware mixed-question retrieval routing",
-  "release_scope": "Routes GLOBAL requests to explicitly named jurisdictions, splits numbered multi-question prompts for independent retrieval, prioritizes legal intent in mixed economic/legal questions, and reports source coverage per question. Does not add new legal authorities, expand indexed jurisdiction coverage, certify legal accuracy, or complete production hardening.",
+  "version": "3.1.1",
+  "release": "Expanded legal corpus and five-question coverage regression tests",
+  "release_scope": "Adds curated jurisdiction-specific legal digests for Article 21, privacy, corporate fraud, competition, trade controls and sanctions; improves international-sanctions routing and adds regression tests. Does not certify legal accuracy or completeness.",
   "requires_maintenance": true,
   "production_certified": false,
   "legal_accuracy_certified": false,

@@ -209,5 +209,195 @@
     "language": "en",
     "category": "law",
     "file_name": "official-primary-maneka-judgment-pdf"
+  },
+  {
+    "title": "India — Constitution Article 21, personal liberty and privacy (legal research digest)",
+    "jurisdiction": "IN",
+    "as_of": "2026-11-25",
+    "source_url": "https://legislative.gov.in/constitution-of-india/",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "INDIA | CONSTITUTIONAL LAW | ARTICLE 21. This educational digest identifies the controlling constitutional text and leading Supreme Court doctrines; it is not a substitute for the official Constitution or full judgments. Article 21 states: “No person shall be deprived of his life or personal liberty except according to procedure established by law.” It protects every person, not only citizens. In Maneka Gandhi v Union of India (1978) 1 SCC 248, the Supreme Court held that a procedure depriving life or personal liberty must be fair, just and reasonable, not arbitrary, fanciful or oppressive; Articles 14, 19 and 21 are read together where applicable. In Justice K.S. Puttaswamy (Retd.) v Union of India (2017) 10 SCC 1, a nine-judge bench recognised privacy as a fundamental right protected by Part III, grounded in dignity, liberty and autonomy, with limits requiring legality, legitimate state aim and proportionality. A specific privacy claim still requires analysis of the state action, legal basis, purpose, necessity, proportionality and safeguards. Cite the constitutional text and the full judgments, not this digest alone. Primary starting point: Legislative Department, Constitution of India; Supreme Court judgment repositories should be checked for the authoritative judgment text."
+  },
+  {
+    "title": "India — Digital Personal Data Protection Act and commencement (privacy law digest)",
+    "jurisdiction": "IN",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.meity.gov.in/static/uploads/2025/11/c56ceae6c383460ca69577428d36828b.pdf",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "INDIA | PRIVACY AND DATA PROTECTION. The Digital Personal Data Protection Act, 2023 (DPDP Act) is the central general framework for digital personal data. Its scope, exemptions, duties of Data Fiduciaries, rights of Data Principals, Board powers and penalties must be read from the Act and notified Rules. CRITICAL COMMENCEMENT QUALIFICATION: Gazette notification G.S.R. 843(E), dated 13 November 2025, brought specified institutional and miscellaneous provisions into force immediately; section 6(9) and section 27(1)(d) came into force one year later, on 13 November 2026; and the main substantive provisions, including sections 3–17 and most of section 27, are scheduled after eighteen months (13 May 2027), subject to any later notification or amendment. Therefore, as at 25 November 2026, distinguish provisions already commenced from the main substantive duties that are not yet in force. Check the latest Gazette commencement instruments before advising. The Information Technology Act 2000 section 43A and SPDI Rules 2011 may remain relevant during the transition, subject to the precise commencement and repeal provisions. Cross-border transfers, significant data fiduciary obligations, children's data and exemptions require provision-specific analysis. Primary sources: DPDP commencement Gazette notification G.S.R. 843(E); DPDP Act 2023 on India Code; DPDP Rules 2025 and subsequent corrigenda/orders in the Gazette."
+  },
+  {
+    "title": "Germany and EU — GDPR and German Federal Data Protection Act (privacy law digest)",
+    "jurisdiction": "DE",
+    "as_of": "2026-11-25",
+    "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "GERMANY | DATA PROTECTION. Germany is subject to the directly applicable EU General Data Protection Regulation (GDPR), Regulation (EU) 2016/679, supplemented in areas left to Member State law by the Bundesdatenschutzgesetz (BDSG) and state data-protection laws. Core GDPR principles include lawfulness, fairness, transparency, purpose limitation, data minimisation, accuracy, storage limitation, integrity/confidentiality and accountability (Article 5). Processing needs an Article 6 legal basis; special-category data is additionally restricted by Article 9. Data subjects have rights including access, rectification, erasure, restriction, portability and objection, subject to statutory limits. Controllers must provide information, implement security and accountability measures, assess high-risk processing and notify qualifying breaches under Articles 32–35 and 33. International transfers require Chapter V compliance. Supervisory authorities can investigate and impose administrative fines under Article 83. Germany's BDSG supplements the GDPR, including rules for federal bodies, employment data and specified derogations; applicability must be checked against the controller, processing and German federal/state allocation. Do not treat the GDPR as the whole of German privacy law. Primary sources: EUR-Lex GDPR consolidated text and the German Federal Ministry of Justice's BDSG text."
+  },
+  {
+    "title": "United Kingdom — UK GDPR and Data Protection Act 2018 (privacy law digest)",
+    "jurisdiction": "UK",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.legislation.gov.uk/ukpga/2018/12/contents",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "UNITED KINGDOM | DATA PROTECTION. The UK regime comprises the UK GDPR (the retained and amended domestic version of Regulation (EU) 2016/679) and the Data Protection Act 2018, as amended, including changes made by the Data (Use and Access) Act 2025 as and when commenced. Core principles, lawful bases, data-subject rights, controller/processor obligations, security, breach reporting, international transfers and enforcement are broadly structured around the GDPR model, but UK-specific amendments and commencement dates matter. The DPA 2018 supplements the UK GDPR, provides rules for law-enforcement and intelligence processing, establishes the Information Commissioner framework and sets exemptions and enforcement provisions. Do not cite the EU GDPR as if it automatically states the current UK law; distinguish UK GDPR from EU GDPR. Verify the point-in-time legislation and commencement status of each 2025 Act amendment on legislation.gov.uk. Primary sources: legislation.gov.uk, UK GDPR text and Data Protection Act 2018; Information Commissioner's Office guidance is regulatory guidance, not legislation."
+  },
+  {
+    "title": "United States — federal and state privacy framework (privacy law digest)",
+    "jurisdiction": "US",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.ftc.gov/legal-library/browse/statutes/federal-trade-commission-act",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "UNITED STATES | PRIVACY AND DATA SECURITY. The United States does not have one generally applicable omnibus federal privacy statute equivalent to the EU GDPR. The framework is a combination of sectoral federal statutes, Federal Trade Commission Act section 5 enforcement against unfair or deceptive practices, state comprehensive privacy statutes and state breach-notification laws. Examples include HIPAA and its implementing rules for covered entities/business associates and protected health information; the Gramm-Leach-Bliley Act and safeguards/privacy rules for covered financial institutions; COPPA for certain online collection from children under 13; FCRA for consumer reports; and state laws such as California's CCPA as amended by the CPRA. Applicability depends on entity, data, activity, thresholds, exemptions, state nexus and effective dates. State laws differ on consumer rights, opt-outs, sensitive data, universal opt-out signals, private rights of action and regulator enforcement. Sectoral rules can overlap; do not state that HIPAA protects all health data or that one state's law applies nationwide. Primary sources: FTC Act and agency materials; HHS HIPAA regulations; FTC GLBA Safeguards Rule; US Code and the relevant state legislature/attorney-general sources."
+  },
+  {
+    "title": "India — corporate fraud, director duties and officer liability (Companies Act digest)",
+    "jurisdiction": "IN",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2114/5/A2013-18.pdf",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "INDIA | CORPORATE FRAUD AND DIRECTOR/OFFICER LIABILITY. Companies Act 2013 section 447 defines fraud broadly in relation to company/body-corporate affairs to include an act, omission, concealment or abuse of position committed with intent to deceive, gain undue advantage or injure the company's, shareholders', creditors' or another person's interests, whether or not wrongful gain/loss results. Section 447 provides criminal punishment, with different treatment for specified thresholds and public-interest cases; check the current amended text and sentencing facts. Section 448 addresses false statements in returns, reports, certificates, financial statements or other documents where the statutory conditions are met. Section 166 imposes directors' duties including good faith, acting in the company's and stakeholders' interests as specified, due care/skill/diligence, independent judgment, conflict avoidance and no undue gain. Section 2(60) defines “officer who is in default”; liability is not automatically imposed on every director merely because of office. Section 149(12) limits certain independent/non-executive director liability to acts/omissions with knowledge attributable through board processes, consent/connivance or lack of diligence, subject to its text. Other routes may include the Bharatiya Nyaya Sanhita 2023, SEBI laws, insolvency law and sectoral statutes depending on conduct. Distinguish company liability from personal liability; establish attribution, role, knowledge, intent and statutory elements. Primary source: India Code / Ministry of Corporate Affairs Companies Act 2013."
+  },
+  {
+    "title": "United Kingdom — corporate fraud and directors duties (Fraud Act and Companies Act digest)",
+    "jurisdiction": "UK",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.legislation.gov.uk/ukpga/2006/35/contents",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "UNITED KINGDOM | CORPORATE FRAUD AND DIRECTORS. Fraud Act 2006 sections 1–4 recognises fraud by false representation, failure to disclose information where under a legal duty, and abuse of position; the prosecution must prove the relevant dishonesty and intent to make a gain or cause/expose another to loss, as specified in each offence. Companies Act 2006 sections 171–177 codify general directors' duties, including acting within powers, promoting the company's success (section 172), independent judgment, reasonable care/skill/diligence (section 174), avoiding conflicts and declaring interests. Corporate criminal attribution depends on the offence and applicable attribution rules; the Economic Crime and Corporate Transparency Act 2023 introduced an identification doctrine for specified economic crimes and a failure-to-prevent-fraud offence for large organisations, subject to statutory scope, commencement and reasonable-prevention-procedures defence. Do not assume all directors are automatically criminally liable for company fraud. Analyse the individual offence, attribution, consent/connivance/neglect provisions and current commencement. Primary sources: legislation.gov.uk Fraud Act 2006; Companies Act 2006; Economic Crime and Corporate Transparency Act 2023."
+  },
+  {
+    "title": "United States — corporate criminal liability and officer responsibility (legal digest)",
+    "jurisdiction": "US",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.justice.gov/jm/jm-9-28000-principles-federal-prosecution-business-organizations",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "UNITED STATES | CORPORATE CRIMINAL LIABILITY. Under federal common-law agency principles, a corporation may be criminally liable for acts of its employees/agents undertaken within the scope of their authority and at least partly for the corporation's benefit; the employee need not be senior management. Individual officers/directors are liable only where their own conduct satisfies the elements of an offence or a valid statutory basis for responsible-person liability applies. Relevant offences can include mail fraud (18 USC 1341), wire fraud (18 USC 1343), securities fraud and Foreign Corrupt Practices Act offences, depending on facts and jurisdiction. Sarbanes-Oxley Act provisions address issuer financial reporting, certifications, audit controls and specified fraud/obstruction offences; they do not create a general automatic criminal liability rule for all directors. DOJ Justice Manual principles guide federal prosecutors but are not themselves statutes or enforceable private rights. State corporate-liability rules can differ. Analyse entity attribution, intent, scope of employment, benefit, individual participation and statutory elements separately. Primary/official sources: DOJ Justice Manual corporate prosecution principles; US Code; SEC and DOJ FCPA resources."
+  },
+  {
+    "title": "Germany — corporate offences, management liability and fraud (legal digest)",
+    "jurisdiction": "DE",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.gesetze-im-internet.de/englisch_owig/englisch_owig.html",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "GERMANY | CORPORATE FRAUD AND LIABILITY. German law generally does not impose criminal punishment on a legal person in the same way as on a natural person; administrative fines against an enterprise may be imposed under section 30 of the Act on Regulatory Offences (OWiG) where a qualifying manager commits a criminal or administrative offence that violates duties incumbent on the entity or enriches/was intended to enrich it. Section 130 OWiG addresses supervisory-duty failures by business owners/management where necessary supervision is omitted and an offence occurs that could have been prevented or made substantially more difficult by proper supervision. Natural-person criminal liability may arise under the German Criminal Code, including fraud under section 263, subject to proof of its elements and individual participation/intent. Directors' duties and civil liability also arise under company statutes, including GmbHG section 43 for managing directors of a GmbH and AktG section 93 for management board members of an AG. Corporate fines, confiscation, individual criminal liability and civil director liability are distinct routes. Verify the legal form, actor status and current statutory text. Primary sources: German Federal Ministry of Justice translations of OWiG, StGB, GmbHG and AktG."
+  },
+  {
+    "title": "India — cartelisation and anti-competitive agreements (Competition Act digest)",
+    "jurisdiction": "IN",
+    "as_of": "2026-11-25",
+    "source_url": "https://upload.indiacode.nic.in/showfile?actid=AC_CEN_22_29_00005_200312_1517807324781&filename=200312.pdf&type=actfile",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "INDIA | CARTELS AND ANTI-COMPETITIVE AGREEMENTS. EU law is covered in a separate EU-jurisdiction source; do not conflate the two regimes. Competition Act 2002 section 3(1) prohibits agreements relating to production, supply, distribution, storage, acquisition or control of goods or provision of services that cause or are likely to cause an appreciable adverse effect on competition (AAEC) within India; contravening agreements are void under section 3(2). Section 3(3) covers horizontal agreements/cartels between competitors, including price-fixing, output limitation, market/customer/geographic allocation and bid-rigging; the statute presumes AAEC, subject to statutory text and exceptions such as qualifying efficiency-enhancing joint ventures. Section 3(4) covers specified vertical restraints where AAEC is established. Sections 19 and 26 address inquiry; section 27 empowers CCI orders and penalties; section 46 provides a lesser-penalty framework subject to conditions. The Competition (Amendment) Act 2023 changed important procedures and penalty calculations; check current consolidated law, CCI regulations and case law. Analyse agreement/concerted practice, relevant market where needed, evidence, effects and jurisdictional nexus. India and EU rules are separate; do not apply EU law solely because an agreement involves a European counterparty."
+  },
+  {
+    "title": "European Union — Article 101 TFEU cartel prohibition and enforcement (competition law digest)",
+    "jurisdiction": "EU",
+    "as_of": "2026-11-25",
+    "source_url": "https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:12016E101",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "EUROPEAN UNION | CARTELS AND ARTICLE 101 TFEU. Article 101(1) TFEU prohibits agreements between undertakings, decisions by associations of undertakings and concerted practices that may affect trade between Member States and have as their object or effect the prevention, restriction or distortion of competition within the internal market. Examples include direct/indirect price fixing, limiting production/markets/technical development, market or supply-source sharing, discriminatory conditions and tying, subject to the Treaty text. Article 101(2) makes prohibited agreements automatically void. Article 101(3) provides an exemption where the agreement contributes to improving production/distribution or promoting technical/economic progress, allows consumers a fair share of benefit, imposes only indispensable restrictions and does not eliminate competition for a substantial part of the products. Regulation 1/2003 governs enforcement; Article 23 permits fines, generally capped at 10% of total turnover in the preceding business year for the relevant undertaking/association. The Commission and national competition authorities enforce EU rules; CJEU/General Court review decisions. “Object” restrictions and effects analysis are distinct; jurisdictional effect on inter-State trade must be addressed. Primary sources: EUR-Lex consolidated TFEU and Regulation 1/2003; Commission guidelines and case law provide interpretive context."
+  },
+  {
+    "title": "India — export controls, SCOMET and trade restrictions (trade compliance digest)",
+    "jurisdiction": "IN",
+    "as_of": "2026-11-25",
+    "source_url": "https://content.dgft.gov.in/Website/NCSTC-2025-Handbook-on-Indias-Strategic-Trade-Control-System.pdf",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "INDIA | EXPORT CONTROLS AND SANCTIONS. The Foreign Trade (Development and Regulation) Act 1992, Foreign Trade Policy and ITC(HS) Export/Import Policy govern India's trade controls. DGFT administers authorisations and restrictions; strategic dual-use goods, software and technology may be controlled under the SCOMET list (Special Chemicals, Organisms, Materials, Equipment and Technologies), including licensing, end-user/end-use review, recordkeeping and catch-all controls where applicable. Classification must be made against the current SCOMET list and technical specifications, not product marketing names. Check destination, end-user, end-use, transit/transshipment, brokering, technology transfer and re-export. India implements UN Security Council sanctions through domestic legislation and notifications; do not assume every unilateral foreign sanction automatically binds an Indian company absent a legal nexus or applicable restriction. DGFT's 2025 National Committee on Strategic Trade Controls handbook is official guidance, not a substitute for the Act, Rules, current ITC(HS) schedules, notifications and licence conditions. Primary sources: DGFT handbook/SCOMET list, India Code FTDR Act and current DGFT notifications."
+  },
+  {
+    "title": "Germany and European Union — dual-use export controls and sanctions (trade compliance digest)",
+    "jurisdiction": "DE",
+    "as_of": "2026-11-25",
+    "source_url": "https://eur-lex.europa.eu/eli/reg/2021/821/oj",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "GERMANY / EU | EXPORT CONTROLS AND SANCTIONS. Germany applies EU export-control law, notably Regulation (EU) 2021/821 on control of exports, brokering, technical assistance, transit and transfer of dual-use items, together with the German Foreign Trade and Payments Act (AWG) and Ordinance (AWV). The EU Dual-Use Regulation controls listed items and includes catch-all controls for specified risks (including WMD-related end uses), brokering, technical assistance and intra-EU transfers for particularly sensitive items. Germany's AWG section 4 permits restrictions/obligations for specified security and foreign-policy interests; AWV and BAFA rules provide detailed licensing and compliance requirements. Separate EU restrictive-measures regulations impose country-, sector-, entity- and activity-specific sanctions; screen counterparties, beneficial ownership/control, goods, services, financing and routing. Classification, licensing, end-use, destination, sanctions and re-export must be checked against current consolidated regulations and BAFA guidance. Primary sources: EUR-Lex Regulation 2021/821 and EU sanctions regulations; Gesetze-im-Internet AWG/AWV; BAFA official guidance."
+  },
+  {
+    "title": "Singapore — strategic goods export controls and sanctions (trade compliance digest)",
+    "jurisdiction": "SG",
+    "as_of": "2026-11-25",
+    "source_url": "https://sso.agc.gov.sg/Act/SGCA2002",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "SINGAPORE | STRATEGIC GOODS AND TRADE CONTROLS. The Strategic Goods (Control) Act 2002 and subsidiary regulations control specified strategic goods and technology, including export, transhipment, transit, brokering and intangible transfer, with permits/registration and recordkeeping obligations depending on the activity and item. Singapore Customs administers the strategic-goods control system and publishes the Strategic Goods Control List, permit procedures and red-flag guidance. The Customs Act, Regulation of Imports and Exports Act and goods-specific prohibitions may also apply. Singapore implements United Nations Security Council sanctions through domestic law and regulations. Singapore Customs states that Singapore does not enforce unilateral sanctions imposed by other countries as such; however, a business may face separate foreign-law exposure where there is a relevant nexus (for example, US persons/transactions, EU territory/persons, currency clearing or contractual commitments). Screen goods classification, end-user, end-use, country, ownership/control, transit route and technology access. Primary sources: Singapore Statutes Online Strategic Goods (Control) Act 2002 and regulations; Singapore Customs official strategic-goods and sanctions guidance."
+  },
+  {
+    "title": "International — UN Security Council sanctions and cross-border sanctions nexus (trade digest)",
+    "jurisdiction": "INTL",
+    "as_of": "2026-11-25",
+    "source_url": "https://main.un.org/securitycouncil/en/content/un-sc-consolidated-list",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "INTERNATIONAL | SANCTIONS. UN Security Council sanctions adopted under the UN Charter are implemented through binding Security Council resolutions and domestic/regional implementing measures. The UN consolidated list is an official screening reference for designated individuals and entities, but compliance requires checking the relevant sanctions regime, resolution, domestic implementing law, ownership/control rules, exemptions and licensing. EU restrictive measures apply under EU regulations to persons/entities within their defined territorial and personal scope and can prohibit dealings, services, financing, imports/exports or making funds/economic resources available. US OFAC sanctions apply according to the relevant US programme and jurisdictional nexus, including US persons, US territory and certain transactions involving the US financial system; secondary-sanctions exposure may also exist under specific programmes. Do not treat UN, EU, US and national sanctions as interchangeable or assume every foreign unilateral sanction binds every non-US/non-EU company. Screen parties, beneficial ownership/control, vessels, banks, goods, services, destination and payment route; obtain specialist advice for complex exposure. Primary sources: UN Security Council consolidated list and programme resolutions; EU regulations; OFAC regulations and sanctions lists."
+  },
+  {
+    "title": "Global comparison — India corporate fraud and director duties",
+    "jurisdiction": "GLOBAL",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.indiacode.nic.in/bitstream/123456789/2114/5/A2013-18.pdf",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "GLOBAL COMPARATIVE CORPORATE FRAUD RESEARCH. No single global rule applies. Determine incorporation, location of conduct, listing/market, victim, transaction and statutory nexus. INDIA: Companies Act 2013 sections 447 (fraud), 448 (false statements), 166 (directors’ duties), 2(60) (officer in default) and 149(12) (certain independent/non-executive director limits) may apply; additional offences may arise under the Bharatiya Nyaya Sanhita, securities and sectoral laws. Personal liability requires proof of the statutory elements and the individual’s role, knowledge, consent/connivance or other required mental state; office alone is not enough. Across systems, distinguish entity attribution, individual criminal liability, civil director duties, regulatory penalties and shareholder remedies. Establish each offence element, mental state, attribution rule, defence and jurisdictional nexus. This is a comparative orientation digest, not a substitute for current primary law."
+  },
+  {
+    "title": "Global comparison — United Kingdom corporate fraud and directors duties",
+    "jurisdiction": "GLOBAL",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.legislation.gov.uk/ukpga/2006/35/contents",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "GLOBAL COMPARATIVE CORPORATE FRAUD RESEARCH. No single global rule applies. Determine incorporation, location of conduct, listing/market, victim, transaction and statutory nexus. UNITED KINGDOM: Fraud Act 2006 sections 1–4 covers false representation, nondisclosure where legally required and abuse of position; Companies Act 2006 sections 171–177 sets directors’ general duties. Economic Crime and Corporate Transparency Act 2023 provides a failure-to-prevent-fraud offence for large organisations and an expanded identification doctrine for specified offences, subject to statutory scope, commencement and defences. Across systems, distinguish entity attribution, individual criminal liability, civil director duties, regulatory penalties and shareholder remedies. Establish each offence element, mental state, attribution rule, defence and jurisdictional nexus. This is a comparative orientation digest, not a substitute for current primary law."
+  },
+  {
+    "title": "Global comparison — United States corporate criminal liability",
+    "jurisdiction": "GLOBAL",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.justice.gov/jm/jm-9-28000-principles-federal-prosecution-business-organizations",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "GLOBAL COMPARATIVE CORPORATE FRAUD RESEARCH. No single global rule applies. Determine incorporation, location of conduct, listing/market, victim, transaction and statutory nexus. UNITED STATES: Federal corporate criminal liability may attach under agency principles where an employee acts within scope and at least partly for corporate benefit; individuals require proof of their own offence or statutory basis. Relevant laws include 18 USC 1341/1343 and Sarbanes-Oxley provisions. DOJ Justice Manual principles guide prosecutors but are not themselves statutes. Across systems, distinguish entity attribution, individual criminal liability, civil director duties, regulatory penalties and shareholder remedies. Establish each offence element, mental state, attribution rule, defence and jurisdictional nexus. This is a comparative orientation digest, not a substitute for current primary law."
+  },
+  {
+    "title": "Global comparison — Germany corporate offences and management liability",
+    "jurisdiction": "GLOBAL",
+    "as_of": "2026-11-25",
+    "source_url": "https://www.gesetze-im-internet.de/englisch_owig/englisch_owig.html",
+    "authority": "official secondary",
+    "language": "en",
+    "category": "law",
+    "text": "GLOBAL COMPARATIVE CORPORATE FRAUD RESEARCH. No single global rule applies. Determine incorporation, location of conduct, listing/market, victim, transaction and statutory nexus. GERMANY: Natural persons may be prosecuted under the Criminal Code, including fraud under section 263. Enterprise fines may arise under OWiG section 30, and supervisory failures under section 130. Civil management liability can arise under GmbHG section 43 or AktG section 93 depending on legal form. Corporate fines, individual criminal liability and civil director liability are distinct routes. Across systems, distinguish entity attribution, individual criminal liability, civil director duties, regulatory penalties and shareholder remedies. Establish each offence element, mental state, attribution rule, defence and jurisdictional nexus. This is a comparative orientation digest, not a substitute for current primary law."
   }
 ]

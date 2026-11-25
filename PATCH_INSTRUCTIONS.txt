@@ -1,0 +1,54 @@
+ARLAW AI GLOBAL 3.0.5 — ACCURACY PATCH
+==========================================
+
+This is an overlay patch for the existing ARLAW_AI_Global project.
+It does NOT include or replace your .env, local databases, uploads, Git history,
+virtual environment, or chat history.
+
+WHAT CHANGED
+------------
+- Strengthens the legal source hierarchy instructions.
+- Requires the assistant to distinguish primary legal text from secondary digests.
+- Prevents a case digest from being described as the official judgment.
+- Warns against describing an old judgment as current law unless retrieved sources
+  establish subsequent amendments or controlling decisions.
+- Requires conflicts and incomplete evidence to be disclosed.
+- Updates the backend version to 3.0.5.
+- Adds regression tests for these safeguards.
+
+INSTALL (Windows PowerShell 5.1)
+-------------------------------
+1. Stop the running Uvicorn server with Ctrl+C in its server window.
+2. Open a SECOND PowerShell window and run:
+
+   $Project = "$env:USERPROFILE\OneDrive\Desktop\ARLAW_AI_Global"
+   Copy-Item "$Project\app\llm.py" "$Project\app\llm.py.before-3.0.5" -Force
+   Copy-Item "$Project\app\main.py" "$Project\app\main.py.before-3.0.5" -Force
+   Copy-Item "$Project\VERSION.json" "$Project\VERSION.json.before-3.0.5" -Force
+
+3. Put this ZIP in your Downloads folder, then run:
+
+   Expand-Archive -LiteralPath "$env:USERPROFILE\Downloads\ARLAW_AI_Global_3.0.5_Accuracy_Patch.zip" -DestinationPath $Project -Force
+
+4. Run the tests:
+
+   Set-Location $Project
+   .\.venv\Scripts\python.exe -m pytest -q
+
+5. If all tests pass, start the server again:
+
+   .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+
+6. Open http://127.0.0.1:8000 and check /api/health shows version 3.0.5.
+
+IMPORTANT LIMITATIONS
+---------------------
+This patch improves conservative answer generation. It does NOT independently
+verify every source, establish that the knowledge base is complete or current,
+or certify legal accuracy. Continue checking the relevant official primary
+authority and later decisions before relying on legal conclusions.
+
+SECURITY
+--------
+Do not upload, commit, or share your .env file. Keep API keys private.
+The patch ZIP intentionally contains no .env file or API key.

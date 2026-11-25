@@ -1,0 +1,23 @@
+ARLAW AI GLOBAL 3.0.8 PATCH
+
+BACK UP THE PROJECT FIRST.
+
+Copy the files in this patch into the matching locations in your project, replacing existing files:
+- app/main.py
+- tests/test_security_v3.py
+- tests/test_retrieval_routing_v308.py
+- VERSION.json
+- CHANGELOG_3.0.8.md
+
+Do not replace your database, .env, uploads, .venv, or other project files.
+
+PowerShell 5.1 validation:
+1. Confirm VERSION.json reports 3.0.8.
+2. Run: .\.venv\Scripts\python.exe -m compileall -q app tests check_groq.py
+3. Run: .\.venv\Scripts\python.exe -m pytest -q
+
+Expected: all tests pass, including the new regression that selects GLOBAL but asks about Article 21 of the Constitution of India.
+
+Then inspect the changes, commit, and push them to GitHub. Render deployment is a separate step and must be verified in Render logs/health endpoint.
+
+SCOPE: Fixes explicit jurisdiction routing and mixed-question retrieval. It does not add legal authorities or certify legal answers.

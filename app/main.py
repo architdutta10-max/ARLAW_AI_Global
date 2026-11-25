@@ -23,7 +23,7 @@ from .knowledge import init_db, add_source, search, list_sources, seed_builtin_k
 from .llm import generate, provider_order, classify_task, fit_context
 from .ambiguity import clarification_for, names_specific_authority
 
-VERSION = "3.1.0"
+VERSION = "3.1.1"
 MAX_UPLOAD_BYTES = int(os.getenv("ARLAW_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
 MAX_PDF_PAGES = int(os.getenv("ARLAW_MAX_PDF_PAGES", "300"))
 CHAT_RATE_LIMIT = int(os.getenv("ARLAW_CHAT_RATE_LIMIT", "20"))
@@ -107,7 +107,9 @@ _LEGAL_TOPIC_MARKER = re.compile(
     re.I,
 )
 _QUESTION_HEADING = re.compile(
-    r"(?im)^\s*(?:#{1,6}\s*)?QUESTION\s+(\d{1,2})\s*(?:[\u2014\u2013:.)?\-\ufffd])\s*(.*?)\s*$"
+    r"(?im)^\s*(?:#{1,6}\s*)?(?:\*\*)?(?:QUESTION\s+)?"
+    r"(\d{1,2})\s*[.)\u2014\u2013:?-]\s*"
+    r"(.*?)(?:\*\*)?\s*$"
 )
 
 

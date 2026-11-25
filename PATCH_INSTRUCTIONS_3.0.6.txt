@@ -1,0 +1,15 @@
+ARLAW AI GLOBAL 3.0.6 PATCH
+
+Apply this patch on top of your existing ARLAW AI 3.0.5 project.
+
+1. Stop the server with Ctrl+C.
+2. Make a full backup of the project folder.
+3. Extract this ZIP into the project root (the folder containing app and tests), overwriting the listed files.
+4. Run: .\.venv\Scripts\python.exe -m pytest -q
+5. If all tests pass, restart: .\.venv\Scripts\python.exe -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+6. Hard-refresh the browser with Ctrl+F5. Confirm the Jurisdiction selector shows India initially.
+7. For non-Indian matters, manually select the correct jurisdiction before asking. GLOBAL remains available but is not suitable for a question about an Indian constitutional provision.
+
+The patch does not include or replace .env, API keys, databases, uploads, .venv, or Git history.
+
+Verification in the patch build environment: 94 tests passed. This verifies software tests only; it is not a legal accuracy certification.

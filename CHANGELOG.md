@@ -80,3 +80,11 @@
 - Added a safeguard against presenting an older decision as current law unless retrieved sources establish subsequent developments.
 - Required conflicts and incomplete evidence to be surfaced rather than silently resolved.
 - These are generation safeguards; they do not independently verify source relevance, legal correctness, or currency.
+
+## 3.1.1 — 2026-11-25
+- Expanded bundled legal retrieval coverage for Article 21, privacy/data protection, corporate fraud and director/officer liability, cartels, sanctions and export controls.
+- Added jurisdiction-specific India, Germany, UK, US, EU and Singapore legal digests linked to primary-law or regulator sources.
+- Added global comparative corporate-liability records while preserving jurisdiction labels and source separation.
+- Recorded phased commencement of India's DPDP Act under G.S.R. 843(E) (13 November 2025).
+- Expanded international-sanctions routing and added five-question legal coverage regression tests.
+- Automated regression result in the prepared source tree: 118 passed; this is not a legal-accuracy percentage.
