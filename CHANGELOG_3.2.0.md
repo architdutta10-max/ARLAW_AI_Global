@@ -29,3 +29,11 @@
 - Important: bundled records are retrieval guides and not complete reproductions of the statutes. Run the refresh script to index the complete source documents; inspect its report and verify subsequent Gazette amendments.
 - TensorFlow Hub models are generic ImageNet object classifiers, not OCR or legal-document models. Hugging Face output is auxiliary NLP, not a legal-answer model.
 - No claim of legal-accuracy certification, production certification or security audit is made.
+
+
+### Retrieval coverage hotfix (3.2.0)
+
+- Numbered research sections now recognise escaped Markdown numbering such as `1\.` so each question is routed and retrieved independently.
+- Indian jurisdiction detection now recognises the BNS, BNSS, BSA, DPDP Act, Limitation Act, 1963 and Indian Contract Act by their named instruments.
+- The full official Indian legal corpus still requires an explicit refresh; it is not fetched automatically at startup or during Render builds.
+- Added regression tests for seven-question routing and Render corpus refresh configuration.

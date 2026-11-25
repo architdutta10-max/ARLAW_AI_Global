@@ -2,7 +2,7 @@
 
 ## Automated checks
 
-- `python -m pytest -q`: **144 passed** in the local build environment.
+- `python -m pytest -q`: **145 passed** in the local build environment.
 - `python -m compileall -q app tests scripts`: passed.
 - `node --check app/static/app.js`: passed.
 - Added regression checks for BNS, BNSS, BSA, separate DPDP Act/Rules/commencement records, Limitation Act Schedule retrieval, Contract Act sections 22/23 separation, Tax Year 2026-27 sources, Hugging Face zero-shot labels and model allowlisting.
@@ -17,7 +17,7 @@
 ## Indian legal retrieval coverage
 
 - Bundled retrieval guides and official-source metadata cover BNS, BNSS, BSA, DPDP Act, DPDP Rules 2025, DPDP commencement notification G.S.R. 843(E), Limitation Act 1963 including Schedule, Indian Contract Act 1872 sections 2, 19, 22 and 23, Income-tax Act 2025, Income-tax Rules 2026 and official Income Tax Department Tax Year 2026-27 guidance.
-- `scripts/refresh_indian_legal_corpus.py` fetches complete official documents from a fixed HTTPS allowlist and indexes them into SQLite. It is operator-invoked and has not been run in this build environment; the bundled guides are not full reproductions of those statutes.
+- `scripts/refresh_indian_legal_corpus.py` fetches complete official documents from a fixed HTTPS allowlist and indexes them into SQLite when explicitly run by the operator. It has not been run in this build environment; the bundled guides are not full reproductions of those statutes. The Render free filesystem is ephemeral, so a local refresh does not update the hosted database. A durable hosted corpus requires a persistent data volume or a build-time packaged corpus.
 - Retrieval tests validate source discovery and routing only. They do not certify generated legal answers, statutory completeness, source authenticity, legal correctness or current validity.
 
 ## Limitations

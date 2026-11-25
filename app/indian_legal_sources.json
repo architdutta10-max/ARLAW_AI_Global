@@ -1,16 +1,104 @@
 {
-  "notice": "Fixed official-source allowlist for India legal corpus refresh. Full texts are downloaded only when the operator explicitly runs scripts/refresh_indian_legal_corpus.py. Review Gazette amendments and source dates before relying on an indexed copy.",
-  "sources": [
-    {"key":"bns_2023","title":"Bharatiya Nyaya Sanhita, 2023 (BNS) — official full text","jurisdiction":"IN","authority":"official primary source","as_of":"2025-10-06","format":"pdf","url":"https://www.indiacode.nic.in/indiacode/bitstream/123456789/20062/1/a202345.pdf"},
-    {"key":"bnss_2023","title":"Bharatiya Nagarik Suraksha Sanhita, 2023 (BNSS) — official full text","jurisdiction":"IN","authority":"official primary source","as_of":"2025-10-06","format":"pdf","url":"https://www.indiacode.nic.in/bitstream/123456789/21920/1/the_bharatiya_nagarik_suraksha_sanhita%2C_2023.pdf"},
-    {"key":"bsa_2023","title":"Bharatiya Sakshya Adhiniyam, 2023 (BSA) — official full text","jurisdiction":"IN","authority":"official primary source","as_of":"2025-10-06","format":"pdf","url":"https://www.indiacode.nic.in/indiacode/bitstream/123456789/20063/1/aa202347.pdf"},
-    {"key":"dpdp_act_2023","title":"Digital Personal Data Protection Act, 2023 — official full text","jurisdiction":"IN","authority":"official primary source","as_of":"2025-11-13","format":"pdf","url":"https://www.indiacode.nic.in/bitstream/123456789/22037/1/a2023-22.pdf"},
-    {"key":"dpdp_rules_2025","title":"Digital Personal Data Protection Rules, 2025 — G.S.R. 846(E) — official Gazette","jurisdiction":"IN","authority":"official primary source","as_of":"2025-11-13","format":"pdf","url":"https://www.meity.gov.in/static/uploads/2025/11/53450e6e5dc0bfa85ebd78686cadad39.pdf"},
-    {"key":"dpdp_commencement_2025","title":"DPDP Act commencement notification — G.S.R. 843(E) — official Gazette","jurisdiction":"IN","authority":"official primary source","as_of":"2025-11-13","format":"pdf","url":"https://www.meity.gov.in/static/uploads/2025/11/c56ceae6c383460ca69577428d36828b.pdf"},
-    {"key":"limitation_act_1963","title":"Limitation Act, 1963 — official full text and Schedule","jurisdiction":"IN","authority":"official primary source","as_of":"2026-11-25","format":"pdf","url":"https://www.indiacode.nic.in/bitstream/123456789/1565/5/A1963-36.pdf"},
-    {"key":"contract_act_1872","title":"Indian Contract Act, 1872 — official full text","jurisdiction":"IN","authority":"official primary source","as_of":"2026-11-25","format":"pdf","url":"https://www.indiacode.nic.in/bitstream/123456789/2187/2/A187209.pdf"},
-    {"key":"income_tax_rules_2026","title":"Income-tax Rules, 2026 — G.S.R. 198(E) — official Gazette","jurisdiction":"IN","authority":"official primary source","as_of":"2026-03-20","format":"pdf","url":"https://www.incometax.gov.in/iec/foportal/sites/default/files/2026-03/En-Notified-IT-Rules-2026-20-03-2026.pdf"},
-    {"key":"income_tax_act_2025_faq","title":"Income Tax Department — Income-tax Act, 2025 official FAQs and transition guidance","jurisdiction":"IN","authority":"official secondary","as_of":"2026-11-25","format":"html","url":"https://www.incometax.gov.in/iec/foportal/help/all-topics/e-filing-services/objective-and-scope-new-act"},
-    {"key":"income_tax_forms_2026","title":"Income Tax Department — Tax Year 2026-27 forms and FAQs","jurisdiction":"IN","authority":"official secondary","as_of":"2026-11-25","format":"html","url":"https://www.incometax.gov.in/iec/foportal/help/all-topics/e-filing-services/income-tax-forms"}
-  ]
+    "notice":  "Fixed official-source allowlist for India legal corpus refresh. Full texts are downloaded only when the operator explicitly runs scripts/refresh_indian_legal_corpus.py. Review Gazette amendments and source dates before relying on an indexed copy.",
+    "sources":  [
+                    {
+                        "key":  "bns_2023",
+                        "title":  "Bharatiya Nyaya Sanhita, 2023 (BNS) â€” official full text",
+                        "jurisdiction":  "IN",
+                        "authority":  "official primary source",
+                        "as_of":  "2025-10-06",
+                        "format":  "pdf",
+                        "url":  "https://www.indiacode.nic.in/indiacode/bitstream/123456789/20062/1/a202345.pdf"
+                    },
+                    {
+                        "key":  "bnss_2023",
+                        "title":  "Bharatiya Nagarik Suraksha Sanhita, 2023 (BNSS) â€” official full text",
+                        "jurisdiction":  "IN",
+                        "authority":  "official primary source",
+                        "as_of":  "2025-10-06",
+                        "format":  "pdf",
+                        "url":  "https://www.mha.gov.in/files/documents/250884_2english_01042024.pdf"
+                    },
+                    {
+                        "key":  "bsa_2023",
+                        "title":  "Bharatiya Sakshya Adhiniyam, 2023 (BSA) â€” official full text",
+                        "jurisdiction":  "IN",
+                        "authority":  "official primary source",
+                        "as_of":  "2025-10-06",
+                        "format":  "pdf",
+                        "url":  "https://www.indiacode.nic.in/indiacode/bitstream/123456789/20063/1/aa202347.pdf"
+                    },
+                    {
+                        "key":  "dpdp_act_2023",
+                        "title":  "Digital Personal Data Protection Act, 2023 â€” official full text",
+                        "jurisdiction":  "IN",
+                        "authority":  "official primary source",
+                        "as_of":  "2025-11-13",
+                        "format":  "pdf",
+                        "url":  "https://www.meity.gov.in/static/uploads/2024/06/2bf1f0e9f04e6fb4f8fef35e82c42aa5.pdf"
+                    },
+                    {
+                        "key":  "dpdp_rules_2025",
+                        "title":  "Digital Personal Data Protection Rules, 2025 â€” G.S.R. 846(E) â€” official Gazette",
+                        "jurisdiction":  "IN",
+                        "authority":  "official primary source",
+                        "as_of":  "2025-11-13",
+                        "format":  "pdf",
+                        "url":  "https://www.meity.gov.in/static/uploads/2025/11/53450e6e5dc0bfa85ebd78686cadad39.pdf"
+                    },
+                    {
+                        "key":  "dpdp_commencement_2025",
+                        "title":  "DPDP Act commencement notification â€” G.S.R. 843(E) â€” official Gazette",
+                        "jurisdiction":  "IN",
+                        "authority":  "official primary source",
+                        "as_of":  "2025-11-13",
+                        "format":  "pdf",
+                        "url":  "https://www.meity.gov.in/static/uploads/2025/11/c56ceae6c383460ca69577428d36828b.pdf"
+                    },
+                    {
+                        "key":  "limitation_act_1963",
+                        "title":  "Limitation Act, 1963 â€” official full text and Schedule",
+                        "jurisdiction":  "IN",
+                        "authority":  "official primary source",
+                        "as_of":  "2026-11-25",
+                        "format":  "pdf",
+                        "url":  "https://cdnbbsr.s3waas.gov.in/s3ec037a4bf9ba2bd774068ad50351fb89/uploads/2023/06/2023060229.pdf"
+                    },
+                    {
+                        "key":  "contract_act_1872",
+                        "title":  "Indian Contract Act, 1872 â€” official full text",
+                        "jurisdiction":  "IN",
+                        "authority":  "official primary source",
+                        "as_of":  "2026-11-25",
+                        "format":  "pdf",
+                        "url":  "https://ldo.mohua.gov.in/administrator/storage/officedocs_eng/The_Indian_Contract_Act%2C_1872_.pdf"
+                    },
+                    {
+                        "key":  "income_tax_rules_2026",
+                        "title":  "Income-tax Rules, 2026 â€” G.S.R. 198(E) â€” official Gazette",
+                        "jurisdiction":  "IN",
+                        "authority":  "official primary source",
+                        "as_of":  "2026-03-20",
+                        "format":  "pdf",
+                        "url":  "https://www.incometax.gov.in/iec/foportal/sites/default/files/2026-03/En-Notified-IT-Rules-2026-20-03-2026.pdf"
+                    },
+                    {
+                        "key":  "income_tax_act_2025_faq",
+                        "title":  "Income Tax Department â€” Income-tax Act, 2025 official FAQs and transition guidance",
+                        "jurisdiction":  "IN",
+                        "authority":  "official secondary",
+                        "as_of":  "2026-11-25",
+                        "format":  "html",
+                        "url":  "https://www.incometax.gov.in/iec/foportal/help/all-topics/e-filing-services/objective-and-scope-new-act"
+                    },
+                    {
+                        "key":  "income_tax_forms_2026",
+                        "title":  "Income Tax Department â€” Tax Year 2026-27 forms and FAQs",
+                        "jurisdiction":  "IN",
+                        "authority":  "official secondary",
+                        "as_of":  "2026-11-25",
+                        "format":  "html",
+                        "url":  "https://www.incometax.gov.in/iec/foportal/help/all-topics/e-filing-services/income-tax-forms"
+                    }
+                ]
 }

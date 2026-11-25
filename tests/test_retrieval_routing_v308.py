@@ -277,3 +277,45 @@ def test_single_jurisdiction_retrieval_keeps_three_source_slots(monkeypatch):
     monkeypatch.setattr(main, "search", fake_search)
     main._retrieve_request("Explain Article 21 in India.", "GLOBAL", 5)
     assert calls == [("IN", 3)]
+
+
+def test_escaped_markdown_numbering_splits_seven_indian_legal_questions(monkeypatch):
+    calls = []
+
+    def fake_search(query, top_k, jurisdiction, task):
+        calls.append((query, top_k, jurisdiction, task))
+        return []
+
+    monkeypatch.setattr(main, "search", fake_search)
+    prompt = r'''7 accuracy test questions
+1\. Constitutional Law — Article 21
+Explain Article 21 of the Indian Constitution.
+
+2\. Criminal Law — BNS 2023
+Explain the sudden-fight exception under the Bharatiya Nyaya Sanhita.
+
+3\. Criminal Procedure — BNSS 2023
+Explain Zero FIR under the Bharatiya Nagarik Suraksha Sanhita.
+
+4\. Evidence Law — BSA 2023
+Explain electronic records under the Bharatiya Sakshya Adhiniyam.
+
+5\. Limitation Law — Limitation Act 1963
+Explain Article 54 of the Limitation Act, 1963.
+
+6\. Contract Law — Indian Contract Act 1872
+Explain coercion under the Indian Contract Act.
+
+7\. Data Protection — DPDP Act 2023
+Explain obligations under the Digital Personal Data Protection Act.'''
+
+    hits, coverage, task = main._retrieve_request(prompt, "GLOBAL", 5)
+
+    assert hits == []
+    assert task == "legal_research"
+    assert len(coverage) == 7
+    assert [item["question"] for item in coverage] == list(range(1, 8))
+    assert all(item["jurisdictions_searched"] == ["IN"] for item in coverage)
+    assert len(calls) == 7
+    assert all(call[1] == 3 and call[2] == "IN" for call in calls)
+    assert all(call[3] == "legal_research" for call in calls)

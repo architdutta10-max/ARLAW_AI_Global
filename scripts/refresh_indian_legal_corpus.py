@@ -5,6 +5,7 @@ This script never runs automatically at web-service startup. It only fetches the
 fixed allowlisted documents in app/indian_legal_sources.json.
 """
 from __future__ import annotations
+import argparse
 import json
 import re
 import sys
@@ -18,7 +19,7 @@ from io import BytesIO
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "app" / "indian_legal_sources.json"
-ALLOWED_HOSTS = {"www.indiacode.nic.in", "indiacode.nic.in", "www.meity.gov.in", "meity.gov.in", "www.incometax.gov.in"}
+ALLOWED_HOSTS = {"www.indiacode.nic.in", "indiacode.nic.in", "www.meity.gov.in", "meity.gov.in", "www.incometax.gov.in", "www.mha.gov.in", "mha.gov.in", "cdnbbsr.s3waas.gov.in", "ldo.mohua.gov.in"}
 MAX_BYTES = 45 * 1024 * 1024
 
 
@@ -71,13 +72,37 @@ def extract_document(item):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Refresh selected ARLAW Indian legal sources.")
+    parser.add_argument(
+        "--keys",
+        nargs="+",
+        help="Only refresh the listed source keys. Omit to refresh all sources."
+    )
+    args = parser.parse_args()
+
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    all_sources = manifest["sources"]
+
+    if args.keys:
+        requested = set(args.keys)
+        known = {item["key"] for item in all_sources}
+        unknown = requested - known
+        if unknown:
+            parser.error("Unknown source key(s): " + ", ".join(sorted(unknown)))
+        selected_sources = [
+            item for item in all_sources if item["key"] in requested
+        ]
+    else:
+        selected_sources = all_sources
+
+    print("Selected sources:", ", ".join(item["key"] for item in selected_sources))
+
     # Add project root so this script also works when invoked from another cwd.
     sys.path.insert(0, str(ROOT))
     from app import knowledge
     knowledge.init_db()
     results = []
-    for item in manifest["sources"]:
+    for item in selected_sources:
         try:
             text, byte_count = extract_document(item)
             managed_name = f"official-refresh:{item['key']}"

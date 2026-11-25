@@ -80,7 +80,12 @@ SUPPORTED_JURISDICTIONS = _jurisdiction_codes()
 # Explicit jurisdiction routing is applied only when the user selects GLOBAL.
 # A deliberate country selection remains authoritative and is never silently overridden.
 _JURISDICTION_MARKERS = (
-    ("IN", re.compile(r"\b(?:india|indian|rbi|reserve bank of india|constitution of india|supreme court of india)\b", re.I)),
+    ("IN", re.compile(
+        r"\b(?:india|indian|rbi|reserve bank of india|constitution of india|supreme court of india|"
+        r"bharatiya nyaya sanhita|bharatiya nagarik suraksha sanhita|bharatiya sakshya adhiniyam|"
+        r"digital personal data protection|dpdp act|indian contract act|limitation act,?\s*1963|"
+        r"bns\s*,?\s*2023|bnss\s*,?\s*2023|bsa\s*,?\s*2023)\b", re.I
+    )),
     ("DE", re.compile(r"\b(?:germany|german)\b", re.I)),
     ("UK", re.compile(r"\b(?:united kingdom|u\.?k\.?|british|england and wales|scotland|northern ireland)\b", re.I)),
     ("US", re.compile(r"\b(?:united states|u\.?s\.?a?\.?|american)\b", re.I)),
@@ -109,7 +114,7 @@ _LEGAL_TOPIC_MARKER = re.compile(
 )
 _QUESTION_HEADING = re.compile(
     r"(?im)^\s*(?:#{1,6}\s*)?(?:\*\*)?(?:QUESTION\s+)?"
-    r"(\d{1,2})\s*(?:[.)\u2014\u2013:?-])\s*"
+    r"(\d{1,2})\s*(?:\\?[.)\u2014\u2013:?-])\s*"
     r"(.*?)(?:\*\*)?\s*$"
 )
 
