@@ -399,5 +399,25 @@
     "language": "en",
     "category": "law",
     "text": "GLOBAL COMPARATIVE CORPORATE FRAUD RESEARCH. No single global rule applies. Determine incorporation, location of conduct, listing/market, victim, transaction and statutory nexus. GERMANY: Natural persons may be prosecuted under the Criminal Code, including fraud under section 263. Enterprise fines may arise under OWiG section 30, and supervisory failures under section 130. Civil management liability can arise under GmbHG section 43 or AktG section 93 depending on legal form. Corporate fines, individual criminal liability and civil director liability are distinct routes. Across systems, distinguish entity attribution, individual criminal liability, civil director duties, regulatory penalties and shareholder remedies. Establish each offence element, mental state, attribution rule, defence and jurisdictional nexus. This is a comparative orientation digest, not a substitute for current primary law."
+  },
+  {
+    "title": "European Union — GDPR Regulation (EU) 2016/679 (data protection digest)",
+    "jurisdiction": "EU",
+    "as_of": "2026-11-25",
+    "source_url": "https://eur-lex.europa.eu/eli/reg/2016/679/oj",
+    "authority": "secondary",
+    "language": "en",
+    "category": "law",
+    "text": "EUROPEAN UNION | GENERAL DATA PROTECTION REGULATION. Regulation (EU) 2016/679 (GDPR) is directly applicable across the EU, subject to its territorial scope and specific provisions. Article 3 sets territorial scope, including processing in the context of an EU establishment and certain processing by non-EU controllers or processors offering goods/services to, or monitoring the behaviour of, individuals in the Union. Article 5 sets principles including lawfulness, fairness, transparency, purpose limitation, data minimisation, accuracy, storage limitation, integrity/confidentiality and accountability. Article 6 lists six lawful bases: consent, contract, legal obligation, vital interests, public task/official authority and legitimate interests; special-category processing is additionally governed by Article 9. Chapter III sets data-subject rights, including information, access, rectification, erasure, restriction, portability and objection, subject to statutory conditions and exceptions. Articles 32–35 address security, breach notification and data-protection impact assessments. Article 83 sets administrative-fine tiers; the exact tier and turnover basis depend on the infringement and must be checked in the current text. Member State law may supplement GDPR in specified areas. This is a secondary research digest, not the Regulation text. Primary source: EUR-Lex official Regulation (EU) 2016/679 text."
+  },
+  {
+    "title": "European Union — Dual-Use Regulation (EU) 2021/821 (export control digest)",
+    "jurisdiction": "EU",
+    "as_of": "2026-11-25",
+    "source_url": "https://eur-lex.europa.eu/eli/reg/2021/821/oj",
+    "authority": "secondary",
+    "language": "en",
+    "category": "law",
+    "text": "EUROPEAN UNION | DUAL-USE EXPORT CONTROLS. Regulation (EU) 2021/821 establishes the EU regime for control of exports, brokering, technical assistance, transit and transfer of dual-use items. Annex I lists controlled items; classification depends on technical specifications, not marketing descriptions. Article 3 provides that export of listed dual-use items is subject to authorisation. The Regulation also contains catch-all controls for specified end uses and risks, controls for certain non-listed items in defined circumstances, brokering and technical assistance controls, and intra-EU transfer controls for particularly sensitive items in Annex IV. Exporters must assess item classification, destination, end-user, end-use, sanctions, licensing route, recordkeeping and internal compliance obligations. The Regulation applies to exports from the EU customs territory; it does not automatically impose an EU export licence on every shipment merely because the buyer is located in the EU. National competent authorities administer authorisations and national penalties apply under implementing law. This is a secondary research digest, not the Regulation text. Primary source: EUR-Lex official Regulation (EU) 2021/821."
   }
 ]

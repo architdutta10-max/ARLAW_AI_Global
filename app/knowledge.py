@@ -129,6 +129,18 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
     if not terms:
         return []
 
+    # Expand common fact descriptions into legal concepts already used by the
+    # jurisdiction-specific digests. This is retrieval assistance, not a legal
+    # conclusion: the model still has to support every proposition from excerpts.
+    query_lower = (query or "").lower()
+    expansions = []
+    if re.search(r"\b(conceal(?:s|ed|ing|ment)?|falsif(?:y|ies|ied|ication)|false accounts?)\b", query_lower):
+        expansions.extend(["fraud", "concealment", "false", "statements", "deceive"])
+    if re.search(r"\b(transfers?|diverts?|misappropriat(?:e|es|ed|ion)?)\b", query_lower) and re.search(r"\bassets?\b", query_lower):
+        expansions.extend(["misappropriation", "undue", "advantage", "abuse", "position"])
+    for token in expansions:
+        if token not in terms:
+            terms.append(token)
     terms = terms[:32]  # Keep named authorities appearing later in long, structured prompts.
 
     # Extract explicit legal anchors. Generic token overlap is not enough for a
@@ -311,28 +323,78 @@ def list_sources():
 
 
 def seed_builtin_knowledge():
-    """Load the bundled, clearly-labelled educational digests once per source title."""
+    """Insert bundled sources and keep only bundled records synchronized with JSON.
+
+    User-uploaded sources are never overwritten. Existing bundled records have
+    their metadata refreshed, and their FTS chunks are replaced only when the
+    bundled text actually changes.
+    """
     import json
     from pathlib import Path
+
     seed_path = Path(__file__).with_name("builtin_knowledge.json")
     if not seed_path.exists():
         return 0
     records = json.loads(seed_path.read_text(encoding="utf-8"))
     inserted = 0
+
     with connect() as c:
-        existing = {r[0] for r in c.execute("SELECT title FROM sources").fetchall()}
-    for item in records:
-        if item["title"] in existing:
-            # Keep already-seeded bundled digests in sync with corrected metadata.
-            with connect() as c:
-                c.execute(
-                    "UPDATE sources SET jurisdiction=? WHERE title=? AND file_name='bundled-curated-digest' AND jurisdiction<>?",
-                    (item.get("jurisdiction", "GLOBAL").upper(), item["title"], item.get("jurisdiction", "GLOBAL").upper()),
+        for item in records:
+            title = str(item["title"]).strip()
+            jurisdiction = str(item.get("jurisdiction", "GLOBAL")).upper().strip()
+            file_name = str(item.get("file_name", "bundled-curated-digest"))
+            authority = str(item.get("authority", "secondary"))
+            language = str(item.get("language", "en"))
+            category = (item.get("category") or infer_category(
+                title, item.get("text", ""), file_name
+            )).lower()
+            if category not in {"law", "economy", "general"}:
+                category = "general"
+            source_url = _specific_source_url(item.get("source_url", ""))
+            as_of = str(item.get("as_of", ""))
+            parts = split_text(str(item.get("text", "")))
+            if not parts:
+                continue
+
+            existing = c.execute(
+                "SELECT id,file_name FROM sources WHERE title=? ORDER BY id LIMIT 1",
+                (title,),
+            ).fetchone()
+            if existing is None:
+                cur = c.execute(
+                    "INSERT INTO sources(title,jurisdiction,source_url,as_of,file_name,authority,language,category) "
+                    "VALUES(?,?,?,?,?,?,?,?)",
+                    (title, jurisdiction, source_url, as_of, file_name,
+                     authority, language, category),
                 )
-            continue
-        add_source(item["title"], item["text"], item.get("jurisdiction", "GLOBAL"),
-                   item.get("source_url", ""), item.get("as_of", ""),
-                   item.get("file_name", "bundled-curated-digest"), item.get("authority", "secondary"),
-                   item.get("language", "en"), item.get("category"))
-        inserted += 1
+                source_id = cur.lastrowid
+                c.executemany(
+                    "INSERT INTO chunks(source_id,chunk_no,content) VALUES(?,?,?)",
+                    [(source_id, i, part) for i, part in enumerate(parts)],
+                )
+                inserted += 1
+                continue
+
+            # Never replace a user-uploaded or independently ingested source
+            # merely because its title matches a bundled record. Seeded records
+            # must also retain the exact managed file_name from the JSON manifest.
+            if existing["file_name"] != file_name:
+                continue
+
+            source_id = existing["id"]
+            old_parts = [r[0] for r in c.execute(
+                "SELECT content FROM chunks WHERE source_id=? ORDER BY CAST(chunk_no AS INTEGER)",
+                (source_id,),
+            ).fetchall()]
+            if old_parts != parts:
+                c.execute("DELETE FROM chunks WHERE source_id=?", (source_id,))
+                c.executemany(
+                    "INSERT INTO chunks(source_id,chunk_no,content) VALUES(?,?,?)",
+                    [(source_id, i, part) for i, part in enumerate(parts)],
+                )
+            c.execute(
+                "UPDATE sources SET jurisdiction=?,source_url=?,as_of=?,authority=?,language=?,category=? "
+                "WHERE id=? AND file_name=?",
+                (jurisdiction, source_url, as_of, authority, language, category, source_id, file_name),
+            )
     return inserted

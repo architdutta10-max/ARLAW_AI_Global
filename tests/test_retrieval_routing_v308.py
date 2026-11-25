@@ -250,3 +250,30 @@ def test_international_approaches_routes_to_intl(monkeypatch):
         "GLOBAL", 5,
     )
     assert calls == ["IN", "INTL"]
+
+
+def test_global_multi_jurisdiction_retrieval_shares_source_slots(monkeypatch):
+    calls = []
+
+    def fake_search(query, top_k, jurisdiction, task):
+        calls.append((jurisdiction, top_k))
+        return []
+
+    monkeypatch.setattr(main, "search", fake_search)
+    main._retrieve_request(
+        "Compare data protection law in India, UK, EU and Germany.", "GLOBAL", 5
+    )
+    assert calls
+    assert all(top_k == 1 for _, top_k in calls)
+
+
+def test_single_jurisdiction_retrieval_keeps_three_source_slots(monkeypatch):
+    calls = []
+
+    def fake_search(query, top_k, jurisdiction, task):
+        calls.append((jurisdiction, top_k))
+        return []
+
+    monkeypatch.setattr(main, "search", fake_search)
+    main._retrieve_request("Explain Article 21 in India.", "GLOBAL", 5)
+    assert calls == [("IN", 3)]

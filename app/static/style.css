@@ -129,3 +129,13 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
 @media(max-width:760px){header{padding:0 14px}.top-right{gap:8px}.top-title{display:none}.status{max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.sidebar{width:210px}.messages{padding:22px 13px}.suggest{grid-template-columns:1fr}.setting-row{gap:12px}}
 @media(max-width:560px){.app{display:block}.sidebar{width:100%;min-height:auto;padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:7px}.brand{padding:3px 5px}.sidebar .new{margin:0}.sidebar .label,.sidebar .history-list,.sidebar .foot,.sidebar .sidebar-note{display:none}.sidebar .nav{padding:8px;font-size:12px}.sidebar .nav span{display:none}main{min-height:calc(100vh - 145px)}header{height:auto;min-height:58px;flex-wrap:wrap;padding:9px 12px}.top-right{flex-wrap:wrap;justify-content:flex-end}.chat{height:calc(100vh - 205px);min-height:420px}.settings-panel{width:min(96vw,520px);padding:18px}.setting-row{align-items:flex-start;flex-direction:column}.setting-row select{width:100%;max-width:none;margin:0}}
 @media(prefers-reduced-motion:reduce){.welcome{animation:none}}
+
+
+/* Individual, accessible deletion for browser-local conversation history. */
+.history-row{display:flex;align-items:center;gap:4px;min-width:0}
+.history-row .history-item{flex:1;min-width:0;width:auto}
+.history-delete{flex:0 0 30px;width:30px;height:30px;border:1px solid transparent;border-radius:7px;background:transparent;color:#d7eeea;cursor:pointer;font-size:19px;line-height:1}
+.history-delete:hover{background:#a832322e;border-color:#d66;color:#ffb6b6}
+.history-delete:focus-visible,.history-item:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+.history-delete:disabled{opacity:.35;cursor:not-allowed}

@@ -69,3 +69,42 @@ def test_trade_control_sources_are_jurisdiction_matched(tmp_path, monkeypatch):
         hits = knowledge.search(query, 5, jurisdiction, "legal_research")
         assert hits, jurisdiction
         assert all(hit["jurisdiction"] == jurisdiction for hit in hits)
+
+
+def test_five_user_benchmark_prompts_retrieve_topic_sources_for_each_named_jurisdiction(tmp_path, monkeypatch):
+    from app.llm import fit_context
+    _seed(tmp_path, monkeypatch)
+    prompts = [
+        (
+            "Explain the scope of Article 21 of the Constitution of India. Analyse Maneka Gandhi v. Union of India (1978), including its relationship with Articles 14 and 19.",
+            ["IN"], ["Constitution of India", "Maneka Gandhi"],
+        ),
+        (
+            "Compare India DPDP Act 2023, EU GDPR and UK GDPR, including commencement dates and individual rights.",
+            ["IN", "UK", "EU"], ["Digital Personal Data Protection", "UK GDPR", "GDPR Regulation (EU) 2016/679"],
+        ),
+        (
+            "A multinational company conceals financial losses, falsifies accounts and transfers assets for personal benefit. Analyse liability under Indian, UK, US and German law.",
+            ["IN", "DE", "UK", "US"], ["India — corporate fraud", "Germany — corporate offences", "United Kingdom — corporate fraud", "United States — corporate criminal liability"],
+        ),
+        (
+            "Competing companies secretly agree to fix prices, divide markets and restrict supply across India and the EU. Analyse Competition Act 2002 and Articles 101–102 TFEU.",
+            ["IN", "EU"], ["India — cartelisation", "European Union — Article 101 TFEU"],
+        ),
+        (
+            "An Indian manufacturer exports dual-use electronic components through Singapore to an EU buyer. Explain SCOMET, Singapore Strategic Goods Act 2002, EU Dual-Use Regulation 2021/821 and UN sanctions obligations.",
+            ["IN", "EU", "SG", "INTL"], ["SCOMET", "Dual-Use Regulation (EU) 2021/821", "Singapore — strategic goods", "UN Security Council sanctions"],
+        ),
+    ]
+    for prompt, expected_jurisdictions, expected_titles in prompts:
+        hits, coverage, task = main._retrieve_request(prompt, "GLOBAL", 5)
+        assert task == "legal_research"
+        assert coverage[0]["jurisdictions_searched"] == expected_jurisdictions
+        assert coverage[0]["jurisdictions_with_sources"] == expected_jurisdictions
+        context, included = fit_context([
+            f"[S{i}] {hit['title']} | {hit['jurisdiction']}\n{hit['content']}"
+            for i, hit in enumerate(hits, 1)
+        ])
+        assert included == len(hits)
+        for expected in expected_titles:
+            assert expected.lower() in context.lower(), expected

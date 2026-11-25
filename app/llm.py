@@ -79,8 +79,6 @@ def classify_task(text: str) -> str:
         return "lawyer_assistance"
     if any(x in q for x in ("pdf", "document", "agreement", "clause", "review this", "review the contract", "analyze this contract", "অঙ্গীকার", "समझौता")):
         return "document_review"
-    if re.search(r"(?<![a-z])tax(?!i)", q) or any(x in q for x in ("gst", "accounting", "financial", "economy", "economic", "investment", "budget")):
-        return "finance_tax"
     # Constitutional Article questions take priority over broad procedure keywords.
     if re.search(r"\barticles?\s+\d+[a-z]?\b", q):
         return "legal_research"
@@ -109,15 +107,20 @@ def classify_task(text: str) -> str:
         or any(x in legal_intent_text for x in ("\u0986\u0987\u09a8", "\u0915\u093e\u0928\u0942\u0928"))
     ):
         return "legal_research"
+    # Broad finance words are a fallback, after explicit legal intent has been
+    # considered. This prevents e.g. a competition-law/tax question from being
+    # routed away from the legal retrieval and evidence safeguards.
+    if re.search(r"(?<![a-z])tax(?!i)", q) or any(x in q for x in ("gst", "accounting", "financial", "economy", "economic", "investment", "budget")):
+        return "finance_tax"
     return "general"
 
 
 def context_limit() -> int:
     """Character budget for retrieved excerpts sent to the model (bounded, env-tunable)."""
     try:
-        value = int(os.getenv("ARLAW_CONTEXT_CHARS", "4200"))
+        value = int(os.getenv("ARLAW_CONTEXT_CHARS", "10000"))
     except ValueError:
-        value = 4200
+        value = 10000
     return max(1500, min(16000, value))
 
 
@@ -165,7 +168,7 @@ def _messages(messages, context="", task=None):
             "citation supports the sentence where it appears. Apply a strict evidence gate to every numeric penalty, fine, imprisonment term, limitation period, effective date, statutory threshold and percentage: include it only when the exact retrieved excerpt supports it for that jurisdiction and date; otherwise mark it unverified. This is not independent "
             "verification of source authenticity or current validity.\n" + str(context)[:context_limit()]
         )})
-    elif task in ("legal_research", "civil_procedure", "lawyer_assistance", "judicial_research"):
+    elif task in ("legal_research", "civil_procedure", "lawyer_assistance", "judicial_research", "document_review"):
         payload.append({"role": "system", "content": (
             "NO SOURCES WERE RETRIEVED for this question. Give only general, widely established "
             "information, and begin by saying it is general information that is not backed by the "
@@ -174,7 +177,10 @@ def _messages(messages, context="", task=None):
         )})
     # Keep recent turns first. A character budget is intentionally conservative because
     # tokenization varies by language; it also bounds Hindi/Bengali prompts safely.
-    remaining = 8200
+    # Give retrieved evidence priority over old chat turns on long legal requests.
+    # The combined budget stays bounded while retaining recent conversational context.
+    context_extra = max(0, len(str(context or "")) - 4200)
+    remaining = max(2400, 8200 - context_extra)
     recent = []
     for item in reversed(messages[-12:]):
         if item.get("role") not in ("user", "assistant"):
@@ -243,7 +249,6 @@ def _ollama(payload):
     response = requests.post(
         base + "/api/chat",
         json={"model": model, "messages": payload, "stream": False,
-              "think": False,
               "options": {"temperature": 0.2, "num_predict": max_tokens}},
         timeout=timeout,
     )
@@ -514,7 +519,7 @@ def _high_risk_legal_number_warning(answer: str, task: str) -> bool:
 
     This is intentionally a warning heuristic, not a factual validator.
     """
-    if task not in {"legal_research", "civil_procedure", "lawyer_assistance", "judicial_research"}:
+    if task not in {"legal_research", "civil_procedure", "lawyer_assistance", "judicial_research", "document_review"}:
         return False
     if _HIGH_RISK_LEGAL_NUMBER_RE.search(answer or ""):
         return True
@@ -585,7 +590,7 @@ def generate(messages, context="", source_labels=None):
     if citation_check.get("invalid"):
         warnings.append("The response contains citation labels that were not supplied by retrieval.")
     if _high_risk_legal_number_warning(answer, task):
-        warnings.append("The response contains a precise legal penalty, deadline, threshold or percentage. Verify the exact figure against the current official primary source; citation presence alone does not verify it.")
+        warnings.append("Verify exact legal figures against the current official primary source; citation labels alone do not verify them.")
     # Citation coverage is a formatting heuristic, not a claim-level validator.
     # Do not turn uncited paragraph/list/table counts or the normal
     # reference_exists_not_verified status into a user-facing reliability warning.

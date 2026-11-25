@@ -23,7 +23,7 @@ from .knowledge import init_db, add_source, search, list_sources, seed_builtin_k
 from .llm import generate, provider_order, classify_task, fit_context
 from .ambiguity import clarification_for, names_specific_authority
 
-VERSION = "3.1.1"
+VERSION = "3.1.3"
 MAX_UPLOAD_BYTES = int(os.getenv("ARLAW_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
 MAX_PDF_PAGES = int(os.getenv("ARLAW_MAX_PDF_PAGES", "300"))
 CHAT_RATE_LIMIT = int(os.getenv("ARLAW_CHAT_RATE_LIMIT", "20"))
@@ -174,10 +174,15 @@ def _retrieve_request(question: str, selected_jurisdiction: str, top_k: int):
             jurisdictions = _explicit_jurisdictions(text) or ["GLOBAL"]
 
         per_jurisdiction = []
+        # Allocate source slots across jurisdictions before packing the context.
+        # One country must not consume the entire context budget in a global query.
+        requested_k = min(max(int(top_k), 1), 3)
+        if len(jurisdictions) >= 2:
+            per_jurisdiction_k = 1
+        else:
+            per_jurisdiction_k = requested_k
         for code in jurisdictions:
-            # Small per-scope retrievals prevent the first issue from crowding out
-            # every later question in a long, multi-jurisdiction request.
-            section_hits = search(text, min(max(int(top_k), 1), 3), code, section_task)
+            section_hits = search(text, per_jurisdiction_k, code, section_task)
             per_jurisdiction.append({"jurisdiction": code, "sources": len(section_hits)})
             for hit in section_hits:
                 source_id = hit.get("id")

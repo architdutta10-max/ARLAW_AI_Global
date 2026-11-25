@@ -231,3 +231,114 @@ def test_first_amendment_query_does_not_return_unrelated_constitutional_digest(m
         "US", authority="secondary", category="law"
     )
     assert knowledge.search("What is the First Amendment of the United States Constitution?", 5, "US", "legal_research") == []
+
+
+def test_builtin_seed_refreshes_changed_bundled_text_and_metadata(monkeypatch, tmp_path):
+    import json
+    import app.knowledge as knowledge
+
+    app_dir = tmp_path / "app"
+    app_dir.mkdir()
+    fake_module = app_dir / "knowledge.py"
+    fake_module.write_text("# test module path", encoding="utf-8")
+    source_file = app_dir / "builtin_knowledge.json"
+    monkeypatch.setattr(knowledge, "__file__", str(fake_module))
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "refresh.db")
+
+    def write_record(text, authority="secondary", jurisdiction="IN"):
+        source_file.write_text(json.dumps([{
+            "title": "Seed refresh regression source",
+            "text": text,
+            "jurisdiction": jurisdiction,
+            "authority": authority,
+            "language": "en",
+            "as_of": "2026-11-25",
+            "source_url": "https://example.org/legal/document.pdf",
+            "file_name": "bundled-curated-digest",
+            "category": "law",
+        }]), encoding="utf-8")
+
+    knowledge.init_db()
+    write_record("Original statutory text about a test provision.")
+    assert knowledge.seed_builtin_knowledge() == 1
+    write_record("Corrected statutory text about the test provision and its scope.", "official secondary", "UK")
+    assert knowledge.seed_builtin_knowledge() == 0
+
+    with knowledge.connect() as c:
+        source = c.execute(
+            "SELECT jurisdiction,authority,source_url FROM sources WHERE title=?",
+            ("Seed refresh regression source",),
+        ).fetchone()
+        chunks = [r[0] for r in c.execute(
+            "SELECT content FROM chunks WHERE source_id=(SELECT id FROM sources WHERE title=?) ORDER BY chunk_no",
+            ("Seed refresh regression source",),
+        )]
+    assert source["jurisdiction"] == "UK"
+    assert source["authority"] == "official secondary"
+    assert source["source_url"] == "https://example.org/legal/document.pdf"
+    assert "Corrected statutory text" in " ".join(chunks)
+    assert "Original statutory text" not in " ".join(chunks)
+
+
+def test_builtin_seed_does_not_overwrite_user_uploaded_same_title(monkeypatch, tmp_path):
+    import json
+    import app.knowledge as knowledge
+
+    app_dir = tmp_path / "app"
+    app_dir.mkdir()
+    fake_module = app_dir / "knowledge.py"
+    fake_module.write_text("# test module path", encoding="utf-8")
+    (app_dir / "builtin_knowledge.json").write_text(json.dumps([{
+        "title": "User-owned same title", "text": "Bundled replacement text",
+        "jurisdiction": "IN", "authority": "official", "language": "en",
+        "file_name": "bundled-curated-digest", "category": "law",
+    }]), encoding="utf-8")
+    monkeypatch.setattr(knowledge, "__file__", str(fake_module))
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "user-source.db")
+    knowledge.init_db()
+    knowledge.add_source("User-owned same title", "User uploaded original source text", "IN", file_name="user-upload.pdf")
+    assert knowledge.seed_builtin_knowledge() == 0
+    with knowledge.connect() as c:
+        row = c.execute("SELECT file_name FROM sources WHERE title=?", ("User-owned same title",)).fetchone()
+        text = c.execute("SELECT content FROM chunks WHERE source_id=1").fetchone()[0]
+    assert row["file_name"] == "user-upload.pdf"
+    assert text == "User uploaded original source text"
+
+
+def test_eu_gdpr_digest_is_retrievable_under_eu_jurisdiction(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "eu-gdpr.db")
+    knowledge.init_db()
+    knowledge.seed_builtin_knowledge()
+    results = knowledge.search(
+        "EU GDPR Regulation 2016/679 territorial scope lawful bases data subject rights",
+        5, "EU", "legal_research"
+    )
+    assert results
+    assert any("GDPR Regulation (EU) 2016/679" in row["title"] for row in results)
+
+
+def test_eu_dual_use_digest_is_retrievable_under_eu_jurisdiction(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "eu-dual-use.db")
+    knowledge.init_db()
+    knowledge.seed_builtin_knowledge()
+    results = knowledge.search(
+        "EU Dual-Use Regulation 2021/821 export control Annex I authorisation",
+        5, "EU", "legal_research"
+    )
+    assert results
+    assert any("Dual-Use Regulation (EU) 2021/821" in row["title"] for row in results)
+
+
+def test_corporate_fraud_fact_pattern_retrieves_india_fraud_digest_first(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "corporate-fraud-retrieval.db")
+    knowledge.init_db()
+    knowledge.seed_builtin_knowledge()
+    results = knowledge.search(
+        "A company conceals financial losses, falsifies accounts and transfers assets for personal benefit.",
+        3, "IN", "legal_research"
+    )
+    assert results
+    assert "corporate fraud" in results[0]["title"].lower()
