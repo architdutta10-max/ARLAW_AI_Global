@@ -2,11 +2,16 @@ const $=id=>document.getElementById(id);
 const HISTORY_KEY='arlaw-chat-history-v1';
 let conversations=[];let activeConversationId=null;let history=[];let sending=false;
 try{conversations=JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]');if(!Array.isArray(conversations))conversations=[];}catch(e){conversations=[];}
-function persistHistory(){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(conversations.slice(0,10)));}catch(e){}}
+function persistHistory(){try{localStorage.setItem(HISTORY_KEY,JSON.stringify(conversations.slice(0,10).map(({_selected,...item})=>item)));}catch(e){}}
 function renderHistory(){
  const host=$('historyList');if(!host)return;host.innerHTML='';
+ const selected=conversations.filter(x=>x._selected).length;
+ const bulk=$('historyDeleteSelected');if(bulk){bulk.disabled=!selected;bulk.textContent=selected?`Delete selected (${selected})`:'Delete selected';}
+ const all=$('historySelectAll');if(all){all.checked=conversations.length>0&&selected===conversations.length;all.indeterminate=selected>0&&selected<conversations.length;}
+
  conversations.slice(0,10).forEach(item=>{
   const row=document.createElement('div');row.className='history-row';
+  const check=document.createElement('input');check.type='checkbox';check.className='history-select';check.checked=Boolean(item._selected);check.setAttribute('aria-label','Select conversation: '+(item.title||'New conversation'));check.onchange=()=>{item._selected=check.checked;renderHistory();};
   const open=document.createElement('button');open.type='button';
   open.className='history-item'+(item.id===activeConversationId?' active':'');
   open.textContent=item.title||'New conversation';open.title=item.title||'New conversation';
@@ -16,9 +21,24 @@ function renderHistory(){
   del.disabled=Boolean(sending&&item.id===activeConversationId);
   del.setAttribute('aria-label','Delete conversation: '+(item.title||'New conversation'));
   del.onclick=()=>deleteConversation(item.id);
-  row.append(open,del);host.append(row);
+  row.append(check,open,del);host.append(row);
  });
 }
+$('historySelectAll')?.addEventListener('change',e=>{conversations.forEach(x=>x._selected=e.target.checked);renderHistory();});
+$('historyDeleteSelected')?.addEventListener('click',()=>{
+ const ids=conversations.filter(x=>x._selected).map(x=>x.id);if(!ids.length)return;
+ if(sending&&ids.includes(activeConversationId))return alert('Wait for the current response to finish before deleting its conversation.');
+ if(!confirm(`Permanently delete ${ids.length} selected conversation(s)?`))return;
+ conversations=conversations.filter(x=>!ids.includes(x.id));
+ if(ids.includes(activeConversationId)){activeConversationId=null;history=[];$('messages').innerHTML='';showWelcome();}
+ persistHistory();renderHistory();
+});
+$('historyClearAll')?.addEventListener('click',()=>{
+ if(!conversations.length)return;
+ if(sending)return alert('Wait for the current response to finish before clearing history.');
+ if(!confirm('Permanently delete ALL saved conversations? This cannot be undone.'))return;
+ conversations=[];activeConversationId=null;history=[];persistHistory();$('messages').innerHTML='';showWelcome();renderHistory();
+});
 function deleteConversation(id){
  const item=conversations.find(x=>x.id===id);if(!item)return;
  if(sending&&id===activeConversationId)return;

@@ -1,8 +1,8 @@
 {
   "name": "ARLAW AI Global",
-  "version": "3.1.3",
-  "release": "Combined reliability, legal retrieval and selective history release",
-  "release_scope": "Combines 3.1.2 selective local chat deletion, evidence safeguards, managed knowledge synchronization and legal task routing with the 3.1.1 bundled legal-source corpus. Improves multi-jurisdiction source allocation and context capacity; adds EU-scoped GDPR and dual-use research digests so EU-wide sources can be retrieved under EU jurisdiction. Does not certify legal accuracy or source currency.",
+  "version": "3.2.0",
+  "release": "Optional vision and Hugging Face integrations; selective history management",
+  "release_scope": "Adds opt-in MobileNet, ResNet50 and VGG16 image classification via tf.keras.applications, configurable Hugging Face NLP inference, and browser-local multi-select and clear-all chat deletion. Heavy model dependencies remain optional. Legal accuracy is not certified.",
   "requires_maintenance": true,
   "production_certified": false,
   "legal_accuracy_certified": false,

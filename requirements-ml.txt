@@ -1,0 +1,5 @@
+# Optional only. Do not install on the lightweight Render web service unless needed.
+tensorflow-cpu>=2.16,<2.20
+Pillow>=10,<13
+transformers>=4.45,<6
+torch>=2.4

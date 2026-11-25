@@ -23,7 +23,7 @@ from .knowledge import init_db, add_source, search, list_sources, seed_builtin_k
 from .llm import generate, provider_order, classify_task, fit_context
 from .ambiguity import clarification_for, names_specific_authority
 
-VERSION = "3.1.3"
+VERSION = "3.2.0"
 MAX_UPLOAD_BYTES = int(os.getenv("ARLAW_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
 MAX_PDF_PAGES = int(os.getenv("ARLAW_MAX_PDF_PAGES", "300"))
 CHAT_RATE_LIMIT = int(os.getenv("ARLAW_CHAT_RATE_LIMIT", "20"))
@@ -248,6 +248,45 @@ async def security_headers(request: Request, call_next):
 @app.get("/")
 def home():
     return FileResponse(STATIC_DIR / "index.html")
+
+
+@app.get("/api/models")
+def optional_models():
+    from .optional_models import model_catalog
+    return model_catalog()
+
+
+class HFInferenceRequest(BaseModel):
+    text: str = Field(min_length=1, max_length=12000)
+    task: str = Field(default="sentiment-analysis", max_length=64)
+    model: str | None = Field(default=None, max_length=256)
+
+
+@app.post("/api/models/huggingface")
+def huggingface_inference(req: HFInferenceRequest):
+    from .optional_models import run_hf_text
+    try:
+        return run_hf_text(req.text, req.task, req.model)
+    except (RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=503 if isinstance(exc, RuntimeError) else 400, detail=str(exc)) from exc
+
+
+@app.post("/api/models/vision/{model_name}")
+async def vision_inference(model_name: str, file: UploadFile = File(...)):
+    if model_name not in {"mobilenet", "resnet50", "vgg16"}:
+        raise HTTPException(status_code=404, detail="Unknown vision model")
+    if file.content_type not in {"image/jpeg", "image/png", "image/webp"}:
+        raise HTTPException(status_code=415, detail="Upload a JPEG, PNG or WebP image")
+    payload = await file.read(8 * 1024 * 1024 + 1)
+    if len(payload) > 8 * 1024 * 1024:
+        raise HTTPException(status_code=413, detail="Image exceeds 8 MB limit")
+    try:
+        from .optional_models import classify_image
+        return {"model": model_name, "predictions": classify_image(model_name, payload)}
+    except (RuntimeError, ValueError) as exc:
+        raise HTTPException(status_code=503 if isinstance(exc, RuntimeError) else 400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=400, detail="Image could not be decoded or classified") from exc
 
 
 @app.get("/api/health")

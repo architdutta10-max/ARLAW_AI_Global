@@ -39,5 +39,5 @@ def test_selective_chat_delete_has_confirmation_and_persists_removal():
 
 def test_static_asset_cache_version_matches_release():
     html = (ROOT / "app/static/index.html").read_text(encoding="utf-8")
-    assert "style.css?v=3.1.3" in html
-    assert "app.js?v=3.1.3" in html
+    assert "style.css?v=3.2.0" in html
+    assert "app.js?v=3.2.0" in html

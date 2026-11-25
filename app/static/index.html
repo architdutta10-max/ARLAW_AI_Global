@@ -5,7 +5,7 @@
   <meta name="theme-color" content="#0b827d">
   <meta name="description" content="ARLAW AI — jurisdiction-aware legal, economic and justice research assistant">
   <title>ARLAW AI — Global Research Workspace</title>
-  <link rel="stylesheet" href="/static/style.css?v=3.1.3">
+  <link rel="stylesheet" href="/static/style.css?v=3.2.0">
 </head>
 <body>
 <div class="app">
@@ -13,6 +13,7 @@
     <div class="brand"><b class="logo">A</b><div><b>ARLAW AI</b><small>LEGAL RESEARCH</small></div></div>
     <button id="newChat" class="new"><span>＋</span> New chat</button>
     <p class="label" id="workspaceLabel">YOUR WORKSPACE</p>
+    <div class="history-tools"><label><input id="historySelectAll" type="checkbox"> Select all</label><button id="historyDeleteSelected" type="button">Delete selected</button><button id="historyClearAll" type="button">Clear all</button></div>
     <div id="historyList" class="history-list" aria-label="Recent chats"></div>
     <button id="chatTab" class="nav active"><span>◉</span> Research assistant</button>
     <button id="sourcesTab" class="nav"><span>▤</span> Knowledge library</button>
@@ -78,5 +79,5 @@
     <p class="settings-note" id="settingsNote">Language preference changes the interface labels. Legal answers may still use the language you request in your message.</p>
   </section>
 </div>
-<script src="/static/app.js?v=3.1.3"></script>
+<script src="/static/app.js?v=3.2.0"></script>
 </body></html>

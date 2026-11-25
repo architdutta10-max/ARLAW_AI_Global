@@ -139,3 +139,11 @@ button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible,te
 .history-delete:focus-visible,.history-item:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
 
 .history-delete:disabled{opacity:.35;cursor:not-allowed}
+
+/* Version 3.2 chat history bulk controls */
+.history-tools{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 8px;color:#d7eeea;font-size:10px}
+.history-tools label{display:flex;align-items:center;gap:4px;margin-right:auto}
+.history-tools button{border:1px solid #ffffff35;border-radius:7px;background:#ffffff12;color:#fff;padding:5px 7px;font-size:10px;cursor:pointer}
+.history-tools button:disabled{opacity:.4;cursor:not-allowed}
+.history-row .history-select{flex:0 0 auto;accent-color:#a9e8dc}
+@media(max-width:560px){.sidebar .history-tools{display:flex;grid-column:1/-1}.sidebar .history-list{display:grid;grid-column:1/-1;max-height:24vh}.history-tools button{font-size:10px}}
