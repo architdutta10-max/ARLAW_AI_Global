@@ -188,3 +188,33 @@ def test_legal_prompt_does_not_claim_citation_labels_verify_support():
     combined = " ".join(m["content"] for m in payload if m["role"] == "system")
     assert "does not prove that the source supports the sentence" in combined
     assert "independent verification" in combined.lower()
+
+
+
+def test_citation_coverage_describes_counts_as_candidate_content_units():
+    answer = (
+        "# Overview\n"
+        "This is explanatory prose that may not itself be a factual claim.\n\n"
+        "- This factual-looking list item has no citation label.\n\n"
+        "| Topic | Explanation |\n"
+        "|---|---|\n"
+        "| Example | This table row has no inline citation label. |"
+    )
+    result = llm.validate_citations(answer, ["S1"])
+    assert result["paragraphs_checked"] == 3
+    assert result["uncited_paragraphs"] == 3
+    assert "candidate content units" in result["scope"]
+    assert "not necessarily a factual claim" in result["scope"]
+
+
+def test_citation_warning_does_not_claim_uncited_units_are_all_factual_claims(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "test-key")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
+    monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq")
+    answer = "This explanatory paragraph has no inline citation label."
+    monkeypatch.setattr(llm, "PROVIDERS", {"groq": lambda payload: (answer, "m")})
+    _text, _err, meta = llm.generate(
+        [{"role": "user", "content": "Explain a legal concept"}], "ctx", ["S1"]
+    )
+    assert "content units" in meta["quality_warning"]
+    assert "does not establish that every unit is a factual claim" in meta["quality_warning"]

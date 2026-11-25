@@ -372,10 +372,11 @@ def _cited_labels(text: str) -> list[str]:
 
 
 def _citation_coverage(answer: str):
-    """Count citation presence in prose paragraphs, factual list items and table rows.
+    """Count candidate text units that contain an inline citation label.
 
-    This is a formatting heuristic only; it cannot establish that a source supports
-    the proposition or that the proposition is legally correct.
+    Paragraphs, list items and table rows are counted as content units; this does
+    not mean every unit is a factual claim or necessarily requires a citation.
+    This formatting heuristic cannot establish source support or legal correctness.
     """
     units = []
     paragraph_lines = []
@@ -465,10 +466,12 @@ def validate_citations(answer: str, available_labels: list[str]):
         **coverage,
         "coverage_status": coverage_status,
         "scope": (
-            "Checks label existence and whether prose paragraphs, factual list items "
-            "and factual table rows contain a label. This is a formatting heuristic "
-            "only; it does not verify source relevance, claim support, authority, "
-            "jurisdiction or currency; these are not verified."
+            "Counts prose paragraphs, list items and table rows as candidate content "
+            "units and checks whether each contains an inline citation label. A unit "
+            "without a label is not necessarily a factual claim or necessarily in "
+            "need of a citation. This is a formatting heuristic only; it does not "
+            "verify source relevance, claim support, authority, jurisdiction or "
+            "currency; these are not verified."
         ),
     }
 def _provider_failure_detail(name: str, exc: Exception) -> str:
@@ -553,7 +556,7 @@ def generate(messages, context="", source_labels=None):
         warnings.append("The response contains citation labels that were not supplied by retrieval.")
     if citation_check.get("uncited_paragraphs", 0) and source_labels:
         warnings.append(
-            f"{citation_check['uncited_paragraphs']} factual prose/list/table units have no detected citation label."
+            f"{citation_check['uncited_paragraphs']} prose/list/table content units have no detected citation label (inline); this count does not establish that every unit is a factual claim."
         )
     if citation_check.get("status") == "reference_exists_not_verified":
         warnings.append("Citation labels exist, but source-to-claim support has not been verified.")
