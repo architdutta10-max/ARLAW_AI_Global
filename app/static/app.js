@@ -20,7 +20,7 @@ function applyTheme(theme){
     button.innerHTML=`<span class="theme-icon" aria-hidden="true">${dark?'☀':'☾'}</span><span class="theme-label">${dark?'Light mode':'Dark mode'}</span>`;
   }
   const meta=document.querySelector('meta[name="theme-color"]');
-  if(meta)meta.content=dark?'#101b1b':'#0b827d';
+  if(meta)meta.content=dark?(getComputedStyle(document.documentElement).getPropertyValue('--dark-bg').trim()||'#101b1b'):'#0b827d';
 }
 let savedTheme='light';
 try{savedTheme=localStorage.getItem('arlaw-theme')||'light'}catch(e){}
@@ -58,7 +58,14 @@ function applyAccent(name){
  document.documentElement.style.setProperty('--teal',palette[1]);
  document.documentElement.style.setProperty('--teal-dark',palette[2]);
  document.documentElement.style.setProperty('--accent-soft',`${palette[1]}18`);
+ document.documentElement.style.setProperty('--dark-bg',`color-mix(in srgb, ${palette[1]} 13%, #101b1b)`);
+ document.documentElement.style.setProperty('--dark-panel',`color-mix(in srgb, ${palette[1]} 17%, #142222)`);
+ document.documentElement.style.setProperty('--dark-sidebar',`color-mix(in srgb, ${palette[1]} 62%, #111b20)`);
  document.documentElement.dataset.accent=palette[0];
+ if(document.documentElement.dataset.theme==='dark'){
+   const meta=document.querySelector('meta[name="theme-color"]');
+   if(meta)meta.content=getComputedStyle(document.documentElement).getPropertyValue('--dark-bg').trim()||'#101b1b';
+ }
 }
 function readPreferences(){try{return {...preferenceDefaults,...JSON.parse(localStorage.getItem('arlaw-preferences')||'{}')}}catch(e){return {...preferenceDefaults}}}
 let preferences=readPreferences();
