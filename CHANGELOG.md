@@ -82,9 +82,10 @@
 - These are generation safeguards; they do not independently verify source relevance, legal correctness, or currency.
 
 ## 3.1.1 — 2026-11-25
-- Expanded bundled legal retrieval coverage for Article 21, privacy/data protection, corporate fraud and director/officer liability, cartels, sanctions and export controls.
-- Added jurisdiction-specific India, Germany, UK, US, EU and Singapore legal digests linked to primary-law or regulator sources.
-- Added global comparative corporate-liability records while preserving jurisdiction labels and source separation.
-- Recorded phased commencement of India's DPDP Act under G.S.R. 843(E) (13 November 2025).
-- Expanded international-sanctions routing and added five-question legal coverage regression tests.
-- Automated regression result in the prepared source tree: 118 passed; this is not a legal-accuracy percentage.
+- Added jurisdiction-specific legal digests for Article 21, privacy/data protection, corporate fraud and officer liability, competition, trade controls and sanctions.
+- Added five-question global coverage regression tests and international sanctions retrieval routing.
+- Added an explicit evidence gate for precise penalties, fines, imprisonment terms, limitation periods, effective dates, thresholds and percentages.
+- Added a visible quality warning when generated legal answers contain precise penalty/deadline/threshold figures; this is a warning heuristic, not claim-level verification.
+- Added a legal accuracy benchmark protocol. Legal accuracy remains not independently measured; no accuracy percentage is claimed.
+- Corrected the test dependency name from `httpx2` to `httpx`.
+- Automated regression suite: 122 passed in the prepared source tree. This is not a legal accuracy score.

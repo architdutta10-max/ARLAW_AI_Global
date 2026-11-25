@@ -95,8 +95,9 @@ _JURISDICTION_MARKERS = (
     ("IE", re.compile(r"\b(?:ireland|irish)\b", re.I)),
 )
 _INTERNATIONAL_MARKER = re.compile(
-    r"\b(?:international law|international trade|cross-border|cross border|"
-    r"international sanctions|transnational)\b", re.I
+    r"\b(?:international law|international trade|international approach(?:es)?|"
+    r"international framework(?:s)?|international standard(?:s)?|cross-border|cross border|"
+    r"international sanctions|sanctions?|transnational)\b", re.I
 )
 _LEGAL_TOPIC_MARKER = re.compile(
     r"\b(?:law|laws|legal|court|case|statute|constitution|regulation|regulatory|"
@@ -108,7 +109,7 @@ _LEGAL_TOPIC_MARKER = re.compile(
 )
 _QUESTION_HEADING = re.compile(
     r"(?im)^\s*(?:#{1,6}\s*)?(?:\*\*)?(?:QUESTION\s+)?"
-    r"(\d{1,2})\s*[.)\u2014\u2013:?-]\s*"
+    r"(\d{1,2})\s*(?:[.)\u2014\u2013:?-])\s*"
     r"(.*?)(?:\*\*)?\s*$"
 )
 

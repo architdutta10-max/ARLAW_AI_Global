@@ -1,8 +1,8 @@
 {
   "name": "ARLAW AI Global",
   "version": "3.1.1",
-  "release": "Expanded legal corpus and five-question coverage regression tests",
-  "release_scope": "Adds curated jurisdiction-specific legal digests for Article 21, privacy, corporate fraud, competition, trade controls and sanctions; improves international-sanctions routing and adds regression tests. Does not certify legal accuracy or completeness.",
+  "release": "Evidence-gated legal coverage and retrieval safeguards",
+  "release_scope": "Adds curated jurisdiction-specific legal digests, explicit penalty/commencement evidence gates, and regression coverage. Does not certify legal accuracy or source currency.",
   "requires_maintenance": true,
   "production_certified": false,
   "legal_accuracy_certified": false,

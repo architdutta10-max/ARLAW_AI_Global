@@ -209,3 +209,44 @@ def test_trade_regulatory_terms_are_recognised_as_legal_topics():
 
     for question in questions:
         assert main._section_task(question) == "legal_research", question
+
+
+def test_markdown_numbered_headings_split_each_requested_section():
+    question = """**1. Indian Constitutional Law — Article 21**
+Explain Article 21 of the Constitution of India.
+
+**2. International Privacy and Data Protection**
+Compare India, Germany, the United Kingdom and the United States.
+
+**3. Corporate and Economic Law**
+Explain corporate fraud and international approaches.
+
+**4. Competition Law**
+Explain cartels in India and the European Union.
+
+**5. International Trade and Sanctions**
+Explain trade controls in India, Germany and Singapore."""
+
+    sections = main._split_research_sections(question)
+
+    assert len(sections) == 5
+    assert [section["number"] for section in sections] == [1, 2, 3, 4, 5]
+    assert "Article 21" in sections[0]["title"]
+    assert "Germany" in sections[1]["text"]
+    assert "international approaches" in sections[2]["text"]
+    assert "Singapore" in sections[4]["text"]
+
+
+def test_international_approaches_routes_to_intl(monkeypatch):
+    calls = []
+
+    def fake_search(query, top_k, jurisdiction, task):
+        calls.append(jurisdiction)
+        return []
+
+    monkeypatch.setattr(main, "search", fake_search)
+    main._retrieve_request(
+        "Explain corporate fraud and compare Indian law with international approaches.",
+        "GLOBAL", 5,
+    )
+    assert calls == ["IN", "INTL"]
