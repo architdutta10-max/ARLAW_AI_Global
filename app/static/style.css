@@ -107,7 +107,7 @@ html[data-theme="dark"] .status{background:#1b302e;border-color:#405956;color:#c
 html[data-theme="dark"] .citations{background:#172827;border-color:#405956;color:#9fcac1}
 html[data-theme="dark"] .citation-scope{background:#c08b3e16;color:#c6d7d2}
 html[data-theme="dark"] .source-row:hover{background:#ffffff08}
-@media(max-width:720px){.history-list{max-height:22vh}.history-item{font-size:10px;padding:7px 5px}.status{display:none}.message{gap:8px}.citation-scope{margin-left:12px;margin-right:12px}}
+@media(max-width:720px){.history-list{max-height:22vh}.history-item{font-size:10px;padding:7px 5px}.status{display:none}.message{gap:8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
 
 /* ARLAW 2.4 workspace refinement and user-selectable accent palettes */

@@ -143,14 +143,15 @@ def test_no_source_prompt_forbids_invented_specifics():
     assert "NO SOURCES WERE RETRIEVED" not in " ".join(m["content"] for m in general)
 
 
-def test_uncited_table_rows_and_lists_raise_a_quality_warning(monkeypatch):
+def test_uncited_table_rows_and_lists_do_not_raise_a_quality_warning(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("OLLAMA_ENABLED", "false")
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq")
     answer = "- This legal proposition has a source. [S1]\n- This second legal proposition has no source label."
     monkeypatch.setattr(llm, "PROVIDERS", {"groq": lambda payload: (answer, "m")})
     _text, _err, meta = llm.generate([{"role": "user", "content": "Explain Article 14"}], "ctx", ["S1"])
-    assert "no detected citation label" in meta["quality_warning"]
+    assert not meta.get("quality_warning")
+    assert meta["citation_validation"]["uncited_paragraphs"] == 1
 
 
 def test_homepage_urls_are_cleared_in_new_and_existing_sources(monkeypatch, tmp_path):
@@ -207,7 +208,7 @@ def test_citation_coverage_describes_counts_as_candidate_content_units():
     assert "not necessarily a factual claim" in result["scope"]
 
 
-def test_citation_warning_does_not_claim_uncited_units_are_all_factual_claims(monkeypatch):
+def test_formatting_coverage_and_unverified_support_do_not_create_reliability_warning(monkeypatch):
     monkeypatch.setenv("GROQ_API_KEY", "test-key")
     monkeypatch.setenv("OLLAMA_ENABLED", "false")
     monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq")
@@ -216,5 +217,13 @@ def test_citation_warning_does_not_claim_uncited_units_are_all_factual_claims(mo
     _text, _err, meta = llm.generate(
         [{"role": "user", "content": "Explain a legal concept"}], "ctx", ["S1"]
     )
-    assert "content units" in meta["quality_warning"]
-    assert "does not establish that every unit is a factual claim" in meta["quality_warning"]
+    assert meta.get("quality_warning", "") == ""
+    assert meta["citation_validation"]["status"] == "no_retrieved_citations"
+
+
+def test_frontend_does_not_render_yellow_citation_scope_box():
+    from pathlib import Path
+    frontend = Path(__file__).resolve().parents[1] / "app" / "static" / "app.js"
+    source = frontend.read_text(encoding="utf-8")
+    assert "citation-scope" not in source
+    assert "Citation check:" not in source

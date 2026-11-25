@@ -554,12 +554,10 @@ def generate(messages, context="", source_labels=None):
         warnings.append("This response may contain repeated sections.")
     if citation_check.get("invalid"):
         warnings.append("The response contains citation labels that were not supplied by retrieval.")
-    if citation_check.get("uncited_paragraphs", 0) and source_labels:
-        warnings.append(
-            f"{citation_check['uncited_paragraphs']} prose/list/table content units have no detected citation label (inline); this count does not establish that every unit is a factual claim."
-        )
-    if citation_check.get("status") == "reference_exists_not_verified":
-        warnings.append("Citation labels exist, but source-to-claim support has not been verified.")
+    # Citation coverage is a formatting heuristic, not a claim-level validator.
+    # Do not turn uncited paragraph/list/table counts or the normal
+    # reference_exists_not_verified status into a user-facing reliability warning.
+    # Invalid labels, repetition, and incomplete output remain actionable warnings.
     if warnings:
         meta["quality_warning"] = " ".join(warnings) + " Check the official primary source before relying on this answer."
     if meta["incomplete"]:
