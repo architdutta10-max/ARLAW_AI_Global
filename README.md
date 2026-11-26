@@ -168,6 +168,26 @@ For pull requests:
 
 - **GitHub:** https://github.com/architdutta10-max
 
-## License
+## Creator
 
+Created by **Archit Dutta**. [LinkedIn profile](https://www.linkedin.com/in/archit-dutta-4522693aa/)
+
+## Source verification limitations
+
+A source citation does not determine whether that source actually supports the generated answer. Legal citations and retrieved materials must be independently checked against the authoritative statutory text.
+
+## License
 This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+
+## Social links
+
+- LinkedIn: https://www.linkedin.com/in/archit-dutta-4522693aa/
+- Instagram: https://www.instagram.com/architdutta17
+
+## Verification, history and security limitations
+
+A source citation does not determine whether that source actually supports the generated answer. Legal citations and retrieved materials must be independently checked against authoritative statutory text.
+
+Conversation history is stored locally in the browser and is not synchronized to the server or other devices.
+
+Automated tests do not constitute a production security audit. Independent security review is required before production certification.
