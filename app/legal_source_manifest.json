@@ -1,0 +1,1334 @@
+{
+  "schema_version": "1.0.0",
+  "generated_from": [
+    "app/jurisdictions.json",
+    "app/sources_registry.json"
+  ],
+  "notice": "This is a coverage and provenance inventory, not a verified source directory. Registry candidates are unverified and do not establish legal coverage. Missing entries are explicitly unavailable.",
+  "jurisdictions": [
+    {
+      "code": "GLOBAL",
+      "name": "Global / unspecified",
+      "selector_group": "Global and international",
+      "jurisdiction_type": "global_unspecified",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "World Bank Open Data",
+          "url": "https://data.worldbank.org/",
+          "source_type": "Economic indicators",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "International Monetary Fund — Data",
+          "url": "https://www.imf.org/en/Data",
+          "source_type": "Macroeconomic and financial data",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "FAO — World Food Situation and Food Price Index",
+          "url": "https://www.fao.org/worldfoodsituation/foodpricesindex/en/",
+          "source_type": "Food prices and agriculture",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "World Food Programme — data and reports",
+          "url": "https://www.wfp.org/publications",
+          "source_type": "Food security and humanitarian reports",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "International Energy Agency — data and statistics",
+          "url": "https://www.iea.org/data-and-statistics",
+          "source_type": "Energy and supply data",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "UNCTAD — statistics",
+          "url": "https://unctad.org/statistics",
+          "source_type": "Trade and supply-chain statistics",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "World Trade Organization — statistics",
+          "url": "https://stats.wto.org/",
+          "source_type": "Trade statistics",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "Bank for International Settlements — statistics",
+          "url": "https://www.bis.org/statistics/",
+          "source_type": "Financial statistics",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "INTL",
+      "name": "International law",
+      "selector_group": "Global and international",
+      "jurisdiction_type": "supranational",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "UN Treaty Collection",
+          "url": "https://treaties.un.org/",
+          "source_type": "Treaties",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "International Court of Justice",
+          "url": "https://www.icj-cij.org/",
+          "source_type": "Decisions",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "EU",
+      "name": "European Union",
+      "selector_group": "Global and international",
+      "jurisdiction_type": "supranational",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "EUR-Lex",
+          "url": "https://eur-lex.europa.eu/",
+          "source_type": "EU legislation and case law",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "Court of Justice of the EU",
+          "url": "https://curia.europa.eu/",
+          "source_type": "Case law",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "ECHR",
+      "name": "European human-rights system",
+      "selector_group": "Global and international",
+      "jurisdiction_type": "supranational",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "HUDOC — European Court of Human Rights",
+          "url": "https://hudoc.echr.coe.int/",
+          "source_type": "Judgments and decisions",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "IN",
+      "name": "India",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "India Code",
+          "url": "https://www.indiacode.nic.in/",
+          "source_type": "Legislation",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "Supreme Court of India",
+          "url": "https://www.sci.gov.in/",
+          "source_type": "Case law",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "Delhi High Court — judgments",
+          "url": "https://delhihighcourt.nic.in/",
+          "source_type": "High Court judgments",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Bharatiya Nyaya Sanhita, 2023 (BNS) — official statute retrieval guide",
+          "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/20062/1/a202345.pdf",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2025-10-06",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Bharatiya Nagarik Suraksha Sanhita, 2023 (BNSS) — official statute retrieval guide",
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/21920/1/the_bharatiya_nagarik_suraksha_sanhita%2C_2023.pdf",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2025-10-06",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Bharatiya Sakshya Adhiniyam, 2023 (BSA) — official statute retrieval guide",
+          "url": "https://www.indiacode.nic.in/indiacode/bitstream/123456789/20063/1/aa202347.pdf",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2025-10-06",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Digital Personal Data Protection Act, 2023 — Act text (separate source)",
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/22037/1/a2023-22.pdf",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2025-11-13",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Digital Personal Data Protection Rules, 2025 — G.S.R. 846(E) (separate source)",
+          "url": "https://www.meity.gov.in/static/uploads/2025/11/53450e6e5dc0bfa85ebd78686cadad39.pdf",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2025-11-13",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — DPDP Act commencement notification — G.S.R. 843(E) (separate source)",
+          "url": "https://www.meity.gov.in/static/uploads/2025/11/c56ceae6c383460ca69577428d36828b.pdf",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2025-11-13",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Limitation Act, 1963 — full Act and Schedule retrieval",
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/1565/5/A1963-36.pdf",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2026-11-25",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Indian Contract Act, 1872 — Sections 2, 19, 22 and 23 (focused retrieval)",
+          "url": "https://www.indiacode.nic.in/bitstream/123456789/2187/2/A187209.pdf",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2026-11-25",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Income-tax Act, 2025 — Tax Year 2026–27 primary law and transition",
+          "url": "https://www.incometax.gov.in/iec/foportal/newdownloads/income-tax-act-2025",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2026-11-25",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Income-tax Rules, 2026 — G.S.R. 198(E) and official forms",
+          "url": "https://www.incometax.gov.in/iec/foportal/sites/default/files/2026-03/En-Notified-IT-Rules-2026-20-03-2026.pdf",
+          "source_type": "Primary legislation",
+          "declared_authority": "official primary source",
+          "as_of": "2026-03-20",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "India — Income Tax Department official Tax Year 2026–27 FAQs and forms",
+          "url": "https://www.incometax.gov.in/iec/foportal/help/all-topics/e-filing-services/income-tax-forms",
+          "source_type": "Official tax guidance",
+          "declared_authority": "official secondary",
+          "as_of": "2026-11-25",
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "BD",
+      "name": "Bangladesh",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "PK",
+      "name": "Pakistan",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "LK",
+      "name": "Sri Lanka",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "NP",
+      "name": "Nepal",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "SG",
+      "name": "Singapore",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "Singapore Statutes Online",
+          "url": "https://sso.agc.gov.sg/",
+          "source_type": "Legislation",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "MY",
+      "name": "Malaysia",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "ID",
+      "name": "Indonesia",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "PH",
+      "name": "Philippines",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "CN",
+      "name": "China",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "HK",
+      "name": "Hong Kong",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "JP",
+      "name": "Japan",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "KR",
+      "name": "South Korea",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "AU",
+      "name": "Australia",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "Federal Register of Legislation",
+          "url": "https://www.legislation.gov.au/",
+          "source_type": "Federal legislation",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "High Court of Australia — judgments",
+          "url": "https://www.hcourt.gov.au/",
+          "source_type": "High Court judgments",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "NZ",
+      "name": "New Zealand",
+      "selector_group": "Asia-Pacific",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "New Zealand Legislation",
+          "url": "https://www.legislation.govt.nz/",
+          "source_type": "Legislation",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "UK",
+      "name": "United Kingdom",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "legislation.gov.uk",
+          "url": "https://www.legislation.gov.uk/",
+          "source_type": "Legislation",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "National Archives Find Case Law",
+          "url": "https://caselaw.nationalarchives.gov.uk/",
+          "source_type": "Case law",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "ENG-WAL",
+      "name": "England and Wales",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "SCO",
+      "name": "Scotland",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "NIR",
+      "name": "Northern Ireland",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "FR",
+      "name": "France",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "DE",
+      "name": "Germany",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "ES",
+      "name": "Spain",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "IT",
+      "name": "Italy",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "NL",
+      "name": "Netherlands",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "CH",
+      "name": "Switzerland",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "SE",
+      "name": "Sweden",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "NO",
+      "name": "Norway",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "PL",
+      "name": "Poland",
+      "selector_group": "Europe",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "US",
+      "name": "United States",
+      "selector_group": "Americas",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "United States Code",
+          "url": "https://uscode.house.gov/",
+          "source_type": "Federal statutes",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "US Supreme Court opinions",
+          "url": "https://www.supremecourt.gov/opinions/opinions.aspx",
+          "source_type": "Case law",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "CA",
+      "name": "Canada",
+      "selector_group": "Americas",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "Justice Laws Website",
+          "url": "https://laws-lois.justice.gc.ca/",
+          "source_type": "Federal legislation",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        },
+        {
+          "name": "Supreme Court of Canada — decisions",
+          "url": "https://decisions.scc-csc.ca/",
+          "source_type": "Judgments",
+          "declared_authority": "official",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "MX",
+      "name": "Mexico",
+      "selector_group": "Americas",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "BR",
+      "name": "Brazil",
+      "selector_group": "Americas",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "AR",
+      "name": "Argentina",
+      "selector_group": "Americas",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "CL",
+      "name": "Chile",
+      "selector_group": "Americas",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "CO",
+      "name": "Colombia",
+      "selector_group": "Americas",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "PE",
+      "name": "Peru",
+      "selector_group": "Americas",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "AE",
+      "name": "United Arab Emirates",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "SA",
+      "name": "Saudi Arabia",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "IL",
+      "name": "Israel",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "TR",
+      "name": "Türkiye",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "ZA",
+      "name": "South Africa",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "unverified_registry_candidates",
+      "verified_legal_coverage": false,
+      "sources": [
+        {
+          "name": "SAFLII — South African case law",
+          "url": "https://www.saflii.org/",
+          "source_type": "Case law repository",
+          "declared_authority": "case-law repository",
+          "as_of": null,
+          "verification_status": "unverified_starting_point",
+          "territorial_scope": "not independently established",
+          "languages": [
+            "und"
+          ],
+          "retrieval_method": "manual_or_existing_refresh_workflow_not_validated",
+          "update_frequency": "not established",
+          "licence_access_constraints": "must be checked",
+          "notes": "Existing registry entry only; URL, authority, currency, completeness and access terms have not been independently verified in this upgrade."
+        }
+      ],
+      "gaps": [],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "NG",
+      "name": "Nigeria",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "KE",
+      "name": "Kenya",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "GH",
+      "name": "Ghana",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "EG",
+      "name": "Egypt",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "MA",
+      "name": "Morocco",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    },
+    {
+      "code": "ET",
+      "name": "Ethiopia",
+      "selector_group": "Middle East and Africa",
+      "jurisdiction_type": "national_or_territorial",
+      "coverage_status": "no_registered_legal_source",
+      "verified_legal_coverage": false,
+      "sources": [],
+      "gaps": [
+        "No jurisdiction-specific source registered in the existing source registry."
+      ],
+      "subnational_coverage": "not_modelled",
+      "legal_case_law_coverage": "not_established"
+    }
+  ]
+}

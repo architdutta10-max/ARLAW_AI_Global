@@ -1,5 +1,19 @@
 # Changelog
 
+## 3.3.0 — Legal governance foundation and hardening
+
+- Added a 52-jurisdiction source inventory with explicit unverified and missing-source statuses.
+- Added versioned legal document, provision, temporal relation, ingestion provenance and jurisdiction hierarchy metadata tables.
+- Added content-hash recording and conservative temporal metadata assessment.
+- Added exact quote-presence checking, explicitly not semantic legal verification.
+- Added legal coverage inventory API endpoints.
+- Enabled SQLite foreign-key enforcement on every governance connection and added hierarchy cycle checks.
+- Prevented metadata registration functions from self-declaring legal documents, versions or relations as verified.
+- Added validation for relation dates, relation endpoints, ingestion status and ingestion metadata.
+- Hardened the release gate to compare selector/source/benchmark jurisdiction code sets, reject duplicates, and require scoped, fresh, hash-matched evidence artifacts instead of environment-variable attestations.
+- Evidence artifact checks do not cryptographically authenticate reviewer identity or independently prove the report's conclusions.
+- Kept legal accuracy, security and production certification disabled until the required real-world evidence exists.
+
 ## 3.0.4 — Packaging cleanup
 - Removed the retired `install_chat_history.py` stub and the obsolete `scripts/install_release_1_2_1.bat` / `install_release_2_0.bat` installers.
 - Removed a duplicated, stale tail from this changelog.

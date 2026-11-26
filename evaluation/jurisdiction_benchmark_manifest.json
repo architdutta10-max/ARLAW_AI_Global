@@ -1,0 +1,432 @@
+{
+  "schema_version": "1.0.0",
+  "status": "template_only_no_benchmark_results",
+  "required_review": "Independent qualified legal reviewers must create answer keys and score each jurisdiction-specific benchmark.",
+  "minimum_dimensions": [
+    "jurisdiction_accuracy",
+    "authority_level",
+    "provision_accuracy",
+    "effective_date_accuracy",
+    "precedent_treatment",
+    "claim_citation_support",
+    "abstention_when_sources_missing"
+  ],
+  "jurisdictions": [
+    {
+      "code": "GLOBAL",
+      "name": "Global / unspecified",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "INTL",
+      "name": "International law",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "EU",
+      "name": "European Union",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "ECHR",
+      "name": "European human-rights system",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "IN",
+      "name": "India",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "BD",
+      "name": "Bangladesh",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "PK",
+      "name": "Pakistan",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "LK",
+      "name": "Sri Lanka",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "NP",
+      "name": "Nepal",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "SG",
+      "name": "Singapore",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "MY",
+      "name": "Malaysia",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "ID",
+      "name": "Indonesia",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "PH",
+      "name": "Philippines",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "CN",
+      "name": "China",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "HK",
+      "name": "Hong Kong",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "JP",
+      "name": "Japan",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "KR",
+      "name": "South Korea",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "AU",
+      "name": "Australia",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "NZ",
+      "name": "New Zealand",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "UK",
+      "name": "United Kingdom",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "ENG-WAL",
+      "name": "England and Wales",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "SCO",
+      "name": "Scotland",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "NIR",
+      "name": "Northern Ireland",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "IE",
+      "name": "Ireland",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "FR",
+      "name": "France",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "DE",
+      "name": "Germany",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "ES",
+      "name": "Spain",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "IT",
+      "name": "Italy",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "NL",
+      "name": "Netherlands",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "CH",
+      "name": "Switzerland",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "SE",
+      "name": "Sweden",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "NO",
+      "name": "Norway",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "PL",
+      "name": "Poland",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "US",
+      "name": "United States",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "CA",
+      "name": "Canada",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "MX",
+      "name": "Mexico",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "BR",
+      "name": "Brazil",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "AR",
+      "name": "Argentina",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "CL",
+      "name": "Chile",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "CO",
+      "name": "Colombia",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "PE",
+      "name": "Peru",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "AE",
+      "name": "United Arab Emirates",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "SA",
+      "name": "Saudi Arabia",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "IL",
+      "name": "Israel",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "TR",
+      "name": "Türkiye",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "ZA",
+      "name": "South Africa",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "NG",
+      "name": "Nigeria",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "KE",
+      "name": "Kenya",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "GH",
+      "name": "Ghana",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "EG",
+      "name": "Egypt",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "MA",
+      "name": "Morocco",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    },
+    {
+      "code": "ET",
+      "name": "Ethiopia",
+      "benchmark_status": "not_created",
+      "frozen_source_pack": false,
+      "independent_answer_key": false,
+      "reviewer_scores": null
+    }
+  ]
+}
