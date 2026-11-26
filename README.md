@@ -1,3 +1,54 @@
+<!-- ARLAW-3.4.0-RELEASE-SECTION -->
+
+# ARLAW AI Global ? Version 3.4.0
+
+**An AI-powered platform for legal research, economic understanding and judicial information.**
+
+Production status: Version 3.4.0 deployed.
+
+## What's new in 3.4.0
+
+- Improved Indian legal corpus refresh reliability.
+- More detailed source-ingestion diagnostics.
+- Safer handling of failed downloads and extraction errors.
+- Preservation of the last successfully indexed copy when a replacement cannot be processed successfully.
+- Additional automated tests for source-ingestion failure scenarios.
+- Updated application version metadata and release documentation.
+
+## AI provider configuration
+
+The deployed application reports the following provider configuration:
+
+- Groq: configured as the primary provider.
+- Gemini: configured as an additional cloud provider.
+- Gemini model: `gemini-3.8-flash`.
+- Ollama: disabled in the current production configuration.
+- Local model support: enabled.
+- Multi-model review: disabled.
+
+Provider configuration does not independently guarantee successful inference or uninterrupted availability.
+
+## Production API health
+
+- Application health: https://arlaw-ai-global.onrender.com/api/health
+- Model configuration: https://arlaw-ai-global.onrender.com/api/health/model
+- Application: https://arlaw-ai-global.onrender.com
+
+## Legal research and source limitations
+
+The platform provides research and workflow assistance. Source inventory and retrieval coverage must not be interpreted as proof that every legal provision is complete, current, authoritative or legally correct.
+
+Official-source ingestion and exact-quote checks do not independently establish semantic support, source authenticity, current legal status or legal correctness.
+
+The application is not certified as a legal authority, law firm, court system or substitute for qualified professional advice. It does not make judicial decisions.
+
+## Project status
+
+- Release: 3.4.0
+- Production certification: Not certified
+- Legal accuracy certification: Not certified
+- Security audit certification: Not certified
+
 # ARLAW AI Global
 
 **Version 3.3.1 — AI-assisted legal information and research platform**
