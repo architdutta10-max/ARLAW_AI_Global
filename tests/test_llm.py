@@ -406,3 +406,92 @@ def test_groq_non_gpt_oss_does_not_receive_gpt_oss_parameters(monkeypatch):
     assert answer == "Test answer"
     assert "include_reasoning" not in captured["json"]
     assert "reasoning_effort" not in captured["json"]
+
+
+def test_provider_order_enables_gemini_only_when_key_is_configured(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "groq-test")
+    monkeypatch.setenv("GEMINI_API_KEY", "gemini-test")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
+    monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq,gemini,ollama")
+    assert llm.provider_order() == ["groq", "gemini"]
+
+    monkeypatch.delenv("GEMINI_API_KEY")
+    assert llm.provider_order() == ["groq"]
+
+
+def test_gemini_adapter_maps_messages_and_response(monkeypatch):
+    from types import SimpleNamespace
+
+    captured = {}
+
+    def fake_post(url, **kwargs):
+        captured["url"] = url
+        captured.update(kwargs)
+        return SimpleNamespace(
+            status_code=200,
+            raise_for_status=lambda: None,
+            json=lambda: {
+                "candidates": [{
+                    "content": {
+                        "parts": [{"text": "Gemini test answer"}]
+                    },
+                    "finishReason": "STOP",
+                }]
+            },
+        )
+
+    monkeypatch.setenv("GEMINI_API_KEY", "test-gemini-key")
+    monkeypatch.setenv("GEMINI_MODEL", "gemini-test-model")
+    monkeypatch.setattr(llm.requests, "post", fake_post)
+
+    answer, model, finish = llm._gemini([
+        {"role": "system", "content": "Follow the system rules."},
+        {"role": "user", "content": "Hello"},
+        {"role": "assistant", "content": "Previous answer"},
+        {"role": "user", "content": "Continue"},
+    ])
+
+    assert answer == "Gemini test answer"
+    assert model == "gemini-test-model"
+    assert finish == "stop"
+    assert captured["url"].endswith(
+        "/models/gemini-test-model:generateContent"
+    )
+    assert captured["headers"]["x-goog-api-key"] == "test-gemini-key"
+    body = captured["json"]
+    assert body["systemInstruction"]["parts"][0]["text"] == "Follow the system rules."
+    assert [item["role"] for item in body["contents"]] == [
+        "user", "model", "user"
+    ]
+
+
+def test_generate_falls_back_from_groq_to_gemini(monkeypatch):
+    monkeypatch.setenv("GROQ_API_KEY", "groq-test")
+    monkeypatch.setenv("GEMINI_API_KEY", "gemini-test")
+    monkeypatch.setenv("OLLAMA_ENABLED", "false")
+    monkeypatch.setenv("ARLAW_PROVIDER_ORDER", "groq,gemini")
+    monkeypatch.setenv("ARLAW_MULTI_MODEL_REVIEW", "false")
+
+    calls = []
+
+    def groq_failure(payload):
+        calls.append("groq")
+        raise RuntimeError("HTTP 429")
+
+    def gemini_success(payload):
+        calls.append("gemini")
+        return "Fallback answer", "gemini-test-model", "stop"
+
+    monkeypatch.setattr(llm, "PROVIDERS", {
+        "groq": groq_failure,
+        "gemini": gemini_success,
+    })
+
+    answer, error, meta = llm.generate([
+        {"role": "user", "content": "Explain a legal concept"}
+    ])
+
+    assert error is None
+    assert answer
+    assert calls == ["groq", "gemini"]
+    assert meta["provider"] == "gemini"

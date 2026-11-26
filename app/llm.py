@@ -296,15 +296,100 @@ def _groq(payload):
 
 
 
-PROVIDERS: dict[str, Callable] = {"groq": _groq, "ollama": _ollama}
+def _gemini(payload):
+    """Call Google's Gemini generateContent REST API."""
+    key = os.getenv("GEMINI_API_KEY", "").strip()
+    if not key:
+        raise RuntimeError("GEMINI_API_KEY is not configured")
+
+    model = os.getenv("GEMINI_MODEL", "gemini-3.8-flash").strip()
+    timeout = max(5, min(180, int(os.getenv("ARLAW_HOSTED_TIMEOUT", "90"))))
+    max_tokens = max(512, min(8192, int(os.getenv("ARLAW_MAX_COMPLETION_TOKENS", "1200"))))
+
+    system_parts = []
+    contents = []
+    for message in payload:
+        role = str(message.get("role", "user")).lower()
+        content = str(message.get("content") or "")
+        if not content:
+            continue
+        if role == "system":
+            system_parts.append(content)
+            continue
+        gemini_role = "model" if role == "assistant" else "user"
+        contents.append({
+            "role": gemini_role,
+            "parts": [{"text": content}],
+        })
+
+    if not contents:
+        raise RuntimeError("Gemini request contains no user or assistant content")
+
+    request_json = {
+        "contents": contents,
+        "generationConfig": {"maxOutputTokens": max_tokens},
+    }
+    if system_parts:
+        request_json["systemInstruction"] = {
+            "parts": [{"text": "\n\n".join(system_parts)}]
+        }
+
+    url = (
+        "https://generativelanguage.googleapis.com/v1beta/models/"
+        + model
+        + ":generateContent"
+    )
+    response = requests.post(
+        url,
+        headers={
+            "x-goog-api-key": key,
+            "Content-Type": "application/json",
+        },
+        json=request_json,
+        timeout=timeout,
+    )
+    response.raise_for_status()
+    data = response.json()
+
+    candidates = data.get("candidates") or []
+    if not candidates:
+        feedback = data.get("promptFeedback") or {}
+        reason = feedback.get("blockReason") or "no candidate returned"
+        raise RuntimeError("Gemini returned no usable candidate: " + str(reason))
+
+    candidate = candidates[0]
+    parts = (candidate.get("content") or {}).get("parts") or []
+    answer = "".join(
+        str(part.get("text") or "")
+        for part in parts
+        if isinstance(part, dict)
+    ).strip()
+    if not answer:
+        raise RuntimeError("Gemini returned an empty response")
+
+    finish_reason = str(candidate.get("finishReason") or "STOP")
+    if finish_reason.upper() == "MAX_TOKENS":
+        finish_reason = "length"
+    else:
+        finish_reason = "stop"
+
+    return answer, model, finish_reason
+
+
+PROVIDERS: dict[str, Callable] = {
+    "groq": _groq,
+    "gemini": _gemini,
+    "ollama": _ollama,
+}
 
 
 def provider_order(task=None):
     """Return enabled providers in configured preference order; failed providers fall through."""
-    raw = os.getenv("ARLAW_PROVIDER_ORDER", "groq,ollama")
+    raw = os.getenv("ARLAW_PROVIDER_ORDER", "groq,gemini,ollama")
     requested = [x.strip().lower() for x in raw.split(",") if x.strip()]
     enabled = {
         "groq": bool(os.getenv("GROQ_API_KEY", "").strip()),
+        "gemini": bool(os.getenv("GEMINI_API_KEY", "").strip()),
         "ollama": os.getenv("OLLAMA_ENABLED", "true").strip().lower() in {"1", "true", "yes", "on"},
     }
     route = os.getenv("ARLAW_ROUTE_" + str(task or "").upper(), "").strip()

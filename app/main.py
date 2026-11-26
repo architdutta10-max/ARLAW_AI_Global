@@ -384,6 +384,8 @@ def model_health():
         "providers": providers,
         "primary_provider": providers[0] if providers else None,
         "groq_configured": bool(os.getenv("GROQ_API_KEY", "").strip()),
+        "gemini_configured": bool(os.getenv("GEMINI_API_KEY", "").strip()),
+        "gemini_model": os.getenv("GEMINI_MODEL", "gemini-3.8-flash"),
         "ollama_enabled": os.getenv("OLLAMA_ENABLED", "true").lower() in {"1", "true", "yes", "on"},
         "ollama_model": os.getenv("OLLAMA_MODEL", "qwen3:8b"),
         "local_models": True,
