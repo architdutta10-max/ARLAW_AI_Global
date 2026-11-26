@@ -1,3 +1,9 @@
+## 3.3.1 — Statutory retrieval improvements
+
+- Recognises full names of the Bharatiya Nyaya Sanhita, Bharatiya Nagarik Suraksha Sanhita and Bharatiya Sakshya Adhiniyam to reduce false clarification prompts.
+- Improves retrieval of complete BNS statutory provisions across overlapping indexed chunks.
+- Adds regression tests for BNS Section 303 retrieval and statutory-name recognition.
+- This version remains a release candidate; automated tests do not certify legal accuracy or production readiness.
 # Changelog
 
 ## 3.3.0 — Legal governance foundation and hardening
