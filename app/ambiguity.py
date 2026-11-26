@@ -58,7 +58,9 @@ def clarification_for(question: str, jurisdiction: str = "GLOBAL") -> dict | Non
         has_instrument = bool(re.search(
             r"\b(constitution|act|acts|code|statute|regulation|regulations|directive|treaty|convention|"
             r"charter|protocol|ordinance|rules|bylaws?|criminal procedure|penal code|civil procedure|"
-            r"ipc|crpc|cpc|bns|bnss|bsa|gdpr|echr|iccpr|icescr|ucc|u\.?s\.?c|c\.?f\.?r|"
+            r"bharatiya\s+nyaya\s+sanhita|bharatiya\s+nagarik\s+suraksha\s+sanhita|"
+            r"bharatiya\s+sakshya\s+adhiniyam|indian\s+penal\s+code|code\s+of\s+criminal\s+procedure|"
+            r"indian\s+evidence\s+act|ipc|crpc|cpc|bns|bnss|bsa|gdpr|echr|iccpr|icescr|ucc|u\.?s\.?c|c\.?f\.?r|"
             r"agreement|contract|lease|deed|association|memorandum)\b", q, re.I
         ))
         if not has_instrument:

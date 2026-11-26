@@ -1,0 +1,1 @@
+AI-assisted legal information and research platform with jurisdiction-aware retrieval, statutory analysis, and source-grounded responses. Version 3.3.1 improves statutory-name recognition and BNS provision retrieval.

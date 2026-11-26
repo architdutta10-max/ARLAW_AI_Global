@@ -104,6 +104,59 @@ def _authority_priority(authority):
     return _AUTHORITY_PRIORITY.get(label, 0)
 
 
+def _expand_anchored_provision(source_id, chunk_no, content, heading_start, provision_number):
+    """Reassemble a complete numbered provision from overlapping FTS chunks.
+
+    Statutory provisions often exceed one 1,200-character chunk. Returning only
+    the chunk containing the heading can expose the definition while dropping
+    the punishment or proviso. Expand from the matched heading until the next
+    numbered statutory heading, preserving the indexed text and overlap.
+    """
+    try:
+        start_index = int(chunk_no)
+    except (TypeError, ValueError):
+        return content
+
+    with connect() as conn:
+        rows = conn.execute(
+            "SELECT chunk_no,content FROM chunks WHERE source_id=? "
+            "AND CAST(chunk_no AS INTEGER)>=? "
+            "ORDER BY CAST(chunk_no AS INTEGER) LIMIT 16",
+            (source_id, start_index),
+        ).fetchall()
+
+    if not rows:
+        return content
+
+    first = str(rows[0]["content"])
+    if not (0 <= heading_start < len(first)):
+        return content
+    merged = first[heading_start:]
+    previous_full_chunk = first
+
+    next_heading = re.compile(
+        r"(?<![0-9A-Za-z])(\d{1,4})\.\s+[A-Z][^—]{1,100}?\s*—"
+    )
+    initial_heading = next_heading.search(merged)
+    search_from = initial_heading.end() if initial_heading else 0
+    for row in rows[1:]:
+        part = str(row["content"])
+        overlap = 0
+        for size in range(min(300, len(previous_full_chunk), len(part)), 0, -1):
+            if previous_full_chunk[-size:] == part[:size]:
+                overlap = size
+                break
+        addition = part[overlap:] if overlap else " " + part
+        merged += addition
+        previous_full_chunk = part
+        following = next_heading.search(merged, pos=search_from)
+        if following and following.group(1) != str(provision_number):
+            merged = merged[:following.start()].rstrip()
+            break
+
+    return merged.strip() or content
+
+
 def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
     """Retrieve relevant sources with conservative legal-jurisdiction boundaries.
 
@@ -262,6 +315,8 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
 
         provision_matches = 0
         provision_heading_matches = 0
+        matched_heading_start = None
+        matched_heading_number = None
         for kind, number in provision_anchors:
             if kind in {"article", "art", "art."}:
                 reference_pattern = rf"\b(?:article|arts?\.?)[ \t]*{re.escape(number)}\b"
@@ -271,7 +326,7 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
             # Official legislative texts commonly print a provision as
             # "21. Protection of life..." without repeating the word Article.
             heading_pattern = re.compile(
-                rf"(?<![0-9A-Za-z]){re.escape(number)}\.\s+([^—]{{2,100}}?)\s*[.]?\s+—"
+                rf"(?<![0-9A-Za-z]){re.escape(number)}\.\s+([^—]{{2,100}}?)\s*[.]?\s*—"
             )
             heading = False
             for heading_match in heading_pattern.finditer(h["content"]):
@@ -285,6 +340,8 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
                     and not re.search(r"\b(schedule|appendix)\b", preceding_context, flags=re.IGNORECASE)
                 ):
                     heading = True
+                    matched_heading_start = heading_match.start()
+                    matched_heading_number = number
                     break
             if referenced or heading:
                 provision_matches += 1
@@ -320,6 +377,11 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
         )
         h["provision_matches"] = provision_matches
         h["provision_heading_matches"] = provision_heading_matches
+        if matched_heading_start is not None and matched_heading_number is not None:
+            h["content"] = _expand_anchored_provision(
+                h["id"], h["chunk_no"], h["content"],
+                matched_heading_start, matched_heading_number,
+            )
         h["ranking_score"] = round(
             h["relevance"] + h["authority_priority"] * 0.10 + provision_bonus, 4
         )
