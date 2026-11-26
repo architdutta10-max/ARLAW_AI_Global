@@ -25,7 +25,7 @@ def test_health_endpoint_reports_v3_and_security_headers():
     with TestClient(app) as client:
         response = client.get("/api/health")
     assert response.status_code == 200
-    assert response.json()["version"] == "3.3.2"
+    assert response.json()["version"] == "3.4.0"
     assert response.headers["x-content-type-options"] == "nosniff"
     assert response.headers["x-frame-options"] == "DENY"
     assert response.headers["cache-control"] == "no-store"
