@@ -14,8 +14,12 @@ services:
       - key: OLLAMA_ENABLED
         value: "false"
       - key: ARLAW_PROVIDER_ORDER
-        value: groq,ollama
+        value: groq,gemini,ollama
+      - key: GEMINI_MODEL
+        value: gemini-3.8-flash
       - key: GROQ_API_KEY
+        sync: false
+      - key: GEMINI_API_KEY
         sync: false
 # IMPORTANT:
 # The free Render filesystem is ephemeral. Uploaded documents and SQLite data
