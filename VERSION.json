@@ -1,7 +1,7 @@
 {
     "name":  "ARLAW AI Global",
-    "version":  "3.3.1",
-    "release":  "Legal governance foundation with fail-closed metadata, integrity and evidence gates",
+    "version":  "3.3.2",
+    "release":  "Gemini cloud fallback with Groq-first provider failover",
     "release_scope":  "Adds MobileNetV2 and ResNet-50 via TensorFlow Hub, VGG-16 via TensorFlow Keras Applications, configurable Hugging Face NLP inference, and official-source retrieval/refresh coverage for BNS, BNSS, BSA, DPDP Act/Rules/commencement, Income-tax Act 2025 and Rules 2026 for Tax Year 2026-27, Limitation Act 1963 including Schedule, and Indian Contract Act 1872 Sections 2, 19, 22 and 23. Full legal documents can be refreshed explicitly from allowlisted official URLs. Heavy model dependencies remain optional. Legal accuracy is not certified. Adds a 52-entry source inventory with unverified/missing statuses, additive legal document/version/provision/relationship tables, exact quote-presence helper, and coverage endpoints. Does not verify source URLs, provide missing jurisdiction corpora, or certify legal accuracy. Governance hardening enables SQLite foreign keys per connection, rejects self-declared verified statuses, validates hierarchy cycles and relation/ingestion metadata, compares selector/source/benchmark code sets, and requires scoped fresh hash-matched release evidence artifacts instead of environment-variable attestations. Evidence hashes do not authenticate reviewer identity or certify report conclusions.",
     "requires_maintenance":  true,
     "production_certified":  false,

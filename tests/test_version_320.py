@@ -7,7 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def test_version_320_optional_model_routes_and_lazy_imports():
     main = (ROOT / 'app/main.py').read_text(encoding='utf-8')
     module = (ROOT / 'app/optional_models.py').read_text(encoding='utf-8')
-    assert 'VERSION = "3.3.1"' in main
+    assert 'VERSION = "3.3.2"' in main
     assert '/api/models' in main
     assert '/api/models/huggingface' in main
     assert '/api/models/vision/{model_name}' in main
