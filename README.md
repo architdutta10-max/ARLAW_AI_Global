@@ -2,7 +2,7 @@
 
 **An AI-assisted global legal, civil, economic, financial and justice research workspace.**
 
-- **Release:** 3.0.6 — India-default jurisdiction selection and long-prompt legal retrieval correction
+- **Release:** 3.3.0 — legal governance foundation and fail-closed release evidence checks
 - **Live application:** https://arlaw-ai-global.onrender.com
 - **Repository:** https://github.com/architdutta10-max/ARLAW_AI_Global
 
@@ -203,3 +203,25 @@ python scripts/refresh_indian_legal_corpus.py
 ```
 
 The script uses a fixed HTTPS host allowlist and size limit, refuses short/empty extracts, replaces only its own managed records, and does not run during web-service startup. Review the result for every source and check later Gazette amendments before legal use.
+
+## Legal governance status (3.3.0)
+
+This release adds a 52-entry legal source inventory and governance metadata
+foundation. The inventory distinguishes 12 selector codes with unverified registry
+candidates from 40 with no registered jurisdiction-specific source. It does not
+represent those candidates as verified legal coverage.
+
+Useful endpoints:
+- `GET /api/legal/coverage`
+- `GET /api/legal/jurisdictions/{code}/sources`
+
+Run the conservative release gate with:
+
+```bash
+python scripts/legal_release_gate.py
+```
+
+The gate is expected to block until official sources are verified, jurisdictional
+benchmarks receive independent legal review, persistent hosting is tested, and
+security and production approvals are recorded. Passing unit tests alone does not
+certify legal accuracy. See `docs/LEGAL_GOVERNANCE_PHASES.md`.

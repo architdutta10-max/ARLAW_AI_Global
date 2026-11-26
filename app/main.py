@@ -22,8 +22,9 @@ from .config import STATIC_DIR, UPLOAD_DIR, TOP_K
 from .knowledge import init_db, add_source, search, list_sources, seed_builtin_knowledge
 from .llm import generate, provider_order, classify_task, fit_context
 from .ambiguity import clarification_for, names_specific_authority
+from .legal_governance import init_governance_db, coverage_report, jurisdiction_source_inventory
 
-VERSION = "3.2.0"
+VERSION = "3.3.0"
 MAX_UPLOAD_BYTES = int(os.getenv("ARLAW_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
 MAX_PDF_PAGES = int(os.getenv("ARLAW_MAX_PDF_PAGES", "300"))
 CHAT_RATE_LIMIT = int(os.getenv("ARLAW_CHAT_RATE_LIMIT", "20"))
@@ -265,6 +266,7 @@ def _retrieve_request(question: str, selected_jurisdiction: str, top_k: int):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     init_db()
+    init_governance_db()
     seed_builtin_knowledge()
     yield
 
@@ -345,6 +347,20 @@ def health():
     }
 
 
+@app.get("/api/legal/coverage")
+def legal_coverage():
+    """Return explicit source-inventory status; this is not a legal accuracy score."""
+    return coverage_report()
+
+
+@app.get("/api/legal/jurisdictions/{code}/sources")
+def legal_jurisdiction_sources(code: str):
+    try:
+        return jurisdiction_source_inventory(code)
+    except KeyError as exc:
+        raise HTTPException(status_code=404, detail="Unknown jurisdiction code") from exc
+
+
 @app.get("/api/capabilities")
 def capabilities():
     return {
@@ -356,7 +372,7 @@ def capabilities():
             {"id": "legal_research", "name": "Legal Research", "scope": "Jurisdiction-aware legal information and source-grounded research", "boundary": "Not a substitute for qualified legal advice."},
         ],
         "supported_languages_prompted": ["English", "Hindi", "Bengali", "other languages when supported by the configured model"],
-        "verification": "Citation labels are checked for reference existence and paragraph coverage only; source support, currency and legal correctness require human verification.",
+        "verification": "Citation labels and paragraph coverage are formatting checks. Exact quote matching is available as a narrow text-presence check; semantic proposition support, source authenticity, currency and legal correctness are not automatically certified.",
         "security_note": "Use authentication, shared rate limiting, persistent storage and independent security review before accepting confidential or privileged records.",
     }
 
@@ -559,6 +575,14 @@ def chat(req: ChatRequest, request: Request):
         "retrieval_coverage": retrieval_coverage,
         "task": model_info.get("task"),
         "citation_validation": model_info.get("citation_validation"),
+        "legal_evidence_assessment": {
+            "status": "not_semantically_verified",
+            "exact_quote_checker": "available_as_separate_library_function",
+            "semantic_proposition_support": False,
+            "source_authenticity": False,
+            "source_currency": False,
+            "legal_correctness": False,
+        },
         "quality": model_info.get("quality"),
         "quality_warning": quality_warning,
         "incomplete": model_info.get("incomplete", False),
