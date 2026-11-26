@@ -1,6 +1,6 @@
 <!-- ARLAW-3.4.0-RELEASE-SECTION -->
 
-# ARLAW AI Global ? Version 3.4.0
+# ARLAW AI Global - Version 3.4.0
 
 **An AI-powered platform for legal research, economic understanding and judicial information.**
 
