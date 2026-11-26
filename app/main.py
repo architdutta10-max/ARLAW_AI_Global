@@ -77,6 +77,27 @@ def _jurisdiction_codes() -> set[str]:
 SUPPORTED_JURISDICTIONS = _jurisdiction_codes()
 
 
+def _jurisdiction_name_markers() -> list[tuple[str, re.Pattern]]:
+    """Build country/territory name detection from the live selector registry.
+
+    This keeps GLOBAL routing aligned with every selectable jurisdiction instead
+    of silently limiting detection to a hand-maintained subset.
+    """
+    data = json.loads((Path(__file__).parent / "jurisdictions.json").read_text(encoding="utf-8"))
+    markers = []
+    for group in data.get("groups", []):
+        for item in group.get("items", []):
+            code = str(item.get("code", "")).upper().strip()
+            name = str(item.get("name", "")).strip()
+            if code in SUPPORTED_JURISDICTIONS and name:
+                markers.append((code, re.compile(r"(?<!\w)" + re.escape(name) + r"(?!\w)", re.I)))
+    # Match longer territory names before parent-country names.
+    return sorted(markers, key=lambda item: len(item[1].pattern), reverse=True)
+
+
+_JURISDICTION_NAME_MARKERS = _jurisdiction_name_markers()
+
+
 # Explicit jurisdiction routing is applied only when the user selects GLOBAL.
 # A deliberate country selection remains authoritative and is never silently overridden.
 _JURISDICTION_MARKERS = (
@@ -138,12 +159,30 @@ def _split_research_sections(question: str) -> list[dict]:
 
 
 def _explicit_jurisdictions(text: str) -> list[str]:
-    """Return only jurisdictions explicitly named in a question section."""
-    found = [code for code, pattern in _JURISDICTION_MARKERS if pattern.search(text or "")]
-    if _INTERNATIONAL_MARKER.search(text or "") and "INTL" in SUPPORTED_JURISDICTIONS:
+    """Return explicitly named jurisdictions, including every selector entry."""
+    value = text or ""
+    # Preserve established alias ordering for backwards compatibility, then add
+    # registry-driven names for every selector entry not covered by those aliases.
+    found = [code for code, pattern in _JURISDICTION_MARKERS if pattern.search(value)]
+    found.extend(code for code, pattern in _JURISDICTION_NAME_MARKERS if pattern.search(value))
+    if _INTERNATIONAL_MARKER.search(value) and "INTL" in SUPPORTED_JURISDICTIONS:
         found.append("INTL")
-    # Preserve marker order while removing duplicates and unsupported codes.
+    # A named sub-jurisdiction is more precise than the broad UK selector.
+    if any(code in found for code in ("ENG-WAL", "SCO", "NIR")):
+        found = [code for code in found if code != "UK"]
+    # Preserve order while removing duplicates and unsupported codes.
     return list(dict.fromkeys(code for code in found if code in SUPPORTED_JURISDICTIONS))
+
+
+LEGAL_TASKS = {
+    "legal_research", "civil_procedure", "lawyer_assistance",
+    "judicial_research", "document_review",
+}
+
+
+def _must_abstain_without_legal_sources(task: str, use_knowledge: bool, hits: list) -> bool:
+    """Fail closed for legal work when source retrieval is absent or disabled."""
+    return task in LEGAL_TASKS and (not use_knowledge or not hits)
 
 
 def _section_task(text: str) -> str:
@@ -430,11 +469,11 @@ def chat(req: ChatRequest, request: Request):
         hits, retrieval_coverage, task = _retrieve_request(question, req.jurisdiction, TOP_K)
     else:
         hits, retrieval_coverage, task = [], [], classify_task(question)
-    legal_tasks = {"legal_research", "civil_procedure", "lawyer_assistance", "judicial_research", "document_review"}
-    no_legal_source = req.use_knowledge and task in legal_tasks and not hits
-    # Abstain only when a specific provision/case is asked about and nothing was retrieved;
-    # broad conceptual questions get clearly labelled general information instead.
-    if no_legal_source and names_specific_authority(question):
+    no_legal_source = _must_abstain_without_legal_sources(task, req.use_knowledge, hits)
+    # Legal answers are fail-closed: broad conceptual questions also abstain when
+    # no jurisdiction-matched evidence is available. A fluent model-memory answer
+    # is not an acceptable substitute for a verified legal source.
+    if no_legal_source:
         return {
             "answer": (
                 f"I could not retrieve a jurisdiction-matched legal source for {req.jurisdiction} that covers this question. "
