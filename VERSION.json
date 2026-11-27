@@ -1,10 +1,10 @@
 {
-    "name":  "ARLAW AI Global",
-    "version":  "3.5.1",
-    "release":  "Indian legal corpus refresh reliability and ingestion diagnostics",
-    "release_scope":  "Adds MobileNetV2 and ResNet-50 via TensorFlow Hub, VGG-16 via TensorFlow Keras Applications, configurable Hugging Face NLP inference, and official-source retrieval/refresh coverage for BNS, BNSS, BSA, DPDP Act/Rules/commencement, Income-tax Act 2025 and Rules 2026 for Tax Year 2026-27, Limitation Act 1963 including Schedule, and Indian Contract Act 1872 Sections 2, 19, 22 and 23. Full legal documents can be refreshed explicitly from allowlisted official URLs. Heavy model dependencies remain optional. Legal accuracy is not certified. Adds a 52-entry source inventory with unverified/missing statuses, additive legal document/version/provision/relationship tables, exact quote-presence helper, and coverage endpoints. Does not verify source URLs, provide missing jurisdiction corpora, or certify legal accuracy. Governance hardening enables SQLite foreign keys per connection, rejects self-declared verified statuses, validates hierarchy cycles and relation/ingestion metadata, compares selector/source/benchmark code sets, and requires scoped fresh hash-matched release evidence artifacts instead of environment-variable attestations. Evidence hashes do not authenticate reviewer identity or certify report conclusions.",
-    "requires_maintenance":  true,
-    "production_certified":  false,
-    "legal_accuracy_certified":  false,
-    "security_audited":  false
+    "name": "ARLAW AI Global",
+    "version": "4.0.0",
+    "release": "Universal professional scope gate and shared internet research gateway",
+    "release_scope": "Adds strict legal/economic/judicial/governance/public-policy purpose gating and a shared external research packet supplied to all conversational model providers. Web search requires TAVILY_API_KEY. Retrieved web material is unverified evidence; no legal accuracy, source authenticity, currency, security audit or production certification is implied.",
+    "requires_maintenance": true,
+    "production_certified": false,
+    "legal_accuracy_certified": false,
+    "security_audited": false
 }

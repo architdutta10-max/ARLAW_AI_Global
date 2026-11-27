@@ -1,4 +1,28 @@
-﻿<!-- ARLAW-3.5.1-RELEASE-SECTION -->
+<!-- ARLAW-4.0.0-RELEASE-SECTION -->
+
+# ARLAW AI Global - Version 4.0.0
+
+**Specialised legal, economic, judicial, governance and public-policy research assistant.**
+
+## What's new in 4.0.0
+
+- Strict purpose-scope gate for designated professional research and workflows.
+- Shared external web-research gateway before conversational model-provider selection.
+- Groq, Gemini and Ollama receive the same assembled local and external source packet.
+- India is the default jurisdiction; relevant international and comparative research is supported.
+- Research status is exposed at `/api/research/status`.
+
+## Web research configuration
+
+Set `TAVILY_API_KEY` in the deployment environment. `ARLAW_WEB_RESEARCH_ENABLED` defaults to `true`; set it to `false` to disable external search. Without the key, the application reports that live web research is unavailable and does not pretend to have searched. Search results are unverified research leads, not proof of source authority, authenticity, legal support or current validity.
+
+## Limitations
+
+A shared prompt and source packet do not guarantee identical model answers or legal accuracy. Citation-label validation is not semantic claim verification. Legal accuracy, source authenticity, source currency, production readiness and security are not certified. Verify important propositions against current official primary sources and obtain qualified professional review.
+
+---
+
+<!-- ARLAW-3.5.1-RELEASE-SECTION -->
 
 # ARLAW AI Global - Version 3.5.1
 
