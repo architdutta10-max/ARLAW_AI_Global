@@ -88,6 +88,7 @@ def test_full_bns_question_reaches_retrieval_in_chat_endpoint(monkeypatch):
     monkeypatch.setattr(main, "_rate_limit", lambda *args, **kwargs: None)
     monkeypatch.setattr(main, "_retrieve_request", lambda *args, **kwargs: ([], [], "legal_research"))
     monkeypatch.setattr(main, "_must_abstain_without_legal_sources", lambda *args, **kwargs: True)
+    monkeypatch.setattr(main, "search_web", lambda *args, **kwargs: [])
 
     question = (
         "Under the Bharatiya Nyaya Sanhita, 2023, explain Section 303(1) "

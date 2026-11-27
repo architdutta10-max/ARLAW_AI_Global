@@ -23,8 +23,10 @@ from .knowledge import init_db, add_source, search, list_sources, seed_builtin_k
 from .llm import generate, provider_order, classify_task, fit_context
 from .ambiguity import clarification_for, names_specific_authority
 from .legal_governance import init_governance_db, coverage_report, jurisdiction_source_inventory
+from .scope import assess_scope, SCOPE_REFUSAL
+from .web_research import search_web, web_research_status
 
-VERSION = "3.5.1"
+VERSION = "4.0.0"
 MAX_UPLOAD_BYTES = int(os.getenv("ARLAW_MAX_UPLOAD_BYTES", str(20 * 1024 * 1024)))
 MAX_PDF_PAGES = int(os.getenv("ARLAW_MAX_PDF_PAGES", "300"))
 CHAT_RATE_LIMIT = int(os.getenv("ARLAW_CHAT_RATE_LIMIT", "20"))
@@ -393,6 +395,11 @@ def model_health():
     }
 
 
+@app.get("/api/research/status")
+def research_status():
+    return web_research_status()
+
+
 @app.get("/api/jurisdictions")
 def jurisdictions():
     return json.loads((Path(__file__).parent / "jurisdictions.json").read_text(encoding="utf-8"))
@@ -483,11 +490,30 @@ def chat(req: ChatRequest, request: Request):
             "needs_clarification": True,
             "clarification": clarification,
         }
+    scope = assess_scope(question, messages)
+    if not scope["in_scope"]:
+        return {
+            "answer": SCOPE_REFUSAL, "citations": [], "model_connected": None,
+            "model": {"provider": None, "model": None, "task": "out_of_scope"},
+            "jurisdiction": req.jurisdiction, "task": "out_of_scope",
+            "scope": scope, "citation_validation": {"status": "not_applicable"},
+            "quality": None, "quality_warning": None, "incomplete": False,
+            "needs_clarification": False, "clarification": None,
+        }
     if req.use_knowledge:
         hits, retrieval_coverage, task = _retrieve_request(question, req.jurisdiction, TOP_K)
     else:
         hits, retrieval_coverage, task = [], [], classify_task(question)
-    no_legal_source = _must_abstain_without_legal_sources(task, req.use_knowledge, hits)
+    # One shared external research packet is assembled before provider selection.
+    # Every configured conversational model receives this same packet via generate().
+    web_results = []
+    web_error = None
+    try:
+        web_results = search_web(question, req.jurisdiction)
+    except Exception as exc:
+        # Never turn a failed search into invented evidence. Preserve the failure status.
+        web_error = type(exc).__name__
+    no_legal_source = _must_abstain_without_legal_sources(task, req.use_knowledge, hits) and not web_results
     # Legal answers are fail-closed: broad conceptual questions also abstain when
     # no jurisdiction-matched evidence is available. A fluent model-memory answer
     # is not an acceptable substitute for a verified legal source.
@@ -504,6 +530,12 @@ def chat(req: ChatRequest, request: Request):
             "jurisdiction": req.jurisdiction,
             "task": task,
             "retrieval_coverage": retrieval_coverage,
+            "web_research": {
+                "status": "failed" if web_error else "unavailable_or_no_results",
+                "provider": web_research_status().get("provider"),
+                "results_count": 0, "error_type": web_error,
+                "limitation": web_research_status().get("limitation"),
+            },
             "citation_validation": {
                 "status": "no_retrieved_citations", "cited": [], "valid": [], "invalid": [],
                 "paragraphs_checked": 0, "paragraphs_with_citations": 0, "uncited_paragraphs": 0,
@@ -540,6 +572,23 @@ def chat(req: ChatRequest, request: Request):
             "as_of": hit["as_of"],
             "url": hit["source_url"],
         })
+    for item in web_results:
+        label = f"S{len(citations) + 1}"
+        context.append(
+            f"[{label}] External web result: {item["title"]} | URL: {item["url"]} | "
+            f"Published: {item.get("published_date") or "not supplied"} | "
+            f"Retrieved: {item["retrieved_at"]} | Requested jurisdiction: {req.jurisdiction} "
+            "(search metadata is not proof of jurisdiction, authority or current validity)\n"
+            f"{item["content"]}"
+        )
+        citations.append({
+            "label": label, "title": item["title"], "jurisdiction": req.jurisdiction,
+            "jurisdiction_relation": "external_search_result_not_verified",
+            "authority": "unverified_web_result", "authority_priority": 0,
+            "language": "und", "category": "external_web_search",
+            "retrieval_relevance": item.get("score"), "as_of": item.get("published_date"),
+            "url": item["url"], "retrieved_at": item["retrieved_at"],
+        })
     # Give the model a per-question coverage map. This is essential for mixed prompts:
     # it must answer supported parts and explicitly mark unsupported jurisdictions.
     if context and retrieval_coverage:
@@ -575,6 +624,13 @@ def chat(req: ChatRequest, request: Request):
         "model": model_info,
         "jurisdiction": req.jurisdiction,
         "retrieval_coverage": retrieval_coverage,
+        "web_research": {
+            "status": "results_retrieved" if web_results else ("failed" if web_error else "unavailable_or_no_results"),
+            "provider": "tavily" if web_results else web_research_status().get("provider"),
+            "results_count": len(web_results), "error_type": web_error,
+            "limitation": web_research_status().get("limitation") if not web_results else None,
+        },
+        "scope": scope,
         "task": model_info.get("task"),
         "citation_validation": model_info.get("citation_validation"),
         "legal_evidence_assessment": {

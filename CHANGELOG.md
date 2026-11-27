@@ -1,3 +1,20 @@
+# Version 4.0.0 - 2026-11-27
+
+## Added
+- Added strict professional-purpose scope classification and refusal for unrelated requests.
+- Added a shared Tavily-backed external research gateway before provider selection.
+- Combined local knowledge-base evidence and external web results into one bounded source packet.
+- Added `/api/research/status` for transparent web-search configuration status.
+- Added common answer-structure and untrusted-web-content instructions to the shared model prompt.
+
+## Limitations
+- Live web search requires `TAVILY_API_KEY`; no key means no live search.
+- Web results are unverified and do not establish legal authority, semantic support or current law.
+- Common evidence and prompts do not guarantee identical model outputs or legal accuracy.
+- No legal accuracy, security, or production certification is claimed.
+
+---
+
 # Version 3.5.1 - 2026-11-27
 
 ## [3.5.1] - 2026-11-27
