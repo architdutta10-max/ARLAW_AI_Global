@@ -1,12 +1,12 @@
-﻿<!-- ARLAW-3.5.0-RELEASE-SECTION -->
+﻿<!-- ARLAW-3.5.1-RELEASE-SECTION -->
 
-# ARLAW AI Global - Version 3.5.0
+# ARLAW AI Global - Version 3.5.1
 
 **An AI-powered platform for legal research, economic understanding and judicial information.**
 
 Release status: Release candidate prepared; production deployment is subject to successful merge and Render health verification.
 
-## What's new in 3.5.0
+## What's new in 3.5.1
 
 - Improved statute-scoped retrieval for explicitly named Indian legislation.
 - Added regression coverage to prevent same-numbered provisions from unrelated statutes appearing in named-statute searches.
@@ -228,3 +228,15 @@ A source citation does not determine whether that source actually supports the g
 Conversation history is stored locally in the browser and is not synchronized to the server or other devices.
 
 Automated tests do not constitute a production security audit. Independent security review is required before production certification.
+
+
+## v3.5.1 ? Legal retrieval reliability
+
+- Corrected source metadata selection in legal knowledge retrieval so
+  full-text source filtering can operate as intended.
+- Prevented bundled full-statute text from crowding out focused legal
+  research sources for unrelated legal queries.
+- Retained full-statute retrieval for queries that explicitly identify
+  the relevant statute.
+- Added regression coverage for legal-source retrieval and ranking.
+- Release validation: 182 automated tests passed.

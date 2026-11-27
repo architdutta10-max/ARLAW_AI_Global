@@ -1,4 +1,19 @@
-# Version 3.5.0 - 2026-11-27
+# Version 3.5.1 - 2026-11-27
+
+## [3.5.1] - 2026-11-27
+
+### Fixed
+- Selected `s.file_name` in legal knowledge retrieval SQL so the
+  full-text source filter works correctly.
+- Prevented bundled full-statute sources from crowding out focused
+  sources for unrelated legal queries.
+- Preserved full-text retrieval when a query explicitly names the
+  corresponding statute.
+
+### Validation
+- Python compilation passed.
+- Full automated test suite: 182 passed.
+
 
 - Added named-statute source scoping to legal retrieval.
 - Added regression tests for BNS and Indian Contract Act provision collisions.
