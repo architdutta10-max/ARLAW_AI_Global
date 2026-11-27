@@ -342,3 +342,73 @@ def test_corporate_fraud_fact_pattern_retrieves_india_fraud_digest_first(monkeyp
     )
     assert results
     assert "corporate fraud" in results[0]["title"].lower()
+
+
+def test_named_bns_section_excludes_same_numbered_constitution_provision(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "bns-scope.db")
+    knowledge.init_db()
+
+    knowledge.add_source(
+        title="Bharatiya Nyaya Sanhita, 2023 (BNS) ? official full text",
+        text="Section 308. Extortion. Whoever intentionally puts any person in fear of injury "
+             "and thereby dishonestly induces delivery of property commits extortion.",
+        jurisdiction="IN",
+        authority="official primary source",
+        category="law",
+    )
+    knowledge.add_source(
+        title="Constitution of India ? official primary text",
+        text="Section 308. Interpretation. This unrelated constitutional provision mentions "
+             "extortion, fear of injury, and delivery of property.",
+        jurisdiction="IN",
+        authority="official primary source",
+        category="law",
+    )
+
+    results = knowledge.search(
+        "Under BNS Section 308 explain extortion, fear of injury and delivery of property",
+        top_k=8,
+        jurisdiction="IN",
+        task="legal_research",
+    )
+
+    assert results
+    assert all("bharatiya nyaya sanhita" in row["title"].lower() for row in results)
+
+
+def test_named_contract_act_section_excludes_same_numbered_constitution_provision(monkeypatch, tmp_path):
+    import app.knowledge as knowledge
+
+    monkeypatch.setattr(knowledge, "DB_PATH", tmp_path / "contract-scope.db")
+    knowledge.init_db()
+
+    knowledge.add_source(
+        title="Indian Contract Act, 1872 ? official full text",
+        text="Section 10. What agreements are contracts. All agreements are contracts "
+             "if made by free consent of parties competent to contract, "
+             "for lawful consideration and with a lawful object.",
+        jurisdiction="IN",
+        authority="official primary source",
+        category="law",
+    )
+    knowledge.add_source(
+        title="Constitution of India ? official primary text",
+        text="Section 10. Continuance of rights. This unrelated provision discusses "
+             "agreements, consent, competent parties, lawful consideration and object.",
+        jurisdiction="IN",
+        authority="official primary source",
+        category="law",
+    )
+
+    results = knowledge.search(
+        "Indian Contract Act 1872 Section 10 agreements free consent competent parties "
+        "lawful consideration lawful object",
+        top_k=8,
+        jurisdiction="IN",
+        task="legal_research",
+    )
+
+    assert results
+    assert all("indian contract act" in row["title"].lower() for row in results)

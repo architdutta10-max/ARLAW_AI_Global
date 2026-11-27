@@ -55,7 +55,7 @@ def _evidence_check(kind: str, version: str) -> bool:
         if meta["status"] != "passed" or meta["scope_version"] != version:
             return False
         reviewed = date.fromisoformat(meta["reviewed_at"])
-        age = (datetime.now(timezone.utc).date() - reviewed).days
+        age = (date.today() - reviewed).days
         if age < 0 or age > MAX_EVIDENCE_AGE_DAYS:
             return False
         artifact = (ROOT / meta["artifact_path"]).resolve()

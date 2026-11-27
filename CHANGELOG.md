@@ -1,3 +1,17 @@
+﻿# Version 3.5.0 - 2026-11-27
+
+- Added named-statute source scoping to legal retrieval.
+- Added regression tests for BNS and Indian Contract Act provision collisions.
+- Corrected local-date handling in the legal evidence release gate.
+- Refreshed official BNS and Indian Contract Act full-text sources in the local audit database.
+- Verification: 182 automated tests passed; compilation and diff checks passed.
+- Local database retrieval smoke checks: 4/4 passed.
+
+The local corpus refresh is not included in this code commit unless separately configured and deployed through the project's approved data-release process.
+
+Legal accuracy and production readiness are not certified.
+
+---
 ## 3.3.1 — Statutory retrieval improvements
 
 - Recognises full names of the Bharatiya Nyaya Sanhita, Bharatiya Nagarik Suraksha Sanhita and Bharatiya Sakshya Adhiniyam to reduce false clarification prompts.
@@ -109,3 +123,4 @@
 - Added a legal accuracy benchmark protocol. Legal accuracy remains not independently measured; no accuracy percentage is claimed.
 - Corrected the test dependency name from `httpx2` to `httpx`.
 - Automated regression suite: 122 passed in the prepared source tree. This is not a legal accuracy score.
+
