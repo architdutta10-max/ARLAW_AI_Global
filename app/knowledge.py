@@ -234,6 +234,24 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
             query or "", flags=re.IGNORECASE
         )
     ]
+
+    # If a question names a particular statute and a numbered provision,
+    # prevent same-numbered provisions from unrelated Acts entering results.
+    required_source_patterns = []
+    if re.search(
+        r"\b(?:bns|bharatiya nyaya sanhita|new penal code)\b",
+        query_lower, flags=re.IGNORECASE
+    ):
+        required_source_patterns.append(
+            r"\b(?:bharatiya nyaya sanhita|bns)\b"
+        )
+    if re.search(
+        r"\b(?:indian\s+)?contract act\b",
+        query_lower, flags=re.IGNORECASE
+    ):
+        required_source_patterns.append(
+            r"\b(?:indian\s+)?contract act\b"
+        )
     amendment_anchors = [
         " ".join(match.lower().split())
         for match in re.findall(
@@ -306,6 +324,16 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
             continue
 
         haystack = (h["title"] + " " + h["content"]).lower()
+
+        # A named statute plus a numbered provision is a source constraint,
+        # not merely a keyword preference. Do not accept another Act's
+        # coincidentally numbered provision or an unrelated judgment.
+        if legal_task and provision_anchors and required_source_patterns:
+            if not any(
+                re.search(pattern, h["title"], flags=re.IGNORECASE)
+                for pattern in required_source_patterns
+            ):
+                continue
 
         # Explicit ordinal amendments must be present in the retrieved passage.
         # This prevents a generic constitutional case digest from being passed

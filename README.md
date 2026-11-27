@@ -1,54 +1,40 @@
-<!-- ARLAW-3.4.0-RELEASE-SECTION -->
+﻿<!-- ARLAW-3.5.0-RELEASE-SECTION -->
 
-# ARLAW AI Global - Version 3.4.0
+# ARLAW AI Global - Version 3.5.0
 
 **An AI-powered platform for legal research, economic understanding and judicial information.**
 
-Production status: Version 3.4.0 deployed.
+Release status: Release candidate prepared; production deployment is subject to successful merge and Render health verification.
 
-## What's new in 3.4.0
+## What's new in 3.5.0
 
-- Improved Indian legal corpus refresh reliability.
-- More detailed source-ingestion diagnostics.
-- Safer handling of failed downloads and extraction errors.
-- Preservation of the last successfully indexed copy when a replacement cannot be processed successfully.
-- Additional automated tests for source-ingestion failure scenarios.
-- Updated application version metadata and release documentation.
+- Improved statute-scoped retrieval for explicitly named Indian legislation.
+- Added regression coverage to prevent same-numbered provisions from unrelated statutes appearing in named-statute searches.
+- Refreshed official full-text BNS and Indian Contract Act corpus in the local audit database.
+- Corrected same-day evidence review date handling in the legal release gate.
+- Expanded automated regression coverage.
 
-## AI provider configuration
+## Verification
 
-The deployed application reports the following provider configuration:
+- Automated test suite: 182 passed in the local audit environment.
+- Python compilation: passed.
+- Git diff whitespace check: passed.
+- Local database retrieval checks: 4 of 4 passed for BNS Sections 303 and 308 and Contract Act Sections 10 and 11.
 
-- Groq: configured as the primary provider.
-- Gemini: configured as an additional cloud provider.
-- Gemini model: `gemini-3.8-flash`.
-- Ollama: disabled in the current production configuration.
-- Local model support: enabled.
-- Multi-model review: disabled.
+These checks do not certify overall legal accuracy, legal completeness, semantic citation support, production readiness or security.
 
-Provider configuration does not independently guarantee successful inference or uninterrupted availability.
+## Production and legal limitations
 
-## Production API health
+The platform provides legal research and workflow assistance. It is not a law firm, court system or substitute for advice from a qualified lawyer. It does not make judicial decisions.
 
-- Application health: https://arlaw-ai-global.onrender.com/api/health
-- Model configuration: https://arlaw-ai-global.onrender.com/api/health/model
-- Application: https://arlaw-ai-global.onrender.com
+Legal accuracy, production readiness and security are not certified.
 
-## Legal research and source limitations
+- Live application: https://arlaw-ai-global.onrender.com
+- GitHub repository: https://github.com/architdutta10-max/ARLAW_AI_Global
+- Health: https://arlaw-ai-global.onrender.com/api/health
+- Model health: https://arlaw-ai-global.onrender.com/api/health/model
 
-The platform provides research and workflow assistance. Source inventory and retrieval coverage must not be interpreted as proof that every legal provision is complete, current, authoritative or legally correct.
-
-Official-source ingestion and exact-quote checks do not independently establish semantic support, source authenticity, current legal status or legal correctness.
-
-The application is not certified as a legal authority, law firm, court system or substitute for qualified professional advice. It does not make judicial decisions.
-
-## Project status
-
-- Release: 3.4.0
-- Production certification: Not certified
-- Legal accuracy certification: Not certified
-- Security audit certification: Not certified
-
+---
 # ARLAW AI Global
 
 **Version 3.3.1 — AI-assisted legal information and research platform**
