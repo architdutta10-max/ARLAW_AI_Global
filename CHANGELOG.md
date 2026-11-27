@@ -1,4 +1,4 @@
-﻿# Version 3.5.0 - 2026-11-27
+# Version 3.5.0 - 2026-11-27
 
 - Added named-statute source scoping to legal retrieval.
 - Added regression tests for BNS and Indian Contract Act provision collisions.
@@ -123,4 +123,3 @@ Legal accuracy and production readiness are not certified.
 - Added a legal accuracy benchmark protocol. Legal accuracy remains not independently measured; no accuracy percentage is claimed.
 - Corrected the test dependency name from `httpx2` to `httpx`.
 - Automated regression suite: 122 passed in the prepared source tree. This is not a legal accuracy score.
-
