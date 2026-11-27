@@ -575,11 +575,11 @@ def chat(req: ChatRequest, request: Request):
     for item in web_results:
         label = f"S{len(citations) + 1}"
         context.append(
-            f"[{label}] External web result: {item["title"]} | URL: {item["url"]} | "
-            f"Published: {item.get("published_date") or "not supplied"} | "
-            f"Retrieved: {item["retrieved_at"]} | Requested jurisdiction: {req.jurisdiction} "
+            f"[{label}] External web result: {item['title']} | URL: {item['url']} | "
+            f"Published: {item.get('published_date') or 'not supplied'} | "
+            f"Retrieved: {item['retrieved_at']} | Requested jurisdiction: {req.jurisdiction} "
             "(search metadata is not proof of jurisdiction, authority or current validity)\n"
-            f"{item["content"]}"
+            f"{item['content']}"
         )
         citations.append({
             "label": label, "title": item["title"], "jurisdiction": req.jurisdiction,

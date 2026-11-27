@@ -264,3 +264,8 @@ Automated tests do not constitute a production security audit. Independent secur
   the relevant statute.
 - Added regression coverage for legal-source retrieval and ranking.
 - Release validation: 182 automated tests passed.
+
+
+## Deployment runtime
+
+The production deployment targets Python 3.11.9. Changes must pass Python 3.11 compilation and the automated test suite before release.
