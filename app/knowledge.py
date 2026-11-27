@@ -278,7 +278,7 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
 
     with connect() as c:
         base_sql = (
-            "SELECT s.id,s.title,s.jurisdiction,s.source_url,s.as_of,"
+            "SELECT s.id,s.title,s.jurisdiction,s.source_url,s.as_of,s.file_name,"
             "s.authority,s.language,s.category,c.chunk_no,c.content,bm25(chunks) score "
             "FROM chunks c JOIN sources s ON s.id=c.source_id "
         )
@@ -324,6 +324,16 @@ def search(query, top_k=6, jurisdiction="GLOBAL", task=None):
             continue
 
         haystack = (h["title"] + " " + h["content"]).lower()
+
+        # Do not let a bundled full statute compete with focused sources
+        # for unrelated legal questions. Full texts remain eligible when
+        # the query explicitly identifies the corresponding statute.
+        if (
+            legal_task
+            and str(h.get("file_name") or "").startswith("official-refresh:")
+            and not required_source_patterns
+        ):
+            continue
 
         # A named statute plus a numbered provision is a source constraint,
         # not merely a keyword preference. Do not accept another Act's
